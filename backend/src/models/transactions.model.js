@@ -3,12 +3,14 @@ const Schema = mongoose.Schema;
 
 const transaction = new Schema({
   userId: {
-    type: Schema.ObjectID,
+    type: Schema.Types.ObjectID,
+    ref: 'User',
     required: true,
     description: "Id of the user who added the transaction"
   },
   entityId: {
-    type: Schema.ObjectID,
+    type: Schema.Types.ObjectID,
+    ref: 'Entity',
     required: true,
     description: "Id of the entity for which the transaction was added"
   },
@@ -26,7 +28,7 @@ const transaction = new Schema({
   transactionMode: {
     type: String,
     required: true,
-    enum: ["cash", "gpay", "paytm", "phonepe", "amazonpe"],
+    enum: ["cash", "upi", "debit-card", "credit-card"],
     description: "Mode of the transaction"
   },
   remark: {
@@ -42,5 +44,5 @@ const transaction = new Schema({
   }
 });
 
-const transactions = mongoose.model("transaction", transaction);
+const transactions = mongoose.model("Transaction", transaction);
 module.exports = transactions;

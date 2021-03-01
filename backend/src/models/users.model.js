@@ -25,18 +25,12 @@ const user = new Schema({
   },
   balance: {
     type: Number,
-    required: true,
+    default: 0,
     description: "Current balance of the user"
   },
-  transactions: {
-    type: [Schema.ObjectID],
-    description: "All transactions done by the user"
-  },
-  entities: {
-    type: [Schema.ObjectID],
-    description: "All entities added by the user"
-  }
+  transactions: [{ type: Schema.Types.ObjectId, ref: "Transaction" }],
+  entities: [{ type: Schema.Types.ObjectId, ref: "Entity" }]
 });
 
-const users = mongoose.model("user", user);
+const users = mongoose.model("User", user);
 module.exports = users;

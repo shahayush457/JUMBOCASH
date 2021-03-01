@@ -3,7 +3,8 @@ const Schema = mongoose.Schema;
 
 const entity = new Schema({
   userId: {
-    type: Schema.ObjectID,
+    type: Schema.Types.ObjectID,
+    ref: 'User',
     required: true,
     description: "Id of the user who created the entity"
   },
@@ -30,5 +31,5 @@ const entity = new Schema({
   }
 });
 
-const entities = mongoose.model("entity", entity);
+const entities = mongoose.model("Entity", entity);
 module.exports = entities;
