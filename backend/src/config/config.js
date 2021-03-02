@@ -6,15 +6,15 @@ module.exports = {
   app: process.env.APP_ID,
   port: process.env.PORT,
   db_url: process.env.DB_URL,
-  jwt_secret: process.env.jwt,
+  jwt_secret: process.env.JWT_SECRET,
   oauth: {
     google: {
-      clientId: process.env.google_clientId,
-      clientSecret: process.env.google_clientSecret
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET
     },
     facebook: {
-      clientId: process.env.facebook_clientId,
-      clientSecret: process.env.facebook_clientSecret
+      clientId: process.env.FACEBOOK_CLIENT_ID,
+      clientSecret: process.env.FACEBOOK_CLIENT_SECRET
     }
   }
 };

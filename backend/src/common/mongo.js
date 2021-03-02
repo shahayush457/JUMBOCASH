@@ -2,10 +2,8 @@ const mongoose = require("mongoose");
 const log = require("./logger");
 const { db_url } = require("../config/config");
 
-const url = db_url;
-
 mongoose
-  .connect(url, {
+  .connect(db_url, {
     useNewUrlParser: true,
     useCreateIndex: true,
     useUnifiedTopology: true,
