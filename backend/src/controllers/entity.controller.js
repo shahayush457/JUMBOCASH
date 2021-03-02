@@ -1,6 +1,7 @@
 const Entity = require('../models/entities.model');
 const User = require('../models/users.model');
 
+// to get get all entites added by current user
 exports.userEntities = async (req, res, next) => {
   const { id } = req.decoded;
   try 
@@ -55,7 +56,7 @@ exports.getEntity = async (req, res, next) => {
   catch (err) 
   {
     return next({
-      status: 400,
+      status: 404,
       message: err.message,
     });
   }

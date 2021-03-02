@@ -17,12 +17,32 @@ exports.getUsers = async (req, res, next) => {
   }
 };
 
+// For registering user
 exports.register = async (req, res, next) => {
   try 
   {
-    const user = await db.create(req.body);
-    const { id, email } = user;
-    const token = jwt.sign({ id, email }, process.env.SECRET);
+    const user = await db.findOne({
+      email: req.body.email,
+    });
+    if(user)
+    {
+      // registered user
+      if(user.method.includes('local',0))
+      {
+        throw new Error('Email is already registered. Please Signin')
+      }
+      else
+      {
+        user.password=req.body.password;
+        user.method.push('local');
+        await user.save();
+        return res.status(200).json(user);
+      }
+    }
+    // first time
+    const newuser = await db.create(req.body);
+    const { id, email } = newuser;
+    const token = jwt.sign({ id, email }, process.env.JWT_SECRET);
 
     return res.status(201).json({
         id,
@@ -34,7 +54,7 @@ exports.register = async (req, res, next) => {
   {
     if (err.code === 11000) 
     {
-      err.message = 'Sorry, that email is already taken';
+      err.message = 'Email is already registered. Please Signin';
     }
     return next({
       status: 400,
@@ -42,6 +62,7 @@ exports.register = async (req, res, next) => {
     });
   }
 };
+
 
 exports.login = async (req, res, next) => {
   try 
@@ -54,7 +75,7 @@ exports.login = async (req, res, next) => {
 
     if (valid) 
     {
-      const token = jwt.sign({ id, email }, process.env.SECRET);
+      const token = jwt.sign({ id, email }, process.env.JWT_SECRET);
       return res.status(200).json({
         id,
         email,
