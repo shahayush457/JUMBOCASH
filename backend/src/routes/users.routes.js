@@ -10,11 +10,8 @@ const router = require("express").Router();
  */
 router.post(
   "/google",
-  passport.authenticate(
-    "google-token",
-    { session: false },
-    googleController.googleOAuth
-  )
+  passport.authenticate("google-token", { session: false }),
+  googleController.googleOAuth
 );
 
 /**
