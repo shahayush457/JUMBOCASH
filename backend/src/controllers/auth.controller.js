@@ -71,24 +71,30 @@ exports.login = async (req, res, next) => {
       email: req.body.email,
     });
     const { id, email } = user;
-    const valid = await user.comparePassword(req.body.password);
-
-    if (valid) 
+    if(user.method.includes('local',0))
     {
-      const token = jwt.sign({ id, email }, process.env.JWT_SECRET);
-      return res.status(200).json({
-        id,
-        email,
-        token,
-      });
-    } 
-    else 
+      const valid = await user.comparePassword(req.body.password);
+      if (valid) 
+      {
+        const token = jwt.sign({ id, email }, process.env.JWT_SECRET);
+        return res.status(200).json({
+          id,
+          email,
+          token,
+        });
+      } 
+      else 
+      {
+        throw new Error('Invalid Email/Password');
+      }
+    }
+    else
     {
-      throw new Error();
+      throw new Error('Please register with local strategy also or proceed with google/facebook login');
     }
   } 
   catch (err) 
   {
-    return next({ status: 400, message: 'Invalid Email/Password' });
+    return next({ status: 400, message: err.message });
   }
 };
