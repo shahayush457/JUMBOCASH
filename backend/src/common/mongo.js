@@ -9,7 +9,8 @@ mongoose
     useNewUrlParser: true,
     useCreateIndex: true,
     useUnifiedTopology: true,
-    useFindAndModify: false
+    useFindAndModify: false,
+    autoIndex: true
   })
   .then(() => {
     log.info("Connected to Database");
