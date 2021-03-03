@@ -4,9 +4,9 @@ const googleController = require("../controllers/googleAuth.controller");
 const router = require("express").Router();
 
 /**
- * @route     POST /api/v1/auth/google
+ * @route     POST /api/v1/oauth/google
  * @desc      Sign in with google
- * @access    Private
+ * @access    Public
  */
 router.post(
   "/google",
@@ -15,9 +15,9 @@ router.post(
 );
 
 /**
- * @route     POST /api/v1/auth/facebook
+ * @route     POST /api/v1/oauth/facebook
  * @desc      Sign in with facebook
- * @access    Private
+ * @access    Public
  */
 
 module.exports = router;

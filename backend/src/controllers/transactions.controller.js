@@ -10,7 +10,6 @@ exports.getTransactionsByUser = async (req, res, next) => {
       if (a.createdOn < b.createdOn) return 1;
       else return -1;
     });
-
     res.status(200).json(user.transactions);
   } catch (error) {
     next({
@@ -78,20 +77,26 @@ exports.getTransactionsById = async (req, res, next) => {
 exports.updateTransaction = async (req, res, next) => {
   try {
     // user id and transaction type not allowed to update
-    if (res.body.userId || req.body.transactionType) {
+    if (req.body.userId || req.body.transactionType) {
       return next({
         status: 405,
-        message: "Method not allowed"
+        message: "User id or transaction type are not allowed to update"
       });
     }
     const transaction = await Transaction.findById(req.params.id);
+    if (!transaction) throw new Error("Transaction not found");
     const user = await User.findById(transaction.userId);
     // if updating transaction amount then update user balance accordingly
     if (req.body.amount) {
-      // subtract old amount
-      user.balance -= transaction.amount;
-      // add new amount
-      user.balance += req.body.amount;
+      // subtract old amount and add new amount
+      if (transaction.transactionType === "credit") {
+        user.balance -= transaction.amount;
+        user.balance += req.body.amount;
+      } else {
+        // add old amount and subtract new amount
+        user.balance += transaction.amount;
+        user.balance -= req.body.amount;
+      }
       await user.save();
     }
     const newTransaction = await Transaction.findByIdAndUpdate(
@@ -102,7 +107,7 @@ exports.updateTransaction = async (req, res, next) => {
     res.status(200).json(newTransaction);
   } catch (error) {
     next({
-      status: 400,
+      status: 404,
       message: error.message
     });
   }
