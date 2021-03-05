@@ -58,11 +58,11 @@ exports.login = async (req, res, next) => {
     const user = await db.findOne({
       email: req.body.email
     });
-    const { id, email } = user;
+    const { id, email,name } = user;
     if (user.method.includes("local", 0)) {
       const valid = await user.comparePassword(req.body.password);
       if (valid) {
-        const token = jwt.sign({ id, email }, jwt_secret);
+        const token = jwt.sign({ id,name  }, jwt_secret);
         return res.status(200).json({
           id,
           email,
