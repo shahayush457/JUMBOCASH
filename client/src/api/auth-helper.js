@@ -12,9 +12,8 @@ const auth = {
     console.log(decode(localStorage.jwtToken))
     cb()
   },
-  clearJWT(cb) {
+  clearJWT() {
     localStorage.removeItem('jwtToken')
-    cb()
   }
 }
 

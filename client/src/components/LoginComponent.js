@@ -33,7 +33,8 @@ class Login extends Component {
         )
     }
     toggleModal() {
-      
+      window.location.href = "/";
+      //window.location.reload();
       this.setState({
         open: !this.state.open
       });
@@ -135,11 +136,6 @@ class Login extends Component {
               <ModalHeader toggle={this.toggleModal}>Login</ModalHeader>
               <ModalBody>
                 You have successfully Logged In ! <br/> 
-                <Link to="/home">
-                <Button color="primary" className="mr-auto">
-                  Home
-                </Button>
-              </Link>
               </ModalBody>
             </Modal>
         </div>

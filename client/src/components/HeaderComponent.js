@@ -27,6 +27,11 @@ class Header extends Component {
     });
   }
 
+  SignOut()
+  {
+    auth.clearJWT();
+    window.location.href = "/";
+  }
   render() {
     return (
         <Navbar color='primary' dark expand="md">
@@ -73,9 +78,9 @@ class Header extends Component {
               {
                 auth.isAuthenticated() && (<Nav navbar className="ml-1">
                     <NavItem>
-                      <NavLink className="nav-link" to="/signout">
+                      <Button color="primary" to="/signout" onClick={this.SignOut}>
                         <span className="fa fa-sign-out fa-lg" /> Log Out
-                      </NavLink>
+                      </Button>
                     </NavItem>
                   </Nav>)
               }
