@@ -11,7 +11,7 @@ const Transaction = require("../../../src/models/transactions.model");
 
 const app = require("../../../src/common/index");
 
-describe("Integration Tests - Transaction's route", () => {
+describe("Integration Tests - Transaction routes", () => {
   let token, userId, newEntity, entityId;
   before(done => {
     chai
@@ -40,7 +40,7 @@ describe("Integration Tests - Transaction's route", () => {
   });
 
   describe("GET /api/v1/transactions", () => {
-    afterEach("dropping transactions collection", async () => {
+    afterEach("dropping transaction collection", async () => {
       let updateUser = await User.findById(userId);
       updateUser.balance = 0;
       await updateUser.save();
@@ -77,7 +77,7 @@ describe("Integration Tests - Transaction's route", () => {
   });
 
   describe("POST /api/v1/transactions", () => {
-    afterEach("dropping transactions collection", async () => {
+    afterEach("dropping transaction collection", async () => {
       let updateUser = await User.findById(userId);
       updateUser.balance = 0;
       await updateUser.save();
@@ -124,7 +124,7 @@ describe("Integration Tests - Transaction's route", () => {
       expect(updatedUser.balance).to.be.equal(100);
     });
 
-    it("It should return status 400", async () => {
+    it("It should return status 400 - Missing entityId", async () => {
       const transaction = {
         amount: 100,
         transactionType: "debit",
@@ -141,14 +141,14 @@ describe("Integration Tests - Transaction's route", () => {
   });
 
   describe("GET /api/v1/transactions/:id", () => {
-    afterEach("dropping transactions collection", async () => {
+    afterEach("dropping transaction collection", async () => {
       let updateUser = await User.findById(userId);
       updateUser.balance = 0;
       await updateUser.save();
       Transaction.collection.drop();
     });
 
-    it("It should return status 404", async () => {
+    it("It should return status 404 - Invalid transaction id", async () => {
       const res = await chai
         .request(app)
         .get("/api/v1/transactions/ddd")
@@ -177,14 +177,14 @@ describe("Integration Tests - Transaction's route", () => {
   });
 
   describe("PATCH /api/v1/transactions/:id", () => {
-    afterEach("dropping transactions collection", async () => {
+    afterEach("dropping transaction collection", async () => {
       let updateUser = await User.findById(userId);
       updateUser.balance = 0;
       await updateUser.save();
       Transaction.collection.drop();
     });
 
-    it("It should return status 404", async () => {
+    it("It should return status 404 - Invalid transaction id", async () => {
       const transaction = {
         amount: 50,
         transactionMode: "credit-card"
