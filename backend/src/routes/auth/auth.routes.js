@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const handle = require("../controllers/auth.controller");
+const handle = require("../../controllers/auth.controller");
 
 /**
  * @route     GET /api/v1

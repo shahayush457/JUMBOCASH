@@ -1,16 +1,16 @@
 const Transaction = require("../models/transactions.model");
 const User = require("../models/users.model");
+const log = require("../common/logger");
+const mongoose = require("mongoose");
 
 exports.getTransactionsByUser = async (req, res, next) => {
   // Retrieve user id from the decoded JWT
-  const { id } = req.decoded;
+  const { id: userId } = req.decoded;
   try {
-    let user = await User.findById(id).populate("transactions");
-    user.transactions.sort((a, b) => {
-      if (a.createdOn < b.createdOn) return 1;
-      else return -1;
+    const transactions = await Transaction.find({ userId }).sort({
+      createdAt: -1
     });
-    res.status(200).json(user.transactions);
+    res.status(200).json(transactions);
   } catch (error) {
     next({
       status: 400,
@@ -40,7 +40,7 @@ exports.createTransactions = async (req, res, next) => {
       remark
     });
 
-    const user = await User.findById(userId);
+    let user = await User.findById(userId);
     if (transaction.transactionType === "credit") {
       // transaction (type = Credit) then add transaction amount to user balance
       user.balance += transaction.amount;
@@ -48,8 +48,6 @@ exports.createTransactions = async (req, res, next) => {
       // transaction (type = Debit) then subtract transaction amount from user balance
       user.balance -= transaction.amount;
     }
-    // add new transaction's entry in the user's record
-    user.transactions.push(transaction._id);
     await user.save();
     res.status(201).json(transaction);
   } catch (error) {
@@ -83,9 +81,11 @@ exports.updateTransaction = async (req, res, next) => {
         message: "User id or transaction type are not allowed to update"
       });
     }
-    const transaction = await Transaction.findById(req.params.id);
+
+    const transaction = await Transaction.findById(req.params.id); // Todo - can get rid of this if updated transaction not required to be sent in response
     if (!transaction) throw new Error("Transaction not found");
-    const user = await User.findById(transaction.userId);
+    let user = await User.findById(transaction.userId);
+
     // if updating transaction amount then update user balance accordingly
     if (req.body.amount) {
       // subtract old amount and add new amount
@@ -99,6 +99,7 @@ exports.updateTransaction = async (req, res, next) => {
       }
       await user.save();
     }
+
     const newTransaction = await Transaction.findByIdAndUpdate(
       req.params.id,
       req.body,
@@ -108,6 +109,66 @@ exports.updateTransaction = async (req, res, next) => {
   } catch (error) {
     next({
       status: 404,
+      message: error.message
+    });
+  }
+};
+
+// Todo - support multiple values for a field in filter
+exports.getFilteredTransactions = async (req, res, next) => {
+  // Retrieve user id from the decoded JWT
+  const { id: userId } = req.decoded;
+  try {
+    let filter = {},
+      sort = {};
+    filter.userId = mongoose.Types.ObjectId(userId);
+
+    if (req.query.tType) filter.transactionType = { $eq: req.query.tType };
+
+    if (req.query.tMode) filter.transactionMode = { $eq: req.query.tMode };
+
+    filter.amount = {
+      $gte: Number(req.query.sAmount) || 0,
+      $lte: Number(req.query.eAmount) || Infinity
+    };
+
+    if (req.query.entityId)
+      filter.entityId = { $eq: mongoose.Types.ObjectId(req.query.entityId) };
+
+    if (req.query.sDate && req.query.eDate)
+      filter.createdAt = {
+        $gte: new Date(req.query.sDate),
+        $lte: new Date(req.query.eDate)
+      };
+    else if (req.query.sDate)
+      filter.createdAt = {
+        $gte: new Date(req.query.sDate)
+      };
+    else if (req.query.eDate) {
+      let endDate = new Date(req.query.eDate);
+      endDate.setDate(endDate.getDate() + 1);
+      filter.createdAt = {
+        $lte: endDate
+      };
+    }
+
+    sort[req.query.sortBy || "createdAt"] = Number(req.query.orderBy) || -1;
+
+    const limit = Number(req.query.limit) || 10;
+    const skip = (Number(req.query.pageNo) || 1) * limit - limit;
+
+    const transactions = await Transaction.aggregate([
+      { $match: filter },
+      { $sort: sort },
+      { $skip: skip },
+      { $limit: limit }
+    ]);
+
+    log.info(transactions);
+    res.status(200).json(transactions);
+  } catch (error) {
+    next({
+      status: 400,
       message: error.message
     });
   }

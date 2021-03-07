@@ -1,6 +1,6 @@
 const router = require("express").Router();
-const handle = require("../controllers/entity.controller");
-const auth = require("../middlewares/isAuthenticated.jwt");
+const handle = require("../../controllers/entity.controller");
+const auth = require("../../middlewares/isAuthenticated.jwt");
 
 /**
  * @route     GET /api/v1/entities
@@ -15,6 +15,13 @@ router.get("/", auth, handle.userEntities);
  * @access    Private
  */
 router.post("/", auth, handle.createEntity);
+
+/**
+ * @route     GET /api/v1/entities/filter
+ * @desc      Get entities after applying filters/sorting/pagination
+ * @access    Private
+ */
+router.get("/filter", auth, handle.getFilteredEntity);
 
 /**
  * @route     GET /api/v1/entities/:id
