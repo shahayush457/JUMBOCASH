@@ -31,6 +31,12 @@ const transaction = new Schema({
     enum: ["cash", "upi", "debit-card", "credit-card"],
     description: "Mode of the transaction"
   },
+  transactionStatus: {
+    type: String,
+    required: true,
+    enum: ["pending", "paid"],
+    description: "Status of the transaction"
+  },
   remark: {
     type: String,
     required: true,

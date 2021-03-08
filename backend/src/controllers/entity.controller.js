@@ -84,10 +84,26 @@ exports.getFilteredEntity = async (req, res, next) => {
     let filter = {},
       sort = {};
 
-    if (req.query.eType) filter.entityType = { $eq: req.query.eType };
+    if (
+      req.query.orderBy &&
+      (req.query.orderBy !== "1" || req.query.orderBy !== "-1")
+    )
+      return next({
+        status: 406,
+        message: "Invalid query"
+      });
 
+    // Add filter queries applied by the user
+    if (req.query.eType)
+      filter.entityType = {
+        $in:
+          req.query.eType instanceof Array ? req.query.eType : [req.query.eType]
+      };
+
+    // Add sorting queries applied by the user
     sort[req.query.sortBy || "name"] = Number(req.query.orderBy) || 1;
 
+    // Paging
     const limit = Number(req.query.limit) || 10;
     const skip = (Number(req.query.pageNo) || 1) * limit - limit;
 

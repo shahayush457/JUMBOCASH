@@ -28,7 +28,17 @@ const user = new Schema({
   balance: {
     type: Number,
     default: 0,
-    description: "Current balance of the user"
+    description: "Current total profit of the user"
+  },
+  pendingAmountCredit: {
+    type: Number,
+    default: 0,
+    description: "Total pending amount that the user will get"
+  },
+  pendingAmountDebit: {
+    type: Number,
+    default: 0,
+    description: "Total pending amount that the user will have to pay"
   },
   entities: [{ type: Schema.Types.ObjectId, ref: "Entity" }]
 });
