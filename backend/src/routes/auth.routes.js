@@ -1,12 +1,19 @@
 const router = require("express").Router();
 const handle = require("../controllers/auth.controller");
-
+const auth = require("../middlewares/isAuthenticated.jwt")
 /**
  * @route     GET /api/v1
  * @desc      Get all users (for development only)
  * @access    Private
  */
 router.get("/", handle.getUsers);
+
+/**
+ * @route     GET /api/v1/user
+ * @desc      Get all users (for development only)
+ * @access    Private
+ */
+ router.get("/user", auth,handle.getUserbyId);
 
 /**
  * @route     POST /api/v1/auth/register

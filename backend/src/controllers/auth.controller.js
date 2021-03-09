@@ -15,6 +15,16 @@ exports.getUsers = async (req, res, next) => {
   }
 };
 
+exports.getUserbyId = async (req,res,next) =>{
+  try{
+    const { id: userId } = req.decoded;
+    const user= await db.findById(userId);
+    return res.status(200).json(user);
+  }
+  catch(err){
+    return next({ status: 400, message: err.message });
+  }
+}
 // For registering user
 exports.register = async (req, res, next) => {
   try {

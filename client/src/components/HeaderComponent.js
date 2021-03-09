@@ -34,58 +34,59 @@ class Header extends Component {
   }
   render() {
     return (
-        <Navbar color='primary' dark expand="md">
-            <NavbarBrand  href="/">
-              CASH FLOW
-            </NavbarBrand>
-            <NavbarToggler className="ml-auto" onClick={this.toggleNav} />
-            <div className="container-fluid">
+        <Navbar color="light"
+        light
+        className="navbar shadow-sm p-3 mb-5 bg-white rounded"
+        expand="md">
+            <Button color="primary" onClick={this.props.toggleSidebar}>
+                <span class="fa fa-align-left"></span>
+            </Button>
+            <NavbarToggler onClick={this.toggleNav} />
             <Collapse isOpen={this.state.isNavOpen} navbar>
-              <Nav navbar className="ml-1">
+              <Nav navbar className="ml-auto">
                 <NavItem>
                   <NavLink className="nav-link" to="/">
                     <span className="fa fa-home fa-lg" /> Dashboard
                   </NavLink>
                 </NavItem>
+                  {
+                    !auth.isAuthenticated() && (
+                        <NavItem>
+                          <NavLink className="nav-link" to="/login">
+                            <span className="fa fa-sign-in fa-lg" /> Login
+                          </NavLink>
+                        </NavItem>
+                      )
+                  }
+                  {
+                    !auth.isAuthenticated() && (
+                        <NavItem>
+                          <NavLink className="nav-link" to="/register">
+                            <span className="fa fa-sign-in fa-lg" /> Register
+                          </NavLink>
+                        </NavItem>
+                      )
+                  }
+                  {
+                    auth.isAuthenticated() && (
+                        <NavItem>
+                          <NavLink className="nav-link" to="/">
+                            <span className="fa fa-user fa-lg" /> {auth.isAuthenticated().name}
+                          </NavLink>
+                        </NavItem>
+                      )
+                  }
+                  {
+                    auth.isAuthenticated() && (
+                        <NavItem>
+                          <Button color="primary" to="/signout" onClick={this.SignOut}>
+                            <span className="fa fa-sign-out fa-lg" /> Log Out
+                          </Button>
+                        </NavItem>
+                      )
+                  }
               </Nav>
-              {
-                !auth.isAuthenticated() && (<Nav navbar className="ml-auto">
-                    <NavItem>
-                      <NavLink className="nav-link" to="/login">
-                        <span className="fa fa-sign-in fa-lg" /> Login
-                      </NavLink>
-                    </NavItem>
-                  </Nav>)
-              }
-              {
-                !auth.isAuthenticated() && (<Nav navbar className="ml-1">
-                    <NavItem>
-                      <NavLink className="nav-link" to="/register">
-                        <span className="fa fa-sign-in fa-lg" /> Register
-                      </NavLink>
-                    </NavItem>
-                  </Nav>)
-              }
-              {
-                auth.isAuthenticated() && (<Nav navbar className="ml-auto">
-                    <NavItem>
-                      <NavLink className="nav-link" to="/">
-                        <span className="fa fa-user fa-lg" /> {auth.isAuthenticated().name}
-                      </NavLink>
-                    </NavItem>
-                  </Nav>)
-              }
-              {
-                auth.isAuthenticated() && (<Nav navbar className="ml-1">
-                    <NavItem>
-                      <Button color="primary" to="/signout" onClick={this.SignOut}>
-                        <span className="fa fa-sign-out fa-lg" /> Log Out
-                      </Button>
-                    </NavItem>
-                  </Nav>)
-              }
             </Collapse>
-          </div>
         </Navbar>
     );
   }
