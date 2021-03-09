@@ -19,7 +19,7 @@ app.use(cors());
 app.use("/api/v1", rootRouter);
 
 // Invalid route's error handling
-app.use((req, res, next) => {
+app.use((_, res, next) => {
   let err = new Error("Not Found");
   err.status = 404;
   next(err);

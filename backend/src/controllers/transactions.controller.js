@@ -1,5 +1,7 @@
+const { validationResult } = require("express-validator");
 const Transaction = require("../models/transactions.model");
 const User = require("../models/users.model");
+const Entity = require("../models/entities.model");
 const log = require("../common/logger");
 const mongoose = require("mongoose");
 
@@ -14,32 +16,39 @@ exports.getTransactionsByUser = async (req, res, next) => {
   } catch (error) {
     next({
       status: 400,
-      message: error.message
+      message: [{ msg: error.message }]
     });
   }
 };
 
 exports.createTransactions = async (req, res, next) => {
-  // Retrieve user id from the decoded JWT
-  const { id: userId } = req.decoded;
-  const {
-    entityId,
-    amount,
-    transactionType,
-    transactionMode,
-    transactionStatus,
-    remark
-  } = req.body;
-
   try {
+    // Finds the validation errors in this request and wraps them in an object
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      next({
+        status: 422,
+        message: errors.array()
+      });
+      return;
+    }
+
+    // Retrieve user id from the decoded JWT
+    const { id: userId } = req.decoded;
+
+    // check whether the entity exists or not
+    const entity = await Entity.findById(req.body.entityId);
+    if (!entity) {
+      next({
+        status: 404,
+        message: [{ msg: "Entity not found" }]
+      });
+      return;
+    }
+
     const transaction = await Transaction.create({
       userId,
-      entityId,
-      amount,
-      transactionType,
-      transactionMode,
-      transactionStatus,
-      remark
+      ...req.body
     });
 
     let user = await User.findById(userId);
@@ -71,7 +80,7 @@ exports.createTransactions = async (req, res, next) => {
   } catch (error) {
     next({
       status: 400,
-      message: error.message
+      message: [{ msg: error.message }]
     });
   }
 };
@@ -79,25 +88,61 @@ exports.createTransactions = async (req, res, next) => {
 exports.getTransactionsById = async (req, res, next) => {
   const id = req.params.id;
   try {
+    // Finds the validation errors in this request and wraps them in an object
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      next({
+        status: 422,
+        message: errors.array()
+      });
+      return;
+    }
+
     const transaction = await Transaction.findById(id);
-    if (!transaction) throw new Error("Transaction not found");
+    if (!transaction)
+      return next({
+        status: 404,
+        message: [{ msg: "Transaction not found" }]
+      });
     res.status(200).json(transaction);
   } catch (error) {
     next({
-      status: 404,
-      message: error.message
+      status: 400,
+      message: [{ msg: error.message }]
     });
   }
 };
 
 exports.updateTransaction = async (req, res, next) => {
   try {
+    // Finds the validation errors in this request and wraps them in an object
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      next({
+        status: 422,
+        message: errors.array()
+      });
+      return;
+    }
+
     // user id is not allowed to update
     if (req.body.userId) {
       return next({
         status: 405,
-        message: "User id or transaction type are not allowed to update"
+        message: [{ msg: "User id is not allowed to update" }]
       });
+    }
+
+    // if updating entity id then check whether the entity exists or not
+    if (req.body.entityId) {
+      const entity = await Entity.findById(req.body.entityId);
+      if (!entity) {
+        next({
+          status: 404,
+          message: [{ msg: "Entity not found" }]
+        });
+        return;
+      }
     }
 
     const transaction = await Transaction.findById(req.params.id); // Todo - can get rid of this if updated transaction not required to be sent in response
@@ -105,7 +150,7 @@ exports.updateTransaction = async (req, res, next) => {
     if (!transaction)
       return next({
         status: 404,
-        message: "Transaction not found"
+        message: [{ msg: "Transaction not found" }]
       });
 
     let user = await User.findById(transaction.userId);
@@ -190,75 +235,66 @@ exports.updateTransaction = async (req, res, next) => {
   } catch (error) {
     next({
       status: 400,
-      message: error.message
+      message: [{ msg: error.message }]
     });
   }
 };
 
 exports.getFilteredTransactions = async (req, res, next) => {
-  // Retrieve user id from the decoded JWT
-  const { id: userId } = req.decoded;
   try {
+    // Retrieve user id from the decoded JWT
+    const { id: userId } = req.decoded;
+
+    // Finds the validation errors in this request and wraps them in an object
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      next({
+        status: 422,
+        message: errors.array()
+      });
+      return;
+    }
+
     log.info(req.query);
     let filter = {},
       sort = {};
 
-    if (
-      req.query.orderBy &&
-      (req.query.orderBy !== "1" || req.query.orderBy !== "-1")
-    )
-      return next({
-        status: 406,
-        message: "Invalid query"
-      });
-
     // Add filter queries applied by the user
     filter.userId = mongoose.Types.ObjectId(userId);
 
-    if (req.query.tType)
-      filter.transactionType = {
-        $in:
-          req.query.tType instanceof Array ? req.query.tType : [req.query.tType]
-      };
+    filter.transactionType = {
+      $in: req.query.tType
+    };
 
-    if (req.query.tMode)
-      filter.transactionMode = {
-        $in:
-          req.query.tMode instanceof Array ? req.query.tMode : [req.query.tMode]
-      };
+    filter.transactionMode = {
+      $in: req.query.tMode
+    };
 
-    if (req.query.tStatus)
-      filter.transactionStatus = {
-        $in:
-          req.query.tStatus instanceof Array
-            ? req.query.tStatus
-            : [req.query.tStatus]
-      };
+    filter.transactionStatus = {
+      $in: req.query.tStatus
+    };
 
     if (req.query.entityId)
       filter.entityId = {
-        $in:
-          req.query.entityId instanceof Array
-            ? req.query.entityId.map(id => mongoose.Types.ObjectId(id))
-            : [mongoose.Types.ObjectId(req.query.entityId)]
+        $in: req.query.entityId.map(id => mongoose.Types.ObjectId(id))
       };
 
     filter.amount = {
-      $gte: Number(req.query.sAmount) || 0,
-      $lte: Number(req.query.eAmount) || Infinity
+      $gte: req.query.sAmount,
+      $lte: req.query.eAmount
     };
 
     if (req.query.sDate && req.query.eDate)
       filter.createdAt = {
-        $gte: new Date(req.query.sDate),
-        $lte: new Date(req.query.eDate)
+        $gte: req.query.sDate,
+        $lte: req.query.eDate
       };
     else if (req.query.sDate)
       filter.createdAt = {
-        $gte: new Date(req.query.sDate)
+        $gte: req.query.sDate
       };
     else if (req.query.eDate) {
-      let endDate = new Date(req.query.eDate);
+      let endDate = req.query.eDate;
       endDate.setDate(endDate.getDate() + 1);
       filter.createdAt = {
         $lte: endDate
@@ -266,11 +302,13 @@ exports.getFilteredTransactions = async (req, res, next) => {
     }
 
     // Add sorting queries applied by the user
-    sort[req.query.sortBy || "createdAt"] = Number(req.query.orderBy) || -1;
+    sort[req.query.sortBy] = req.query.orderBy;
 
     // Paging
-    const limit = Number(req.query.limit) || 10;
-    const skip = (Number(req.query.pageNo) || 1) * limit - limit;
+    const limit = req.query.limit;
+    const skip = req.query.pageNo * limit - limit;
+
+    console.log(filter);
 
     const transactions = await Transaction.aggregate([
       { $match: filter },
@@ -284,7 +322,7 @@ exports.getFilteredTransactions = async (req, res, next) => {
   } catch (error) {
     next({
       status: 400,
-      message: error.message
+      message: [{ msg: error.message }]
     });
   }
 };
