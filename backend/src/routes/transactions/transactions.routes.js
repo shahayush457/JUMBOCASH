@@ -1,5 +1,5 @@
-const transactionsController = require("../controllers/transactions.controller");
-const authenticate = require("../middlewares/isAuthenticated.jwt");
+const transactionsController = require("../../controllers/transactions.controller");
+const authenticate = require("../../middlewares/isAuthenticated.jwt");
 const router = require("express").Router();
 
 /**
@@ -15,6 +15,17 @@ router.get("/", authenticate, transactionsController.getTransactionsByUser);
  * @access    Private
  */
 router.post("/", authenticate, transactionsController.createTransactions);
+
+/**
+ * @route     GET /api/v1/transactions/filter
+ * @desc      Get transactions after applying filters/sorting/pagination
+ * @access    Private
+ */
+router.get(
+  "/filter",
+  authenticate,
+  transactionsController.getFilteredTransactions
+);
 
 /**
  * @route     GET /api/v1/transactions/:id

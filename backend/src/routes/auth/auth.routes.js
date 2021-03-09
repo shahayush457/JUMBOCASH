@@ -1,6 +1,8 @@
 const router = require("express").Router();
 const handle = require("../controllers/auth.controller");
 const auth = require("../middlewares/isAuthenticated.jwt")
+const handle = require("../../controllers/auth.controller");
+
 /**
  * @route     GET /api/v1
  * @desc      Get all users (for development only)

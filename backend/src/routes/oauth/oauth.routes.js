@@ -1,6 +1,6 @@
 const passport = require("passport");
-const googleMiddleware = require("../middlewares/passportGoogle");
-const googleController = require("../controllers/googleAuth.controller");
+const googleMiddleware = require("../../middlewares/passportGoogle");
+const googleController = require("../../controllers/googleAuth.controller");
 const router = require("express").Router();
 
 /**

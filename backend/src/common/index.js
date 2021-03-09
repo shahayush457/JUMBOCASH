@@ -5,30 +5,18 @@ const db = require("./mongo");
 const { port } = require("../config/config");
 const log = require("./logger");
 
-const oauthRoutes = require("../routes/oauth.routes");
-const transactionRoutes = require("../routes/transactions.routes");
-const authRoutes = require("../routes/auth.routes");
-const entityRoutes = require("../routes/entities.routes");
+const rootRouter = require("../routes/index.routes");
 const errorhandler = require("../controllers/error.controller");
 
 const app = express();
 
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use(cors());
 
-// requests related to OAuth authentication
-app.use("/api/v1/oauth", oauthRoutes);
-
-// requests related to password based authentication
-app.use("/api/v1/auth", authRoutes);
-
-// requests related to user transactions
-app.use("/api/v1/transactions", transactionRoutes);
-
-// requests related to user entities
-app.use("/api/v1/entities", entityRoutes);
+// Root endpoint for all requests
+app.use("/api/v1", rootRouter);
 
 // Invalid route's error handling
 app.use((req, res, next) => {
@@ -39,8 +27,10 @@ app.use((req, res, next) => {
 
 app.use(errorhandler.error);
 
-app.listen(port, () => {
-  log.info(`Server up and running on port ${port}...`);
-});
+if (process.env.NODE_ENV !== "test") {
+  app.listen(port, () => {
+    log.info(`Server up and running on port ${port}...`);
+  });
+}
 
 module.exports = app; // for testing

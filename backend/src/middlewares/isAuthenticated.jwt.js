@@ -7,13 +7,19 @@ module.exports = (req, res, next) => {
     console.log(req.headers);
     jwt.verify(token, jwt_secret, (err, decoded) => {
       if (err) {
-        next(Error("Failed to authenticate token"));
+        next({
+          status: 401,
+          message: "Failed to authenticate token"
+        });
       } else {
         req.decoded = decoded;
         next();
       }
     });
   } else {
-    next(Error("No token provided"));
+    next({
+      status: 401,
+      message: "No token provided"
+    });
   }
 };

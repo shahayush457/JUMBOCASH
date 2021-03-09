@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const bcrypt = require('bcryptjs');
+const bcrypt = require("bcryptjs");
 
 const user = new Schema({
   method: {
@@ -28,15 +28,24 @@ const user = new Schema({
   balance: {
     type: Number,
     default: 0,
-    description: "Current balance of the user"
+    description: "Current total profit of the user"
   },
-  transactions: [{ type: Schema.Types.ObjectId, ref: "Transaction" }],
+  pendingAmountCredit: {
+    type: Number,
+    default: 0,
+    description: "Total pending amount that the user will get"
+  },
+  pendingAmountDebit: {
+    type: Number,
+    default: 0,
+    description: "Total pending amount that the user will have to pay"
+  },
   entities: [{ type: Schema.Types.ObjectId, ref: "Entity" }]
 });
 
-user.pre('save', async function(next) {
+user.pre("save", async function(next) {
   try {
-    if (!this.isModified('password')) {
+    if (!this.isModified("password")) {
       return next();
     }
     const hashed = await bcrypt.hash(this.password, 10);
