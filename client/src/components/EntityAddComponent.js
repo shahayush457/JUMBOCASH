@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Breadcrumb, BreadcrumbItem, Button,Modal,ModalHeader,ModalBody,Form, FormGroup, Label, Input, Col, FormFeedback } from 'reactstrap';
+import { Alert,Breadcrumb, BreadcrumbItem, Button,Modal,ModalHeader,ModalBody,Form, FormGroup, Label, Input, Col, FormFeedback } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import {create} from '../api/api-entities'
 import auth from '../api/auth-helper';
@@ -27,18 +27,21 @@ class AddEntity extends Component {
         this.handleBlur = this.handleBlur.bind(this);
         this.toggleModal=this.toggleModal.bind(this);
     }
+
     toggleModal() {
       
         this.setState({
           open: !this.state.open
         });
-      }
+    }
+
     onRadioChange = (e) => {
-        //console.log(e.target);
+       
         this.setState({
           entityType: e.target.value
         });
     }
+
     handleInputChange(event) {
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
@@ -60,12 +63,11 @@ class AddEntity extends Component {
         create(entity,token).then((data) => {
            
             if (data.error) {
-              this.setState({ ...this.state, error: data.error})
+              this.setState({ ...this.state, error: data.error.message})
             } else {
               this.setState({ ...this.state, error:'',open:true})
             }
-        })
-        
+        }) 
     }
 
     handleBlur = (field) => (evt) => {
@@ -100,12 +102,17 @@ class AddEntity extends Component {
     };
 
     render() {
-        const errors = this.validate(this.state.name, this.state.address, this.state.contactNo);
 
+        const errors = this.validate(this.state.name, this.state.address, this.state.contactNo);
+        
 
         return (
+            
             <div className="container">
                 <div className="row row-content">
+                {this.state.error && <Alert color="danger">
+                  {this.state.error}
+                </Alert>}
                     <div className="col-12 col-md-9">
                         <Form onSubmit={this.handleSubmit}>
                             <FormGroup row>

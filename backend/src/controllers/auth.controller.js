@@ -51,8 +51,8 @@ exports.register = async (req, res, next) => {
     // first time
     req.body.method = ["local"];
     const newuser = await db.create(req.body);
-    const { id, email } = newuser;
-    const token = jwt.sign({ id, email }, jwt_secret);
+    const { id, email,name } = newuser;
+    const token = jwt.sign({ id,name }, jwt_secret);
 
     return res.status(201).json({
       id,

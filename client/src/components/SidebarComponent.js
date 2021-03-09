@@ -2,7 +2,7 @@ import React from "react";
 import { NavItem, NavLink, Nav, Button } from "reactstrap";
 import classNames from "classnames";
 import { Link } from "react-router-dom";
-
+import auth from "../api/auth-helper"
 
 const SideBar = ({ isOpen, toggle }) => (
     <div className={classNames("sidebar", { "is-open": isOpen })}>
@@ -14,20 +14,30 @@ const SideBar = ({ isOpen, toggle }) => (
       </div>
       <div className="side-menu">
         <Nav vertical className="list-unstyled pb-3">
-          <p>Dashboard</p>
-          <NavItem>
-            <NavLink tag={Link} to={"/entity"}>
-              <span className="fa fa-plus ml-4 mr-2"/>
-              Add Entity
-            </NavLink>
-          </NavItem>
+          <p>Dashboard</p> 
+          {
+            auth.isAuthenticated() && (
+                <NavItem>
+                  <NavLink tag={Link} to={"/entity"}>
+                    <span className="fa fa-plus ml-4 mr-2"/>
+                    Add Entity
+                  </NavLink>
+                </NavItem>
+              )
+          }
+          
           <br></br>
-          <NavItem>
-            <NavLink tag={Link} to={"/transaction"}>
-              <span className="fa fa-plus ml-4 mr-2"/>
-              Add Transaction
-            </NavLink>
-          </NavItem>
+          {
+            auth.isAuthenticated() && (
+                <NavItem>
+                  <NavLink tag={Link} to={"/transaction"}>
+                    <span className="fa fa-plus ml-4 mr-2"/>
+                    Add Transaction
+                  </NavLink>
+                </NavItem>
+              )
+          }
+         
         </Nav>
         
       </div>

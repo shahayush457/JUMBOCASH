@@ -72,7 +72,6 @@ class Register extends Component {
     handleSubmit=(event)=>
     {
         
-        
         const user={
           "name":this.state.name,
           "email":this.state.email,

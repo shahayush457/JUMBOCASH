@@ -1,7 +1,6 @@
 const router = require("express").Router();
-const handle = require("../controllers/auth.controller");
-const auth = require("../middlewares/isAuthenticated.jwt")
 const handle = require("../../controllers/auth.controller");
+const auth = require("../../middlewares/isAuthenticated.jwt")
 
 /**
  * @route     GET /api/v1

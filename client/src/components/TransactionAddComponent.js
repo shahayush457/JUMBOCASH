@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { Breadcrumb, BreadcrumbItem, Button,Modal,ModalHeader,ModalBody,Form, FormGroup, Label, Input, Col, FormFeedback } from 'reactstrap';
+import { Alert,Breadcrumb, BreadcrumbItem, Button,Modal,ModalHeader,ModalBody,Form, FormGroup, Label, Input, Col, FormFeedback } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import {create} from '../api/api-entities'
+import {create} from '../api/api-trans';
+import {read} from '../api/api-entities';
 import auth from '../api/auth-helper';
 class AddTransaction extends Component {
 
@@ -9,16 +10,21 @@ class AddTransaction extends Component {
         super(props);
 
         this.state = {
-            name: '',
-            address: '',
-            contactNo: '',
-            entityType:'customer',
+            amount:'',
+            type:'',
+            mode:'',
+            remark:'',
+            status:'',
             error:'',
             open:'',
+            entityId:'',
+            entities:[],
             touched: {
-                name: false,
-                address: false,
-                contactNo: false
+                amount: false,
+                type: false,
+                mode: false,
+                remark: false,
+                status: false,
             }
         };
 
@@ -26,6 +32,23 @@ class AddTransaction extends Component {
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleBlur = this.handleBlur.bind(this);
         this.toggleModal=this.toggleModal.bind(this);
+        this.handleEntityChange=this.handleEntityChange.bind(this);
+    }
+    componentDidMount()
+    {
+        const token=localStorage.getItem('jwtToken');
+        read(token).then((data) => {
+            console.log(data);
+            
+            if (data.error) {
+                this.setState({ ...this.state,error:data.error.message})
+            } else {
+                this.setState({
+                   entities:data
+                })
+            }
+            console.log(this.state);
+        })
     }
     toggleModal() {
       
@@ -33,12 +56,28 @@ class AddTransaction extends Component {
           open: !this.state.open
         });
       }
+
     onRadioChange = (e) => {
-        //console.log(e.target);
+       
         this.setState({
-          entityType: e.target.value
+          type: e.target.value
         });
     }
+
+    onRadioModeChange = (e) => {
+        
+        this.setState({
+          mode: e.target.value
+        });
+    }
+
+    onRadioStatusChange = (e) => {
+        
+        this.setState({
+          status: e.target.value
+        });
+    }
+
     handleInputChange(event) {
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
@@ -47,20 +86,27 @@ class AddTransaction extends Component {
         this.setState({ [name]: value })
     }
 
+    handleEntityChange(e) {
+
+        this.setState({entityId:e.target.value});
+        console.log(this.state.entityId);
+    }
     handleSubmit(event) {
-       
-        const entity={
-            "name":this.state.name,
-            "address":this.state.address,
-            "contactNo":this.state.contactNo,
-            "entityType":this.state.entityType
+       console.log(this.state);
+        const transaction={
+            "amount":this.state.amount,
+            "transactionType":this.state.type,
+            "transactionMode":this.state.mode,
+            "transactionStatus":this.state.status,
+            "remark":this.state.remark,
+            "entityId":this.state.entityId
         }
         event.preventDefault();
         const token=localStorage.getItem('jwtToken');
-        create(entity,token).then((data) => {
+        create(transaction,token).then((data) => {
            
             if (data.error) {
-              this.setState({ ...this.state, error: data.error})
+              this.setState({ ...this.state, error: data.error.message})
             } else {
               this.setState({ ...this.state, error:'',open:true})
             }
@@ -74,104 +120,191 @@ class AddTransaction extends Component {
         });
     }
 
-    validate(name, address, contactNo) {
+    validate(amount,type,mode,remark,status) {
         const errors = {
-            name: '',
-            address: '',
-            contactNo: ''
+            amount:'',
+            type:'',
+            mode:'',
+            remark:'',
+            status:''
         };
 
-        if (this.state.touched.name && name.length < 3)
-            errors.name = 'Name should be greater than 3 characters';
-        else if (this.state.touched.name && name.length > 25)
-            errors.name = 'First name shouldbe less than 25 characters';
-
-        if (this.state.touched.address && address.length < 3)
-            errors.address = 'Address should be greater than 3 characters';
-        else if (this.state.touched.address && address.length > 30)
-            errors.lastname = 'Last name shouldbe <= 30 characters';
+        if (this.state.touched.remark && remark.length < 3)
+            errors.remark = 'Remark should be greater than 3 characters';
+        else if (this.state.touched.remark && remark.length > 25)
+            errors.remark = 'Remark should be less than 25 characters';
 
         const reg = /^\d+$/;
 
-        if (this.state.touched.contactNo && !reg.test(contactNo))
-            errors.contactNo = 'contact number should contain only numbers';
+        if (this.state.touched.amount && !reg.test(amount))
+            errors.amount = 'amount should contain only numbers';
 
         return errors;
     };
 
     render() {
-        const errors = this.validate(this.state.name, this.state.address, this.state.contactNo);
+        const errors = this.validate(this.state.amount, this.state.type, this.state.mode,this.state.remark,this.state.status);
 
 
         return (
             <div className="container">
                 <div className="row row-content">
+                { this.state.error && <Alert color="danger">
+                  {this.state.error}
+                </Alert>}
                     <div className="col-12 col-md-9">
                         <Form onSubmit={this.handleSubmit}>
                             <FormGroup row>
-                                <Label htmlFor="name" md={2}>Name</Label>
+                                <Label htmlFor="amount" md={2}>Amount</Label>
                                 <Col md={10}>
-                                    <Input type="text" id="name" name="name" placeholder="name" value={this.state.name} valid={errors.name === ''} invalid={errors.name !== ''} onChange={this.handleInputChange} onBlur={this.handleBlur('name')} />
-                                    <FormFeedback>{errors.name}</FormFeedback>
-                                </Col>
-                            </FormGroup>
-
-                            <FormGroup row>
-                                <Label htmlFor="address" md={2}>Address</Label>
-                                <Col md={10}>
-                                    <Input type="text" id="address" name="address" placeholder="address" value={this.state.address} valid={errors.address === ''} invalid={errors.address !== ''} onChange={this.handleInputChange} onBlur={this.handleBlur('address')} />
-                                    <FormFeedback>{errors.address}</FormFeedback>
-                                </Col>
-                            </FormGroup>
-
-                            <FormGroup row>
-                                <Label htmlFor="contactNo" md={2}>Contact No.</Label>
-                                <Col md={10}>
-                                    <Input type="conatctNo" id="contactNo" name="contactNo" placeholder="Contact number" value={this.state.contactNo} valid={errors.contactNo === ''} invalid={errors.contactNo !== ''} onChange={this.handleInputChange} onBlur={this.handleBlur('contactNo')} />
+                                    <Input type="number" id="amount" name="amount" placeholder="Amount" value={this.state.amount} valid={errors.amount === ''} invalid={errors.amount !== ''} onChange={this.handleInputChange} onBlur={this.handleBlur('amount')} />
                                     <FormFeedback>{errors.contactNo}</FormFeedback>
                                 </Col>
                             </FormGroup>
 
+
                             <FormGroup row>
                                 <Col md={2} >
-                                    <p>Entity Type </p>
+                                    <p>Type </p>
                                 </Col>
                                 <Col md={2} className="ml-3 mr-0">
                                     <Label>
                                         <Input
                                         type="radio"
-                                        value="customer"
-                                        checked={this.state.entityType === "customer"}
+                                        value="credit"
+                                        checked={this.state.type === "credit"}
                                         onChange={this.onRadioChange}
                                         />
-                                        <span>Customer</span>
+                                        <span>Credit</span>
                                     </Label>
                                 </Col>
                                 <Col >
                                     <Label>
                                         <Input
                                         type="radio"
-                                        value="vendor"
-                                        checked={this.state.entityType === "vendor"}
+                                        value="debit"
+                                        checked={this.state.type === "debit"}
                                         onChange={this.onRadioChange}
                                         />
-                                        <span>Vendor</span>
+                                        <span>Debit</span>
                                     </Label>
                                 </Col>
                             </FormGroup>
+
+                            <FormGroup row>
+                                <Col md={2} >
+                                    <p>Status </p>
+                                </Col>
+                                <Col md={2} className="ml-3 mr-0">
+                                    <Label>
+                                        <Input
+                                        type="radio"
+                                        value="pending"
+                                        checked={this.state.status === "pending"}
+                                        onChange={this.onRadioStatusChange}
+                                        />
+                                        <span>Pending</span>
+                                    </Label>
+                                </Col>
+                                <Col >
+                                    <Label>
+                                        <Input
+                                        type="radio"
+                                        value="paid"
+                                        checked={this.state.status === "paid"}
+                                        onChange={this.onRadioStatusChange}
+                                        />
+                                        <span>Completed</span>
+                                    </Label>
+                                </Col>
+                            </FormGroup>
+
+
+                            <FormGroup row>
+                                <Col md={2} >
+                                    <p>Mode </p>
+                                </Col>
+                                <Col md={2} className="ml-3 mr-0">
+                                    <Label>
+                                        <Input
+                                        type="radio"
+                                        value="cash"
+                                        checked={this.state.mode === "cash"}
+                                        onChange={this.onRadioModeChange}
+                                        />
+                                        <span>Cash</span>
+                                    </Label>
+                                </Col>
+                                <Col md={2} className="ml-0 mr-0">
+                                    <Label>
+                                        <Input
+                                        type="radio"
+                                        value="upi"
+                                        checked={this.state.mode === "upi"}
+                                        onChange={this.onRadioModeChange}
+                                        />
+                                        <span>UPI</span>
+                                    </Label>
+                                </Col>
+                                <Col md={2} className="ml-3 mr-0">
+                                    <Label>
+                                        <Input
+                                        type="radio"
+                                        value="debit-card"
+                                        checked={this.state.mode === "debit-card"}
+                                        onChange={this.onRadioModeChange}
+                                        />
+                                        <span>Debit Card</span>
+                                    </Label>
+                                </Col>
+                                <Col >
+                                    <Label>
+                                        <Input
+                                        type="radio"
+                                        value="credit-card"
+                                        checked={this.state.mode === "credit-card"}
+                                        onChange={this.onRadioModeChange}
+                                        />
+                                        <span>Credit Card</span>
+                                    </Label>
+                                </Col>
+                            </FormGroup>
+
+                            <FormGroup row>
+                                <Label htmlFor="enitityId" md={2}>Entitiy</Label>
+                                <Col md={10}>
+                                    <Input type="select" name="entityId" id="entityId" value={this.state.entityId} onChange={this.handleEntityChange}>
+                                    (
+                                        {this.state.entities.map(entity=>(<option value={entity._id}  >{entity.name} :  {entity.address} : {entity.contactNo}</option>))}
+                                    )
+                                    </Input>
+                                </Col>
+                            </FormGroup>
+
+                            <FormGroup row>
+                                <Label htmlFor="remark" md={2}>Remarks</Label>
+                                <Col md={10}>
+                                    <Input type="text" id="remark" name="remark" placeholder="Remark" value={this.state.remark} valid={errors.remark === ''} invalid={errors.remark !== ''} onChange={this.handleInputChange} onBlur={this.handleBlur('remark')} />
+                                    <FormFeedback>{errors.remark}</FormFeedback>
+                                </Col>
+                            </FormGroup>
+
+                            
 
                             <FormGroup row>
                                 <Col md={{ size: 10, offset: 2 }}>
                                     <Button type="submit" color="primary">ADD</Button>
                                 </Col>
                             </FormGroup>
+
+                            
                         </Form>
                     </div>
                 </div>
                 <Modal isOpen={this.state.open} toggle={this.toggleModal}>
                 <ModalHeader toggle={this.toggleModal}></ModalHeader>
                 <ModalBody>
-                    You have successfully added the Entity!
+                    You have successfully added the Transaction!
                 </ModalBody>
                 </Modal>
             </div>

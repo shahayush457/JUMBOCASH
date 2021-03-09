@@ -34,7 +34,6 @@ class Login extends Component {
     }
     toggleModal() {
       window.location.href = "/";
-      //window.location.reload();
       this.setState({
         open: !this.state.open
       });
