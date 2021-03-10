@@ -1,7 +1,7 @@
 const transactionsController = require("../../controllers/transactions.controller");
 const authenticate = require("../../middlewares/isAuthenticated.jwt");
-const validator = require("../../middlewares/validators/validateTransactions");
-const sanitiser = require("../../middlewares/sanitisers/sanitiserTransactions");
+const validator = require("../../utils/validators/validateTransactions");
+const sanitiser = require("../../utils/sanitisers/sanitiseTransactions");
 const router = require("express").Router();
 
 /**

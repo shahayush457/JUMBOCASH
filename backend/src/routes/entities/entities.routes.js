@@ -1,8 +1,8 @@
 const router = require("express").Router();
 const handle = require("../../controllers/entity.controller");
 const auth = require("../../middlewares/isAuthenticated.jwt");
-const validator = require("../../middlewares/validators/validateEntities");
-const sanitiser = require("../../middlewares/sanitisers/sanitiserEntities");
+const validator = require("../../utils/validators/validateEntities");
+const sanitiser = require("../../utils/sanitisers/sanitiseEntities");
 
 /**
  * @route     GET /api/v1/entities
