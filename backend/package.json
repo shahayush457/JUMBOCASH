@@ -18,9 +18,11 @@
     "cross-env": "^7.0.3",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "express-validator": "^6.10.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.11.18",
     "passport": "^0.4.1",
+    "passport-facebook-token": "^4.0.0",
     "passport-google-plus-token": "^2.1.0",
     "passport-jwt": "^4.0.0",
     "pino": "^6.11.1"

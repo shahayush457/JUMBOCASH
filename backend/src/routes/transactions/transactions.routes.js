@@ -1,5 +1,7 @@
 const transactionsController = require("../../controllers/transactions.controller");
 const authenticate = require("../../middlewares/isAuthenticated.jwt");
+const validator = require("../../utils/validators/validateTransactions");
+const sanitiser = require("../../utils/sanitisers/sanitiseTransactions");
 const router = require("express").Router();
 
 /**
@@ -14,7 +16,13 @@ router.get("/", authenticate, transactionsController.getTransactionsByUser);
  * @desc      Create transaction added by the user
  * @access    Private
  */
-router.post("/", authenticate, transactionsController.createTransactions);
+router.post(
+  "/",
+  authenticate,
+  validator.validate("createTransactions"),
+  sanitiser.sanitiseCreate,
+  transactionsController.createTransactions
+);
 
 /**
  * @route     GET /api/v1/transactions/filter
@@ -24,6 +32,8 @@ router.post("/", authenticate, transactionsController.createTransactions);
 router.get(
   "/filter",
   authenticate,
+  validator.validate("getFilteredTransactions"),
+  sanitiser.sanitiseFilter,
   transactionsController.getFilteredTransactions
 );
 
@@ -32,13 +42,24 @@ router.get(
  * @desc      Get transaction by its id
  * @access    Private
  */
-router.get("/:id", authenticate, transactionsController.getTransactionsById);
+router.get(
+  "/:id",
+  authenticate,
+  validator.validate("getTransactionsById"),
+  transactionsController.getTransactionsById
+);
 
 /**
  * @route     PATCH /api/v1/transactions/:id
  * @desc      Update transaction by its id
  * @access    Private
  */
-router.patch("/:id", authenticate, transactionsController.updateTransaction);
+router.patch(
+  "/:id",
+  authenticate,
+  validator.validate("updateTransaction"),
+  sanitiser.sanitiseUpdate,
+  transactionsController.updateTransaction
+);
 
 module.exports = router;
