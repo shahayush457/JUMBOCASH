@@ -1,11 +1,8 @@
 const router = require("express").Router();
 const handle = require("../../controllers/auth.controller");
-<<<<<<< HEAD
 const auth = require("../../middlewares/isAuthenticated.jwt")
-=======
 const validator = require("../../utils/validators/validateAuth");
 const sanitiser = require("../../utils/sanitisers/sanitiseAuth");
->>>>>>> 0cbb5134570930eb504817d5fba341472effdc4f
 
 /**
  * @route     GET /api/v1

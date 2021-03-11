@@ -80,8 +80,8 @@ class Register extends Component {
         }
          
         create(user).then((data) => {
-          if (data.error) {
-            this.setState({ ...this.state, error: data.error.message})
+          if (data.errors) {
+            this.setState({ ...this.state, error: data.errors[0].msg})
           } else {
             this.setState({ ...this.state, error: '' ,open: true})
           }

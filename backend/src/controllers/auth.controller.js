@@ -16,7 +16,6 @@ exports.getUsers = async (req, res, next) => {
   }
 };
 
-<<<<<<< HEAD
 exports.getUserbyId = async (req,res,next) =>{
   try{
     const { id: userId } = req.decoded;
@@ -28,8 +27,6 @@ exports.getUserbyId = async (req,res,next) =>{
   }
 }
 // For registering user
-=======
->>>>>>> 0cbb5134570930eb504817d5fba341472effdc4f
 exports.register = async (req, res, next) => {
   try {
     // Finds the validation errors in this request and wraps them in an object
@@ -104,12 +101,8 @@ exports.login = async (req, res, next) => {
     const user = await db.findOne({
       email: req.body.email
     });
-<<<<<<< HEAD
     const { id, email,name } = user;
-=======
-    const { id, email } = user;
 
->>>>>>> 0cbb5134570930eb504817d5fba341472effdc4f
     if (user.method.includes("local", 0)) {
       const valid = await user.comparePassword(req.body.password);
       if (valid) {

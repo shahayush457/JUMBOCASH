@@ -40,8 +40,8 @@ class AddTransaction extends Component {
         read(token).then((data) => {
             console.log(data);
             
-            if (data.error) {
-                this.setState({ ...this.state,error:data.error.message})
+            if (data.errors) {
+                this.setState({ ...this.state,error:data.errors[0].msg})
             } else {
                 this.setState({
                    entities:data
@@ -105,8 +105,8 @@ class AddTransaction extends Component {
         const token=localStorage.getItem('jwtToken');
         create(transaction,token).then((data) => {
            
-            if (data.error) {
-              this.setState({ ...this.state, error: data.error.message})
+            if (data.errors) {
+              this.setState({ ...this.state, error: data.errors[0].msg})
             } else {
               this.setState({ ...this.state, error:'',open:true})
             }
@@ -149,10 +149,10 @@ class AddTransaction extends Component {
         return (
             <div className="container">
                 <div className="row row-content">
-                { this.state.error && <Alert color="danger">
-                  {this.state.error}
-                </Alert>}
                     <div className="col-12 col-md-9">
+                    { this.state.error && <Alert color="danger">
+                        {this.state.error}
+                        </Alert>}
                         <Form onSubmit={this.handleSubmit}>
                             <FormGroup row>
                                 <Label htmlFor="amount" md={2}>Amount</Label>
