@@ -4,23 +4,25 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "NODE_ENV=production node ./src/common/index.js",
-    "dev": "NODE_ENV=development nodemon ./src/common/index.js",
-    "test": "mocha --timeout 5000",
-    "lint": "eslint ."
+    "start": "cross-env NODE_ENV=production node ./src/common/index.js",
+    "dev": "cross-env NODE_ENV=development nodemon ./src/common/index.js",
+    "test": "cross-env NODE_ENV=test mocha --timeout 5000 ./tests/**/**/*.test.js"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "PRIVATE",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "express-validator": "^6.10.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.11.18",
     "passport": "^0.4.1",
+    "passport-facebook-token": "^4.0.0",
     "passport-google-plus-token": "^2.1.0",
     "passport-jwt": "^4.0.0",
     "pino": "^6.11.1"
@@ -28,8 +30,8 @@
   "devDependencies": {
     "chai": "^4.3.0",
     "chai-http": "^4.3.0",
-    "eslint": "^7.21.0",
     "mocha": "^8.3.0",
-    "nodemon": "^2.0.7"
+    "nodemon": "^2.0.7",
+    "sinon": "^9.2.4"
   }
 }
