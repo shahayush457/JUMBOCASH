@@ -35,20 +35,35 @@ exports.sanitiseFilter = async (req, res, next) => {
     .toArray()
     .run(req);
 
-  if (req.query.entityId)
-    await query("entityId")
-      .toArray()
-      .run(req);
+  await query("eType")
+    .default(["customer", "vendor"])
+    .toArray()
+    .run(req);
 
-  if (req.query.sDate)
-    await query("sDate")
-      .toDate()
-      .run(req);
+  await query("eName")
+    .optional()
+    .toArray()
+    .run(req);
 
-  if (req.query.eDate)
-    await query("eDate")
-      .toDate()
-      .run(req);
+  await query("eAddress")
+    .optional()
+    .toArray()
+    .run(req);
+
+  await query("entityId")
+    .optional()
+    .toArray()
+    .run(req);
+
+  await query("sDate")
+    .optional()
+    .toDate()
+    .run(req);
+
+  await query("eDate")
+    .optional()
+    .toDate()
+    .run(req);
 
   await query("sAmount")
     .default(0)
