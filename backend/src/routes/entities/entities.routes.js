@@ -33,7 +33,7 @@ router.get(
   "/filter",
   auth,
   validator.validate("getFilteredEntity"),
-  sanitiser.sanitiseCreate,
+  sanitiser.sanitiseFilter,
   handle.getFilteredEntity
 );
 
