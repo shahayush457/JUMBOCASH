@@ -9,9 +9,15 @@ exports.getTransactionsByUser = async (req, res, next) => {
   // Retrieve user id from the decoded JWT
   const { id: userId } = req.decoded;
   try {
-    const transactions = await Transaction.find({ userId }).sort({
-      createdAt: -1
-    });
+    // Enabling the lean option tells Mongoose to skip instantiating a full
+    // Mongoose document and just give you the POJO. This makes queries faster
+    // and less memory intensive (memory only affects how much memory the node.js
+    // process uses and not in terms of how much data is sent over the network)
+    const transactions = await Transaction.find({ userId })
+      .lean()
+      .sort({
+        createdAt: -1
+      });
     res.status(200).json(transactions);
   } catch (error) {
     next({
@@ -36,8 +42,10 @@ exports.createTransactions = async (req, res, next) => {
     // Retrieve user id from the decoded JWT
     const { id: userId } = req.decoded;
 
-    // check whether the entity exists or not
-    const entity = await Entity.findById(req.body.entityId);
+    // check whether the entity exists or not.
+    // enabling lean because I am not modifying the entity document
+    // further in this function.
+    const entity = await Entity.findById(req.body.entityId).lean();
     if (!entity) {
       next({
         status: 404,
@@ -98,7 +106,9 @@ exports.getTransactionsById = async (req, res, next) => {
       return;
     }
 
-    const transaction = await Transaction.findById(id);
+    // enabling lean because I am not modifying the transaction document
+    // further in this function.
+    const transaction = await Transaction.findById(id).lean();
     if (!transaction)
       return next({
         status: 404,
@@ -135,7 +145,9 @@ exports.updateTransaction = async (req, res, next) => {
 
     // if updating entity id then check whether the entity exists or not
     if (req.body.entityId) {
-      const entity = await Entity.findById(req.body.entityId);
+      // enabling lean because I am not modifying the entity document
+      // further in this function.
+      const entity = await Entity.findById(req.body.entityId).lean();
       if (!entity) {
         next({
           status: 404,
@@ -145,7 +157,9 @@ exports.updateTransaction = async (req, res, next) => {
       }
     }
 
-    const transaction = await Transaction.findById(req.params.id); // Todo - can get rid of this if updated transaction not required to be sent in response
+    // enabling lean because I am not modifying the transaction document
+    // further in this function.
+    const transaction = await Transaction.findById(req.params.id).lean(); // Todo - can get rid of this if updated transaction not required to be sent in response
 
     if (!transaction)
       return next({
@@ -225,11 +239,13 @@ exports.updateTransaction = async (req, res, next) => {
     await user.save();
 
     // update the transaction info in the database
+    // enabling lean because I am not modifying the neTransaction document
+    // further in this function.
     const newTransaction = await Transaction.findByIdAndUpdate(
       req.params.id,
       req.body,
       { new: true }
-    );
+    ).lean();
 
     res.status(200).json(newTransaction);
   } catch (error) {
@@ -275,8 +291,8 @@ exports.getFilteredTransactions = async (req, res, next) => {
     };
 
     filter.amount = {
-      $gte: req.query.sAmount,
-      $lte: req.query.eAmount
+      $gte: req.query.sAmount, // default start amount = 0
+      $lte: req.query.eAmount // default end amount = Infinity
     };
 
     if (req.query.sDate && req.query.eDate)
@@ -313,15 +329,15 @@ exports.getFilteredTransactions = async (req, res, next) => {
 
     if (req.query.entityId)
       filter.entityId = {
-        $in: req.query.entityId.map(id => mongoose.Types.ObjectId(id))
+        $in: req.query.entityId.map(id => mongoose.Types.ObjectId(id)) // converting string to ObjectId
       };
 
     // Add sorting queries applied by the user
-    sort[req.query.sortBy] = req.query.orderBy;
+    sort[req.query.sortBy] = req.query.orderBy; // default sortBy = createdAt, orderBy = -1
 
     // Paging
-    const limit = req.query.limit;
-    const skip = req.query.pageNo * limit - limit;
+    const limit = req.query.limit; // default = 10
+    const skip = req.query.pageNo * limit - limit; // default pageNo = 1
 
     log.info(filter);
 

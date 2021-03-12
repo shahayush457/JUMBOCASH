@@ -7,7 +7,13 @@ const log = require("../common/logger");
 exports.userEntities = async (req, res, next) => {
   const { id } = req.decoded;
   try {
-    const user = await User.findById(id).populate("entities");
+    // Enabling the lean option tells Mongoose to skip instantiating a full
+    // Mongoose document and just give you the POJO. This makes queries faster
+    // and less memory intensive (memory only affects how much memory the node.js
+    // process uses and not in terms of how much data is sent over the network)
+    const user = await User.findById(id)
+      .lean()
+      .populate("entities");
     return res.status(200).json(user.entities);
   } catch (err) {
     return next({
@@ -59,7 +65,10 @@ exports.getEntityById = async (req, res, next) => {
     }
 
     const { id } = req.params;
-    const entity = await Entity.findById(id);
+
+    // enabling lean because I am not modifying the entity document
+    // further in this function.
+    const entity = await Entity.findById(id).lean();
 
     if (!entity) {
       next({
@@ -98,11 +107,13 @@ exports.updateEntity = async (req, res, next) => {
       });
     }
 
+    // enabling lean because I am not modifying the updatedEntity document
+    // further in this function.
     const updatedEntity = await Entity.findByIdAndUpdate(
       req.params.id,
       req.body,
       { new: true }
-    );
+    ).lean();
 
     if (!updatedEntity) {
       next({
@@ -144,21 +155,26 @@ exports.getFilteredEntity = async (req, res, next) => {
     };
 
     // Add sorting queries applied by the user
-    sort[req.query.sortBy] = req.query.orderBy;
+    sort[req.query.sortBy] = req.query.orderBy; // default sortBy = name, orderBy = 1
 
     // Paging
-    const limit = req.query.limit;
-    const skip = req.query.pageNo * limit - limit;
+    const limit = req.query.limit; // default limit = 10
+    const skip = req.query.pageNo * limit - limit; // default pageNo = 1
 
-    const user = await User.findById(userId).populate({
-      path: "entities",
-      match: filter,
-      options: {
-        limit: limit,
-        skip: skip,
-        sort: sort
-      }
-    });
+    // enabling lean because I am not modifying the entity document
+    // further in this function.
+    const user = await User.findById(userId)
+      .lean()
+      .populate({
+        path: "entities",
+        match: filter,
+        options: {
+          limit: limit,
+          skip: skip,
+          sort: sort
+        }
+      });
+
     log.info(user.entities);
     res.status(200).json(user.entities);
   } catch (error) {

@@ -6,7 +6,7 @@ const db = require("../models/users.model");
 // for development only
 exports.getUsers = async (req, res, next) => {
   try {
-    const users = await db.find();
+    const users = await db.find().lean();
     return res.status(200).json(users);
   } catch (err) {
     return next({
