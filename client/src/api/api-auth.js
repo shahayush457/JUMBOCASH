@@ -1,6 +1,7 @@
+import config from '../config'
 const create = async (user) => {
     try {
-        let response = await fetch('http://localhost:8081/api/v1/auth/register', {
+        let response = await fetch(config.server+'/auth/register', {
           method: 'POST',
           headers: {
             'Accept': 'application/json',
@@ -15,7 +16,7 @@ const create = async (user) => {
 }
 const signin = async (user) => {
   try {
-    let response = await fetch('http://localhost:8081/api/v1/auth/login', {
+    let response = await fetch(config.server+'/auth/login', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',

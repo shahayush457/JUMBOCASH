@@ -11,6 +11,7 @@ class UserOverall extends Component {
             pendingCredit:''
         };
     }
+
     componentWillMount()
     {
         const token=localStorage.getItem('jwtToken');
@@ -26,7 +27,6 @@ class UserOverall extends Component {
                     pendingCredit:data.pendingAmountCredit
                 })
             }
-            console.log(this.state);
         })
     }
     render()
@@ -41,10 +41,10 @@ class UserOverall extends Component {
                                     <div className="col mr-2">
                                         <div className="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                             Net Balance</div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800"><i className="fa fa-inr">{this.state.balance}</i></div>
+                                        <div className="h5 mb-0 font-weight-bold text-gray-800"><i className="fa fa-inr">{this.state.balance}</i></div>
                                     </div>
                                     <div class="col-auto">
-                                        <i class="fa fa-money fa-2x text-gray-300"></i>
+                                        <i className="fa fa-money fa-2x text-gray-300"></i>
                                     </div>
                                 </div>
                             </div>
@@ -57,10 +57,10 @@ class UserOverall extends Component {
                                 <div className="col mr-2">
                                     <div className="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                         Pending Balance To Pay</div>
-                                    <div class="h5 mb-0 font-weight-bold text-gray-800"><i className="fa fa-inr">{this.state.pendingDebit}</i></div>
+                                    <div className="h5 mb-0 font-weight-bold text-gray-800"><i className="fa fa-inr">{this.state.pendingDebit}</i></div>
                                 </div>
                                 <div class="col-auto">
-                                    <i class="fa fa-money fa-2x text-gray-300"></i>
+                                    <i className="fa fa-money fa-2x text-gray-300"></i>
                                 </div>
                             </div>
                         </div>
@@ -73,10 +73,10 @@ class UserOverall extends Component {
                             <div className="col mr-2">
                                 <div className="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                     Pending Balance To Recieve</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800"><i className="fa fa-inr">{this.state.pendingCredit}</i></div>
+                                <div className="h5 mb-0 font-weight-bold text-gray-800"><i className="fa fa-inr">{this.state.pendingCredit}</i></div>
                             </div>
-                            <div class="col-auto">
-                                <i class="fa fa-money fa-2x text-gray-300"></i>
+                            <div className="col-auto">
+                                <i className="fa fa-money fa-2x text-gray-300"></i>
                             </div>
                         </div>
                     </div>

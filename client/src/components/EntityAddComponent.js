@@ -1,8 +1,15 @@
 import React, { Component } from 'react';
-import { Alert,Breadcrumb, BreadcrumbItem, Button,Modal,ModalHeader,ModalBody,Form, FormGroup, Label, Input, Col, FormFeedback } from 'reactstrap';
-import { Link } from 'react-router-dom';
+import { Alert,
+         Button,
+         Modal,
+         ModalHeader,
+         ModalBody,Form, 
+         FormGroup, Label, 
+         Input, 
+         Col, 
+         FormFeedback } from 'reactstrap';
 import {create} from '../api/api-entities'
-import auth from '../api/auth-helper';
+
 class AddEntity extends Component {
 
     constructor(props) {
@@ -58,6 +65,7 @@ class AddEntity extends Component {
             "contactNo":this.state.contactNo,
             "entityType":this.state.entityType
         }
+
         event.preventDefault();
         const token=localStorage.getItem('jwtToken');
         create(entity,token).then((data) => {
@@ -175,8 +183,9 @@ class AddEntity extends Component {
                         </Form>
                     </div>
                 </div>
+                
                 <Modal isOpen={this.state.open} toggle={this.toggleModal}>
-                <ModalHeader toggle={this.toggleModal}></ModalHeader>
+                <ModalHeader toggle={this.toggleModal}>Entity</ModalHeader>
                 <ModalBody>
                     You have successfully added the Entity!
                 </ModalBody>

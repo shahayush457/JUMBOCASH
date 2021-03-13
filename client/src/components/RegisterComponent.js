@@ -1,5 +1,15 @@
 import React,{Component} from 'react';
-import {Button,Form,FormGroup,Label,Input,Col,Row,FormFeedback, Modal,ModalHeader,ModalBody,Alert} from 'reactstrap'
+import {Button,
+        Form,
+        FormGroup,
+        Label,
+        Input,
+        Col,
+        FormFeedback, 
+        Modal,
+        ModalHeader,
+        ModalBody,
+        Alert} from 'reactstrap'
 import {Link} from 'react-router-dom'
 import {create} from '../api/api-auth'
 
@@ -90,6 +100,7 @@ class Register extends Component {
     }
 
     render() { 
+
         const errors = this.validate(this.state.name,this.state.email, this.state.password);
         return ( 
             <div className="container">
@@ -99,6 +110,7 @@ class Register extends Component {
                   {this.state.error}
                 </Alert>}
                 <Form onSubmit={this.handleSubmit} onChange={this.handleInputChange}>
+                    
                     <FormGroup row>
                         <Label htmlFor="name" md={2}>Name</Label>
                         <Col md={10}>
@@ -113,6 +125,7 @@ class Register extends Component {
 
                         </Col>
                     </FormGroup>
+
                     <FormGroup row>
                         <Label htmlFor="email" md={2}>Email</Label>
                         <Col md={10}>
@@ -126,6 +139,7 @@ class Register extends Component {
                             </FormFeedback>
                         </Col>
                     </FormGroup>
+
                     <FormGroup row>
                         <Label htmlFor="password" md={2}>Password</Label>
                         <Col md={10}>
@@ -150,12 +164,13 @@ class Register extends Component {
                 </Form>
                 </div>
             </div>
+
             <Modal isOpen={this.state.open} toggle={this.toggleModal}>
-              <ModalHeader toggle={this.toggleModal}>Login</ModalHeader>
+              <ModalHeader toggle={this.toggleModal}>Register</ModalHeader>
               <ModalBody>
                 You have successfully registered ! <br/> 
                 <Link to="/login">
-                <Button color="primary" className="mr-auto">
+                <Button color="primary" className="mr-auto mt-2">
                   Sign In
                 </Button>
               </Link>

@@ -1,6 +1,16 @@
 import React,{Component} from 'react';
-import {Button,Form,FormGroup,Label,Input,Col,Row,FormFeedback, Modal,ModalHeader,ModalBody,Alert} from 'reactstrap'
-import {Link} from 'react-router-dom'
+import {Button,
+        Form,
+        FormGroup,
+        Label,
+        Input,
+        Col,
+        Row,
+        FormFeedback, 
+        Modal,
+        ModalHeader,
+        ModalBody,
+        Alert} from 'reactstrap'
 import {signin} from '../api/api-auth'
 import auth from '../api/auth-helper'
 
@@ -32,12 +42,14 @@ class Login extends Component {
             }
         )
     }
+
     toggleModal() {
       window.location.href = "/";
       this.setState({
         open: !this.state.open
       });
     }
+
     handleInputChange=(event)=>
     {
         const target = event.target;
@@ -53,8 +65,6 @@ class Login extends Component {
             email:''
         }
 
-        
-
         if(this.state.touched.password && password.length<6)
             errors.password='Password should be greater than 6 characters';
 
@@ -69,7 +79,9 @@ class Login extends Component {
           "email":this.state.email,
           "password": this.state.password,
         }
+
         event.preventDefault();
+
         signin(user).then((data) => {
             console.log(data);
           if (data.errors) {
@@ -85,7 +97,9 @@ class Login extends Component {
     }
 
     render() { 
+
         const errors = this.validate(this.state.email, this.state.password);
+
         return ( 
             <div className="container">
             <div className="row row-content">
@@ -94,6 +108,7 @@ class Login extends Component {
                   {this.state.error}
                 </Alert>}
                 <Form onSubmit={this.handleSubmit} onChange={this.handleInputChange}>
+
                     <FormGroup row>
                         <Label htmlFor="email" md={2}>Email</Label>
                         <Col md={10}>
@@ -107,6 +122,7 @@ class Login extends Component {
                             </FormFeedback>
                         </Col>
                     </FormGroup>
+
                     <FormGroup row>
                         <Label htmlFor="password" md={2}>Password</Label>
                         <Col md={10}>
@@ -131,6 +147,7 @@ class Login extends Component {
                 </Form>
                 </div>
             </div>
+            
             <Modal isOpen={this.state.open} toggle={this.toggleModal}>
               <ModalHeader toggle={this.toggleModal}>Login</ModalHeader>
               <ModalBody>

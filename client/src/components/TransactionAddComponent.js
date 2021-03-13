@@ -1,9 +1,19 @@
 import React, { Component } from 'react';
-import { Alert,Breadcrumb, BreadcrumbItem, Button,Modal,ModalHeader,ModalBody,Form, FormGroup, Label, Input, Col, FormFeedback } from 'reactstrap';
-import { Link } from 'react-router-dom';
+import { Alert,
+         Button,
+         Modal,
+         ModalHeader,
+         ModalBody,
+         Form, 
+         FormGroup, 
+         Label, 
+         Input, 
+         Col, 
+         FormFeedback } from 'reactstrap';
+
 import {create} from '../api/api-trans';
 import {read} from '../api/api-entities';
-import auth from '../api/auth-helper';
+
 class AddTransaction extends Component {
 
     constructor(props) {
@@ -34,6 +44,7 @@ class AddTransaction extends Component {
         this.toggleModal=this.toggleModal.bind(this);
         this.handleEntityChange=this.handleEntityChange.bind(this);
     }
+
     componentDidMount()
     {
         const token=localStorage.getItem('jwtToken');
@@ -44,12 +55,14 @@ class AddTransaction extends Component {
                 this.setState({ ...this.state,error:data.errors[0].msg})
             } else {
                 this.setState({
-                   entities:data
+                   entities:data,
+                   entityId:data[0]._id
                 })
             }
             console.log(this.state);
         })
     }
+
     toggleModal() {
       
         this.setState({
@@ -91,8 +104,9 @@ class AddTransaction extends Component {
         this.setState({entityId:e.target.value});
         console.log(this.state.entityId);
     }
+
     handleSubmit(event) {
-       console.log(this.state);
+       
         const transaction={
             "amount":this.state.amount,
             "transactionType":this.state.type,
@@ -101,8 +115,10 @@ class AddTransaction extends Component {
             "remark":this.state.remark,
             "entityId":this.state.entityId
         }
+
         event.preventDefault();
         const token=localStorage.getItem('jwtToken');
+
         create(transaction,token).then((data) => {
            
             if (data.errors) {
@@ -150,9 +166,13 @@ class AddTransaction extends Component {
             <div className="container">
                 <div className="row row-content">
                     <div className="col-12 col-md-9">
-                    { this.state.error && <Alert color="danger">
-                        {this.state.error}
-                        </Alert>}
+                    
+                        { 
+                            this.state.error && <Alert color="danger">
+                                {this.state.error}
+                            </Alert>
+                        }
+
                         <Form onSubmit={this.handleSubmit}>
                             <FormGroup row>
                                 <Label htmlFor="amount" md={2}>Amount</Label>
@@ -302,7 +322,7 @@ class AddTransaction extends Component {
                     </div>
                 </div>
                 <Modal isOpen={this.state.open} toggle={this.toggleModal}>
-                <ModalHeader toggle={this.toggleModal}></ModalHeader>
+                <ModalHeader toggle={this.toggleModal}>Transaction</ModalHeader>
                 <ModalBody>
                     You have successfully added the Transaction!
                 </ModalBody>

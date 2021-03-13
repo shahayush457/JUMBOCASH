@@ -32,6 +32,7 @@ class Header extends Component {
     auth.clearJWT();
     window.location.href = "/";
   }
+  
   render() {
     return (
         <Navbar color="light"

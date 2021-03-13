@@ -1,6 +1,7 @@
+import config from '../config'
 const create = async (transaction,token) => {
     try {
-        let response = await fetch('http://localhost:8081/api/v1/transactions', {
+        let response = await fetch(config.server+'/transactions', {
           method: 'POST',
           headers: {
             'Accept': 'application/json',
