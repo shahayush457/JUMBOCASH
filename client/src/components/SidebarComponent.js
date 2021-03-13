@@ -5,7 +5,6 @@ import { NavItem,
 import classNames from "classnames";
 import { Link } from "react-router-dom";
 import auth from "../api/auth-helper"
-
 import EntityFilter from "../components/EntityFilterComponent";
 
 class SideBar extends Component {

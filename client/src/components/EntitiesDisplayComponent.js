@@ -39,8 +39,9 @@ class Entities extends Component {
         return(
             <div className="container-fluid">
                 <UserOverall/>
-                <h5 className="ml-1">Entities : </h5>
-                <div className="row"> {menu} </div>
+                    <div className="row">
+                       {menu} 
+                     </div>
             </div>
         )
     }

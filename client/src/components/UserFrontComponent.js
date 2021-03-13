@@ -59,7 +59,7 @@ class UserOverall extends Component {
                                         Pending Balance To Pay</div>
                                     <div className="h5 mb-0 font-weight-bold text-gray-800"><i className="fa fa-inr">{this.state.pendingDebit}</i></div>
                                 </div>
-                                <div class="col-auto">
+                                <div className="col-auto">
                                     <i className="fa fa-money fa-2x text-gray-300"></i>
                                 </div>
                             </div>
