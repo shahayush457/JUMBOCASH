@@ -48,7 +48,7 @@ exports.register = async (req, res, next) => {
       if (user.method.includes("local", 0)) {
         return next({
           status: 409,
-          message: [{ msg: "Email is already registered. Please Signin" }]
+          message: [{ msg: "Email is already registered. Please login" }]
         });
       } else {
         user.password = req.body.password;
@@ -77,7 +77,7 @@ exports.register = async (req, res, next) => {
     });
   } catch (err) {
     if (err.code === 11000) {
-      err.message = "Email is already registered. Please Signin";
+      err.message = "Email is already registered. Please login";
     }
     return next({
       status: 400,
