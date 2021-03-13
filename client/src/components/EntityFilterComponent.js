@@ -106,7 +106,7 @@ class EntityFilter extends Component {
           className={classNames({ "menu-open": !this.state.collapsed })}
         >
           <NavLink className="ml-4">
-          <i className="fa fa-arrow-down mr-1"></i> {title}
+          <i className="fa fa-arrow-down"></i> {title}
           </NavLink>
         </NavItem>
         <Collapse

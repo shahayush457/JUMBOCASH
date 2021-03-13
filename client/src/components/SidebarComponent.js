@@ -6,7 +6,7 @@ import classNames from "classnames";
 import { Link } from "react-router-dom";
 import auth from "../api/auth-helper"
 import EntityFilter from "../components/EntityFilterComponent";
-
+import SubMenu from "../components/TransactionFilterComponent";
 class SideBar extends Component {
 
   constructor(props){
@@ -53,7 +53,12 @@ class SideBar extends Component {
                     <EntityFilter setData={this.props.setEntities}  title="Entities"/>
                 )
             }
-            
+            <br></br>
+            {
+              auth.isAuthenticated() && (
+                    <SubMenu  title="Transactions"/>
+                )
+            }
           </Nav>
           
         </div>

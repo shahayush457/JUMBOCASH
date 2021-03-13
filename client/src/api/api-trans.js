@@ -15,7 +15,22 @@ const create = async (transaction,token) => {
       console.log(err)
     }
 }
-
+const find = async (url, token) => {
+  try {
+    let response = await fetch(config.server+'/transactions/filter?'+url, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer '+JSON.parse(token)
+      }
+    })
+    return await response.json()
+    } catch(err) {
+      console.log(err)
+    }
+}
 export {
-    create
+    create,
+    find
 }
