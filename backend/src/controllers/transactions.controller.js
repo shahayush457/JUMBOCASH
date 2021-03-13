@@ -1,23 +1,17 @@
 const { validationResult } = require("express-validator");
-const Transaction = require("../models/transactions.model");
-const User = require("../models/users.model");
-const Entity = require("../models/entities.model");
 const log = require("../common/logger");
-const mongoose = require("mongoose");
+const db = require("../database/dbQueries");
 
 exports.getTransactionsByUser = async (req, res, next) => {
   // Retrieve user id from the decoded JWT
   const { id: userId } = req.decoded;
   try {
-    // Enabling the lean option tells Mongoose to skip instantiating a full
-    // Mongoose document and just give you the POJO. This makes queries faster
-    // and less memory intensive (memory only affects how much memory the node.js
-    // process uses and not in terms of how much data is sent over the network)
-    const transactions = await Transaction.find({ userId })
-      .lean()
-      .sort({
-        createdAt: -1
-      });
+    const transactions = await db.find(
+      "transaction",
+      { userId },
+      { createdAt: -1 },
+      true
+    );
     res.status(200).json(transactions);
   } catch (error) {
     next({
@@ -43,9 +37,7 @@ exports.createTransactions = async (req, res, next) => {
     const { id: userId } = req.decoded;
 
     // check whether the entity exists or not.
-    // enabling lean because I am not modifying the entity document
-    // further in this function.
-    const entity = await Entity.findById(req.body.entityId).lean();
+    const entity = await db.findById("entity", req.body.entityId, true);
     if (!entity) {
       next({
         status: 404,
@@ -54,12 +46,12 @@ exports.createTransactions = async (req, res, next) => {
       return;
     }
 
-    const transaction = await Transaction.create({
+    const transaction = await db.createData("transaction", {
       userId,
       ...req.body
     });
 
-    let user = await User.findById(userId);
+    let user = await db.findById("user", userId, false);
 
     // Update user balance and pending amounts
     if (transaction.transactionStatus === "paid") {
@@ -82,7 +74,7 @@ exports.createTransactions = async (req, res, next) => {
       }
     }
 
-    await user.save();
+    await db.updateData(user);
 
     res.status(201).json(transaction);
   } catch (error) {
@@ -106,9 +98,7 @@ exports.getTransactionsById = async (req, res, next) => {
       return;
     }
 
-    // enabling lean because I am not modifying the transaction document
-    // further in this function.
-    const transaction = await Transaction.findById(id).lean();
+    const transaction = await db.findById("transaction", id, true);
     if (!transaction)
       return next({
         status: 404,
@@ -145,9 +135,7 @@ exports.updateTransaction = async (req, res, next) => {
 
     // if updating entity id then check whether the entity exists or not
     if (req.body.entityId) {
-      // enabling lean because I am not modifying the entity document
-      // further in this function.
-      const entity = await Entity.findById(req.body.entityId).lean();
+      const entity = await db.findById("entity", req.body.entityId, true);
       if (!entity) {
         next({
           status: 404,
@@ -157,9 +145,7 @@ exports.updateTransaction = async (req, res, next) => {
       }
     }
 
-    // enabling lean because I am not modifying the transaction document
-    // further in this function.
-    const transaction = await Transaction.findById(req.params.id).lean(); // Todo - can get rid of this if updated transaction not required to be sent in response
+    const transaction = await db.findById("transaction", req.params.id, true); // Todo - can get rid of this if updated transaction not required to be sent in response
 
     if (!transaction)
       return next({
@@ -167,7 +153,7 @@ exports.updateTransaction = async (req, res, next) => {
         message: [{ msg: "Transaction not found" }]
       });
 
-    let user = await User.findById(transaction.userId);
+    let user = await db.findById("user", transaction.userId, false);
 
     const newStatus =
       req.body.transactionStatus || transaction.transactionStatus;
@@ -236,16 +222,16 @@ exports.updateTransaction = async (req, res, next) => {
     }
 
     // save updated user info in the database
-    await user.save();
+    await db.updateData(user);
 
     // update the transaction info in the database
-    // enabling lean because I am not modifying the neTransaction document
-    // further in this function.
-    const newTransaction = await Transaction.findByIdAndUpdate(
+    const newTransaction = await db.findByIdAndUpdate(
+      "transaction",
       req.params.id,
       req.body,
-      { new: true }
-    ).lean();
+      true,
+      true
+    );
 
     res.status(200).json(newTransaction);
   } catch (error) {
@@ -276,7 +262,7 @@ exports.getFilteredTransactions = async (req, res, next) => {
       sort = {};
 
     // Add filter queries applied by the user
-    filter.userId = mongoose.Types.ObjectId(userId);
+    filter.userId = db.getObjectId(userId);
 
     filter.transactionType = {
       $in: req.query.tType
@@ -329,7 +315,7 @@ exports.getFilteredTransactions = async (req, res, next) => {
 
     if (req.query.entityId)
       filter.entityId = {
-        $in: req.query.entityId.map(id => mongoose.Types.ObjectId(id)) // converting string to ObjectId
+        $in: req.query.entityId.map(id => db.getObjectId(id)) // converting string to ObjectId
       };
 
     // Add sorting queries applied by the user
@@ -341,10 +327,10 @@ exports.getFilteredTransactions = async (req, res, next) => {
 
     log.info(filter);
 
-    const transactions = await Transaction.aggregate([
+    const pipelines = [
       {
         $lookup: {
-          from: Entity.collection.name, // Mongoose pluralize the collection name at the time of creation (Entity -> entities)
+          from: db.getCollectionName("entity"), // Mongoose pluralize the collection name at the time of creation (Entity -> entities)
           localField: "entityId",
           foreignField: "_id",
           as: "entity"
@@ -354,7 +340,9 @@ exports.getFilteredTransactions = async (req, res, next) => {
       { $sort: sort },
       { $skip: skip },
       { $limit: limit }
-    ]);
+    ];
+
+    const transactions = await db.aggregateData("transaction", pipelines);
 
     log.info(transactions);
     res.status(200).json(transactions);

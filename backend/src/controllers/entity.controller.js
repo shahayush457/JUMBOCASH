@@ -1,19 +1,18 @@
 const { validationResult } = require("express-validator");
-const Entity = require("../models/entities.model");
-const User = require("../models/users.model");
 const log = require("../common/logger");
+const db = require("../database/dbQueries");
 
 // to get all entites added by current user
 exports.userEntities = async (req, res, next) => {
   const { id } = req.decoded;
   try {
-    // Enabling the lean option tells Mongoose to skip instantiating a full
-    // Mongoose document and just give you the POJO. This makes queries faster
-    // and less memory intensive (memory only affects how much memory the node.js
-    // process uses and not in terms of how much data is sent over the network)
-    const user = await User.findById(id)
-      .lean()
-      .populate("entities");
+    const user = await db.getPopulatedData(
+      "user",
+      id,
+      { path: "entities" },
+      true
+    );
+
     return res.status(200).json(user.entities);
   } catch (err) {
     return next({
@@ -36,13 +35,13 @@ exports.createEntity = async (req, res, next) => {
       return;
     }
 
-    const user = await User.findById(userId);
-    const entity = await Entity.create({
+    const user = await db.findById("user", userId, false);
+    const entity = await db.createData("entity", {
       userId,
       ...req.body
     });
     user.entities.push(entity._id);
-    await user.save();
+    await db.updateData(user);
     return res.status(201).json(entity);
   } catch (err) {
     return next({
@@ -66,9 +65,7 @@ exports.getEntityById = async (req, res, next) => {
 
     const { id } = req.params;
 
-    // enabling lean because I am not modifying the entity document
-    // further in this function.
-    const entity = await Entity.findById(id).lean();
+    const entity = await db.findById("entity", id, true);
 
     if (!entity) {
       next({
@@ -107,13 +104,13 @@ exports.updateEntity = async (req, res, next) => {
       });
     }
 
-    // enabling lean because I am not modifying the updatedEntity document
-    // further in this function.
-    const updatedEntity = await Entity.findByIdAndUpdate(
+    const updatedEntity = await db.findByIdAndUpdate(
+      "entity",
       req.params.id,
       req.body,
-      { new: true }
-    ).lean();
+      true,
+      true
+    );
 
     if (!updatedEntity) {
       next({
@@ -161,11 +158,10 @@ exports.getFilteredEntity = async (req, res, next) => {
     const limit = req.query.limit; // default limit = 10
     const skip = req.query.pageNo * limit - limit; // default pageNo = 1
 
-    // enabling lean because I am not modifying the entity document
-    // further in this function.
-    const user = await User.findById(userId)
-      .lean()
-      .populate({
+    const user = await db.getPopulatedData(
+      "user",
+      userId,
+      {
         path: "entities",
         match: filter,
         options: {
@@ -173,7 +169,9 @@ exports.getFilteredEntity = async (req, res, next) => {
           skip: skip,
           sort: sort
         }
-      });
+      },
+      true
+    );
 
     log.info(user.entities);
     res.status(200).json(user.entities);
