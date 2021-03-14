@@ -1,12 +1,14 @@
 import React,{Component} from "react";
 import { NavItem, 
          NavLink, 
-         Nav } from "reactstrap";
+         Nav,
+         Button } from "reactstrap";
 import classNames from "classnames";
 import { Link } from "react-router-dom";
 import auth from "../api/auth-helper"
 import EntityFilter from "../components/EntityFilterComponent";
 import SubMenu from "../components/TransactionFilterComponent";
+import { withRouter } from 'react-router-dom';
 class SideBar extends Component {
 
   constructor(props){
@@ -50,13 +52,16 @@ class SideBar extends Component {
             <br></br>
             {
               auth.isAuthenticated() && (
-                    <EntityFilter setData={this.props.setEntities}  title="Entities"/>
+                        <EntityFilter  setData={this.props.setEntities}  title="Entities"/>
+
+                    
                 )
             }
             <br></br>
             {
               auth.isAuthenticated() && (
-                    <SubMenu  title="Transactions"/>
+                   
+                          <SubMenu  setData={this.props.setTrans} title="Transactions"/>
                 )
             }
           </Nav>
@@ -67,4 +72,4 @@ class SideBar extends Component {
   }
 }
 
-export default SideBar;
+export default withRouter(SideBar);

@@ -36,6 +36,7 @@ const read = async (token) => {
 }
 const find = async (url, token) => {
   try {
+    console.log(config.server+'/entities/filter?'+url);
     let response = await fetch(config.server+'/entities/filter?'+url, {
       method: 'GET',
       headers: {

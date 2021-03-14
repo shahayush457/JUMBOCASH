@@ -11,15 +11,18 @@ import AddEntity from "./EntityAddComponent";
 import UserOverall from "./UserFrontComponent";
 import AddTransaction from "./TransactionAddComponent";
 import Entities from "./EntitiesDisplayComponent";
+import Transactions from "./TransactionDisplayComponent";
 class Main extends Component {
 
     constructor(props){
       super(props);
       this.state={
         sidebarIsOpen:true,
-        entities:[]
+        entities:[],
+        trans:[],
       }
       this.setEntities=this.setEntities.bind(this);
+      this.setTrans=this.setTrans.bind(this);
       this.toggleSidebar=this.toggleSidebar.bind(this);
     }
     toggleSidebar()
@@ -33,13 +36,18 @@ class Main extends Component {
       this.setState({
         entities:updatedentities
       })
-      console.log(this.state);
+    }
+    setTrans(updatedtrans)
+    {
+      this.setState({
+        trans:updatedtrans
+      })
     }
     render() 
     {
       return (
         <div className="App wrapper">
-          <SideBar setEntities={this.setEntities} toggle={this.toggleSidebar} isOpen={this.state.sidebarIsOpen} />
+          <SideBar setEntities={this.setEntities} setTrans={this.setTrans} toggle={this.toggleSidebar} isOpen={this.state.sidebarIsOpen} />
           <Container
             fluid
             className={classNames("content", { "is-open": this.state.sidebarIsOpen })}
@@ -48,9 +56,19 @@ class Main extends Component {
             <Switch>
                 <Route
                   exact path='/'
-                  component={() => <Entities entities={this.state.entities} />}
+                  component={() => <UserOverall/>}
+                />  
+                <Route
+                  exact path='/showtransaction'
+                  component={() => <Transactions transactions={this.state.trans} />}
                 />
-                <Route exact path='/' component={UserOverall}/>
+                 <Route
+                  exact path='/showentities'
+                  component={() => {
+                                      return <Entities entities={this.state.entities}/>
+                                  }
+                            }
+                />
                 <Route exact path='/transaction' component={AddTransaction}/>
                 <Route exact path='/register' component={Register}/>
                 <Route exact path='/login' component={Login}/>

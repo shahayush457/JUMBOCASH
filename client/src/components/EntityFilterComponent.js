@@ -6,9 +6,11 @@ import {Row,
         NavLink,
         Button,
         Label, 
-        Input} from "reactstrap";
+        Input,
+        FormGroup} from "reactstrap";
 import Checkbox from "../components/Checkbox"
 import { find } from "../api/api-entities";
+import { Link } from "react-router-dom";
 const checkboxes = [
   {
     name: 'customer',
@@ -35,45 +37,38 @@ class EntityFilter extends Component {
       eType: new Map(),
       limit:'',
       pageNo:'',
-      openentity:''
     }
 
     this.toggle=this.toggle.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleClick=this.handleClick.bind(this);
   }
-
+  generateurlmap(data,val)
+  {
+        var part="";
+        for (let [key, value] of data) {
+            if(value==true)
+            {
+                part=part+"&"+val+"="+key
+            }
+        }
+        return part;
+  }
   handleClick(e)
   {
-    this.setState({
-      openentity:'true'
-    })
-    var etype;
-    if(this.state.eType.get("customer")==true)
-    etype="customer"
-    if(this.state.eType.get("vendor")==true)
-    etype="vendor"
-
-    const urldata={
-      orderBy: this.state.orderBy,
-      eType:etype 
-    }
-
-    if((this.state.eType.get("customer")==true && this.state.eType.get("vendor")==true) || this.state.eType.size==0)
-    delete urldata.eType
-
-    const searchParams = new URLSearchParams(urldata);
     
+    var url=this.generateurlmap(this.state.eType,"eType")
+    url+='&orderBy=' + this.state.orderBy        
     e.preventDefault();
     const token=localStorage.getItem('jwtToken');
 
-    find(searchParams.toString(),token).then((data) => {
+    find(url,token).then((data) => {
       if (data.error) {
           this.setState({ ...this.state})
       } else {
           this.props.setData(data);
       }
-      console.log(this.state);
+     
     })
   }
 
@@ -102,12 +97,14 @@ class EntityFilter extends Component {
     return (
       <div>
         <NavItem
-          onClick={this.toggle}
-          className={classNames({ "menu-open": !this.state.collapsed })}
-        >
-          <NavLink className="ml-4">
-          <i className="fa fa-arrow-down"></i> {title}
-          </NavLink>
+                onClick={this.toggle}
+
+                className={classNames({ "menu-open": !this.state.collapsed })}
+              >
+                <NavLink tag={Link} to="/showentities" className="ml-4">
+                  <i className="fa fa-arrow-down mr-1"></i> 
+                  {this.props.title}
+                </NavLink>
         </NavItem>
         <Collapse
           isOpen={!this.state.collapsed}
@@ -134,26 +131,26 @@ class EntityFilter extends Component {
                       Order Names By
                   </Row>
 
-                  <Row>
-                    <Label className="ml-5">
+                  <FormGroup row>
+                    <Label className="ml-5 col-4">
                         <Input
                         type="radio"
                         value="1"
                         checked={this.state.orderBy === "1"}
                         onChange={this.onRadioOrderChange}
                         />
-                        <span>Ascending</span>
+                        Ascending
                     </Label>
-                    <Label className="ml-4">
+                    <Label className="ml-4 col">
                         <Input
                         type="radio"
                         value="-1"
                         checked={this.state.orderBy === "-1"}
                         onChange={this.onRadioOrderChange}
                         />
-                        <span>Descending</span>
+                        Descending
                       </Label>
-                  </Row>
+                  </FormGroup >
                   
                   <Row className="ml-4">
                     <Button color="primary" onClick={this.handleClick}>

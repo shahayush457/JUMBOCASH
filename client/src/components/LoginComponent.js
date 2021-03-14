@@ -83,7 +83,7 @@ class Login extends Component {
         event.preventDefault();
 
         signin(user).then((data) => {
-            console.log(data);
+          
           if (data.errors) {
             this.setState({ ...this.state, error: data.errors[0].msg})
           } else {

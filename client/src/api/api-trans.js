@@ -17,6 +17,7 @@ const create = async (transaction,token) => {
 }
 const find = async (url, token) => {
   try {
+    console.log(config.server+'/transactions/filter?'+url)
     let response = await fetch(config.server+'/transactions/filter?'+url, {
       method: 'GET',
       headers: {

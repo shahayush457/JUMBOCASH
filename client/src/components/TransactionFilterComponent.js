@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import classNames from "classnames";
 import { Button, Collapse, NavItem, NavLink , Row , Label , Form, Col , Input , FormGroup} from "reactstrap";
 import Checkbox from "../components/Checkbox"
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import {find} from "../api/api-trans"
 const checktype = [
     {
@@ -80,8 +80,7 @@ class SubMenu extends Component{
             sDate:'',
             eDate:'',
             eType: new Map(),
-            opentrans: '',
-            trans:[]
+           
         }
         this.toggle=this.toggle.bind(this);
         this.handletTypeChange = this.handletTypeChange.bind(this);
@@ -123,53 +122,74 @@ class SubMenu extends Component{
         const name=target.name;
         this.setState({[name]:value})
     }
+    generateurlmap(data,val)
+    {
+        var part="";
+        for (let [key, value] of data) {
+            if(value==true)
+            {
+                part=part+"&"+val+"="+key
+            }
+        }
+        return part;
+    }
+    generateurlval(data,val)
+    {
+        if(!data)
+        {
+            return '';
+        }
+        var part="";
+        part=part+"&"+val+"="+data
+        return part;
+    }
     handleClick(e)
     {
-        this.setState({
-            opentrans:'true'
-        })
         
-
-        const urldata={
-            
-        }
-
-        
-        const searchParams = new URLSearchParams(urldata);
-        
+        const url=this.generateurlmap(this.state.tType,"tType")
+                  +this.generateurlmap(this.state.eType,"eType")
+                  +this.generateurlmap(this.state.tMode,"tMode")
+                  +this.generateurlmap(this.state.tStatus,"tStatus")
+                  +this.generateurlval(this.state.sAmount,"sAmount")
+                  +this.generateurlval(this.state.eAmount,"eAmount")
+                  +this.generateurlval(this.state.sDate,"sDate")
+                  +this.generateurlval(this.state.eDate,"eDate")
+       
         e.preventDefault();
         const token=localStorage.getItem('jwtToken');
-
-        find(searchParams.toString(),token).then((data) => {
+        find(url,token).then((data) => {
             if (data.error) {
                 this.setState({ ...this.state})
             } else {
-                this.setState({
-                    trans:data
-                });
+                this.props.setData(data);
             }
-        console.log(this.state);
+            
         })
+
     }
     render()
     {
+       
         return (
+            
             <div>
               <NavItem
                 onClick={this.toggle}
                 className={classNames({ "menu-open": !this.state.collapsed })}
               >
-                <NavLink className="ml-4">
+                <NavLink tag={Link} to="/showtransaction" className="ml-4">
                   <i className="fa fa-arrow-down mr-1"></i> 
                   {this.props.title}
                 </NavLink>
               </NavItem>
+              
               <Collapse
                 isOpen={!this.state.collapsed}
                 navbar
                 className={classNames("items-menu", { "mb-1": !this.state.collapsed })}
               >
                 <div>
+                    <br></br>
                     <Row className="ml-2 mt-2">
                         Transaction Type
                     </Row>
@@ -250,7 +270,7 @@ class SubMenu extends Component{
                         <FormGroup row>
                             <Label htmlFor="eDate" md={2} className="ml-4">To</Label>
                             <Col md={8}>
-                                <Input type="date" id="eDate" name="eAmount"
+                                <Input type="date" id="eDate" name="eDate"
                                 placeholder="To" value={this.state.eDate} 
                                 />
                             </Col>

@@ -102,7 +102,7 @@ class AddTransaction extends Component {
     handleEntityChange(e) {
 
         this.setState({entityId:e.target.value});
-        console.log(this.state.entityId);
+        
     }
 
     handleSubmit(event) {

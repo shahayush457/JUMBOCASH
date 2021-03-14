@@ -38,7 +38,7 @@ class Entities extends Component {
         });
         return(
             <div className="container-fluid">
-                <UserOverall/>
+               
                     <div className="row">
                        {menu} 
                      </div>

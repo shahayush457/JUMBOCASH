@@ -16,7 +16,6 @@ class UserOverall extends Component {
     {
         const token=localStorage.getItem('jwtToken');
         read(token).then((data) => {
-            console.log(data);
             
             if (data.error) {
                 this.setState({ ...this.state})
