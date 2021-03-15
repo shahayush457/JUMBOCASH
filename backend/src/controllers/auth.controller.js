@@ -49,8 +49,8 @@ exports.register = async (req, res, next) => {
 
         await db.updateData(user);
 
-        const { id, email } = user;
-        const token = jwt.sign({ id, email }, jwt_secret);
+        const { id, name, email } = user;
+        const token = jwt.sign({ id, name, email }, jwt_secret);
         return res.status(201).json({
           id,
           email,
@@ -62,8 +62,8 @@ exports.register = async (req, res, next) => {
     // first time
     req.body.method = ["local"];
     const newuser = await db.createData("user", req.body);
-    const { id, email } = newuser;
-    const token = jwt.sign({ id, email }, jwt_secret);
+    const { id, name, email } = newuser;
+    const token = jwt.sign({ id, name, email }, jwt_secret);
 
     return res.status(201).json({
       id,
@@ -101,12 +101,12 @@ exports.login = async (req, res, next) => {
       false
     );
 
-    const { id, email } = user;
+    const { id, name, email } = user;
 
     if (user.method.includes("local", 0)) {
       const valid = await user.comparePassword(req.body.password);
       if (valid) {
-        const token = jwt.sign({ id, email }, jwt_secret);
+        const token = jwt.sign({ id, name, email }, jwt_secret);
         return res.status(200).json({
           id,
           email,
