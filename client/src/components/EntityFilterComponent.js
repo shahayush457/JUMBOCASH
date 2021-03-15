@@ -153,7 +153,7 @@ class EntityFilter extends Component {
                   </FormGroup >
                   
                   <Row className="ml-4">
-                    <Button color="primary" onClick={this.handleClick}>
+                    <Button color="light btn-sm" onClick={this.handleClick}>
                       Show Enitites
                     </Button>
                   </Row>

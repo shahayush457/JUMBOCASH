@@ -4,6 +4,8 @@ import { Button, Collapse, NavItem, NavLink , Row , Label , Form, Col , Input , 
 import Checkbox from "../components/Checkbox"
 import { Link, Redirect } from "react-router-dom";
 import {find} from "../api/api-trans"
+import {read} from '../api/api-entities';
+
 const checktype = [
     {
       name: 'credit',
@@ -80,6 +82,10 @@ class SubMenu extends Component{
             sDate:'',
             eDate:'',
             eType: new Map(),
+            orderBy:'-1',
+            sortBy:'createdAt',
+            entityId:'',
+            entities:[]
            
         }
         this.toggle=this.toggle.bind(this);
@@ -87,7 +93,26 @@ class SubMenu extends Component{
         this.handletModeChange = this.handletModeChange.bind(this);
         this.handleeTypeChange = this.handleeTypeChange.bind(this);
         this.handletStatusChange = this.handletStatusChange.bind(this);
+        this.onRadioOrderChange = this.onRadioOrderChange.bind(this);
+        this.onRadioSortChange = this.onRadioSortChange.bind(this);
+        this.handleEntityChange=this.handleEntityChange.bind(this);
         this.handleClick=this.handleClick.bind(this);
+    }
+    componentDidMount()
+    {
+        const token=localStorage.getItem('jwtToken');
+        read(token).then((data) => {
+            console.log(data);
+            
+            if (data.errors) {
+                this.setState({ ...this.state,error:data.errors[0].msg})
+            } else {
+                this.setState({
+                   entities:data
+                })
+            }
+            console.log(this.state);
+        })
     }
     toggle()
     {
@@ -143,10 +168,27 @@ class SubMenu extends Component{
         part=part+"&"+val+"="+data
         return part;
     }
+    handleEntityChange(e) {
+
+        this.setState({entityId:e.target.value});
+        
+    }
+    onRadioOrderChange = (e) => {
+        
+        this.setState({
+          orderBy: e.target.value
+        });
+    }
+    onRadioSortChange = (e) => {
+       
+        this.setState({
+          sortBy: e.target.value
+        });
+    }
     handleClick(e)
     {
         
-        const url=this.generateurlmap(this.state.tType,"tType")
+        var url=this.generateurlmap(this.state.tType,"tType")
                   +this.generateurlmap(this.state.eType,"eType")
                   +this.generateurlmap(this.state.tMode,"tMode")
                   +this.generateurlmap(this.state.tStatus,"tStatus")
@@ -154,7 +196,13 @@ class SubMenu extends Component{
                   +this.generateurlval(this.state.eAmount,"eAmount")
                   +this.generateurlval(this.state.sDate,"sDate")
                   +this.generateurlval(this.state.eDate,"eDate")
-       
+                  +'&orderBy=' + this.state.orderBy
+                  +'&sortBy=' + this.state.sortBy
+        if(this.state.entityId)
+        {
+            url+='&entityId=' + this.state.entityId
+        }
+        console.log(url);
         e.preventDefault();
         const token=localStorage.getItem('jwtToken');
         find(url,token).then((data) => {
@@ -291,9 +339,84 @@ class SubMenu extends Component{
                         ))
                         }
                     </Row>
+                    
+                    <Row className="ml-2 mt-2">
+                        Sort By
+                    </Row>
+                    
+                    <FormGroup row>
+                        <Label className="ml-5 col-6">
+                            <Input
+                            type="radio"
+                            value="createdAt"
+                            checked={this.state.sortBy === "createdAt"}
+                            onChange={this.onRadioSortChange}
+                            />
+                            Creation Date
+                        </Label>
+                        <Label className="ml-5 col-6">
+                            <Input
+                            type="radio"
+                            value="amount"
+                            checked={this.state.sortBy === "amount"}
+                            onChange={this.onRadioSortChange}
+                            />
+                            Amount
+                        </Label>
+                        {/* <Label className="ml-5 col-6">
+                            <Input
+                            type="radio"
+                            value="eName"
+                            checked={this.state.sortBy === "eName"}
+                            onChange={this.onRadioSortChange}
+                            />
+                            Entity Name
+                        </Label> */}
+                    </FormGroup >
+
+                    
+                    <Row className="ml-2 mt-2">
+                        Order By
+                    </Row>
+                    
+                    <FormGroup row>
+                        <Label className="ml-5 col-4">
+                            <Input
+                            type="radio"
+                            value="1"
+                            checked={this.state.orderBy === "1"}
+                            onChange={this.onRadioOrderChange}
+                            />
+                            Ascending
+                        </Label>
+                        <Label className="ml-4 col">
+                            <Input
+                            type="radio"
+                            value="-1"
+                            checked={this.state.orderBy === "-1"}
+                            onChange={this.onRadioOrderChange}
+                            />
+                            Descending
+                        </Label>
+                    </FormGroup >
+                    
+                    <Row className="ml-2 mt-2">
+                        Entity
+                    </Row>
+                    <FormGroup row>
+                        <Col md={10} className="ml-2">
+                            
+                            <Input type="select" name="entityId" id="entityId" value={this.state.entityId} onChange={this.handleEntityChange}>
+                            (
+                                <option selected value={''}> All Entities</option>
+                                {this.state.entities.map(entity=>(<option value={entity._id}  >{entity.name} :  {entity.address} : {entity.contactNo}</option>))}
+                            )
+                            </Input>
+                        </Col>
+                    </FormGroup>
 
                     <Row className="ml-4">
-                        <Button color="primary" onClick={this.handleClick}>
+                        <Button color="light btn-sm" onClick={this.handleClick}>
                           Show Transactions
                         </Button>
                    </Row>
