@@ -281,12 +281,14 @@ exports.getFilteredTransactions = async (req, res, next) => {
       $lte: req.query.eAmount // default end amount = Infinity
     };
 
-    if (req.query.sDate && req.query.eDate)
+    if (req.query.sDate && req.query.eDate) {
+      let endDate = req.query.eDate;
+      endDate.setDate(endDate.getDate() + 1);
       filter.createdAt = {
         $gte: req.query.sDate,
         $lte: req.query.eDate
       };
-    else if (req.query.sDate)
+    } else if (req.query.sDate)
       filter.createdAt = {
         $gte: req.query.sDate
       };
