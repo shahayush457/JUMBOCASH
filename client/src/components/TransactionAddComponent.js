@@ -55,8 +55,7 @@ class AddTransaction extends Component {
                 this.setState({ ...this.state,error:data.errors[0].msg})
             } else {
                 this.setState({
-                   entities:data,
-                   entityId:data[0]._id
+                   entities:data
                 })
             }
             console.log(this.state);
@@ -295,6 +294,7 @@ class AddTransaction extends Component {
                                 <Col md={10}>
                                     <Input type="select" name="entityId" id="entityId" value={this.state.entityId} onChange={this.handleEntityChange}>
                                     (
+                                        <option selected value={''}> Select Entitiy</option>
                                         {this.state.entities.map(entity=>(<option value={entity._id}  >{entity.name} :  {entity.address} : {entity.contactNo}</option>))}
                                     )
                                     </Input>
