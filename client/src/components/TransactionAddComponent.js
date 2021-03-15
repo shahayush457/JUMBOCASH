@@ -50,13 +50,19 @@ class AddTransaction extends Component {
         const token=localStorage.getItem('jwtToken');
         read(token).then((data) => {
             console.log(data);
-            
-            if (data.errors) {
-                this.setState({ ...this.state,error:data.errors[0].msg})
-            } else {
-                this.setState({
-                   entities:data
-                })
+            if(data.length!=0)
+            {
+                if (data.errors) {
+                    this.setState({ ...this.state,error:data.errors[0].msg})
+                } else {
+                    this.setState({
+                    entities:data
+                    })
+                }
+            }
+            else
+            {
+                this.setState({error:'Please add a entity first'})
             }
             console.log(this.state);
         })
