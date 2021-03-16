@@ -6,15 +6,15 @@ import {
     CardText,
     CardSubtitle
 } from "reactstrap";
-import UserOverall from "./UserFrontComponent"
+
 // A functional compoennet to render single entity
 function RenderEntity({ entity }) {
     return (
           <Card >
             <CardBody>
             <CardTitle tag="h6"><span className="fa fa-user fa-lg justify-content-center" /> : {entity.name} <span className="float-right">{entity.entityType}</span></CardTitle>
-            <CardSubtitle tag="h6" className="mb-2 text-muted"><i class="fa fa-building"></i> : {entity.address}</CardSubtitle>
-            <CardText><i class="fa fa-phone" aria-hidden="true"></i> : {entity.contactNo}</CardText>
+            <CardSubtitle tag="h6" className="mb-2 text-muted"><i className="fa fa-building"></i> : {entity.address}</CardSubtitle>
+            <CardText><i className="fa fa-phone" aria-hidden="true"></i> : {entity.contactNo}</CardText>
             </CardBody>
           </Card>
     );

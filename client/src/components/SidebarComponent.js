@@ -2,7 +2,7 @@ import React,{Component} from "react";
 import { NavItem, 
          NavLink, 
          Nav,
-         Button } from "reactstrap";
+        } from "reactstrap";
 import classNames from "classnames";
 import { Link } from "react-router-dom";
 import auth from "../api/auth-helper"
@@ -30,7 +30,7 @@ class SideBar extends Component {
             {
               auth.isAuthenticated() && (
                   <NavItem>
-                    <NavLink tag={Link} to={"/entity"}>
+                    <NavLink onClick={this.props.toggle} tag={Link} to={"/entity"}>
                       <span className="fa fa-plus ml-4 mr-2"/>
                       Add Entity
                     </NavLink>
@@ -42,7 +42,7 @@ class SideBar extends Component {
             {
               auth.isAuthenticated() && (
                   <NavItem>
-                    <NavLink tag={Link} to={"/transaction"}>
+                    <NavLink onClick={this.props.toggle} tag={Link} to={"/transaction"}>
                       <span className="fa fa-plus ml-4 mr-2"/>
                       Add Transaction
                     </NavLink>

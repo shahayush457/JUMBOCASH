@@ -1,4 +1,4 @@
-import React, { Component, useState } from "react";
+import React, { Component } from "react";
 import classNames from "classnames";
 import {Row,
         Collapse, 
@@ -93,7 +93,7 @@ class EntityFilter extends Component {
   }
   render()
   {
-    const { title, items } = this.props;
+    
     return (
       <div>
         <NavItem
@@ -132,7 +132,7 @@ class EntityFilter extends Component {
                   </Row>
 
                   <FormGroup row>
-                    <Label className="ml-5 col-4">
+                    <Label className="ml-5 col-3">
                         <Input
                         type="radio"
                         value="1"
@@ -141,7 +141,7 @@ class EntityFilter extends Component {
                         />
                         Ascending
                     </Label>
-                    <Label className="ml-4 col">
+                    <Label className="ml-5 col">
                         <Input
                         type="radio"
                         value="-1"

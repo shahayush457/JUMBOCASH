@@ -23,8 +23,8 @@ a:focus {
     SIDEBAR STYLE
 ----------------------------------------------------- */
 .sidebar {
-  min-width: 280px;
-  max-width: 280px;
+  min-width: 250px;
+  max-width: 250px;
   background: #375efb;
   color: #fff;
   margin-left: -250px;
@@ -40,6 +40,7 @@ a:focus {
 
 .sidebar-header {
   background: #375efb;
+  
 }
 
 .sidebar-header h3 {
@@ -79,9 +80,10 @@ li a.dropdown-toggle::after {
 }
 
 .sidebar-header > span {
-  position: relative;
+  position: absolute;
   float: right;
   margin: 0.5em;
+  margin-left:300px;
   font-size: 2rem;
   cursor: pointer;
   display: none;

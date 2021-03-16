@@ -2,10 +2,9 @@ import React, { Component } from "react";
 import classNames from "classnames";
 import { Button, Collapse, NavItem, NavLink , Row , Label , Form, Col , Input , FormGroup} from "reactstrap";
 import Checkbox from "../components/Checkbox"
-import { Link, Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {find} from "../api/api-trans"
 import {read} from '../api/api-entities';
-
 const checktype = [
     {
       name: 'credit',
@@ -102,7 +101,7 @@ class SubMenu extends Component{
     {
         const token=localStorage.getItem('jwtToken');
         read(token).then((data) => {
-            console.log(data);
+            //console.log(data);
             
             if (data.errors) {
                 this.setState({ ...this.state,error:data.errors[0].msg})
@@ -111,7 +110,7 @@ class SubMenu extends Component{
                    entities:data
                 })
             }
-            console.log(this.state);
+            //console.log(this.state);
         })
     }
     toggle()
@@ -202,7 +201,7 @@ class SubMenu extends Component{
         {
             url+='&entityId=' + this.state.entityId
         }
-        console.log(url);
+        //console.log(url);
         e.preventDefault();
         const token=localStorage.getItem('jwtToken');
         find(url,token).then((data) => {
@@ -389,7 +388,7 @@ class SubMenu extends Component{
                             />
                             Ascending
                         </Label>
-                        <Label className="ml-4 col">
+                        <Label className="ml-5 col">
                             <Input
                             type="radio"
                             value="-1"

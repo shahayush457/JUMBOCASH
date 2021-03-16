@@ -9,11 +9,13 @@ import {Button,
         Modal,
         ModalHeader,
         ModalBody,
-        Alert} from 'reactstrap'
+        Alert,
+        Row} from 'reactstrap'
 import {Link} from 'react-router-dom'
 import {create} from '../api/api-auth'
-
-
+import {oauthGoogle , oauthFacebook} from '../api/api-oauth'
+import GoogleLogin from 'react-google-login';
+import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
 class Register extends Component {
     
     constructor(props)
@@ -34,6 +36,8 @@ class Register extends Component {
         this.toggleModal=this.toggleModal.bind(this);
         this.handleSubmit=this.handleSubmit.bind(this);
         this.handleInputChange=this.handleInputChange.bind(this);
+        this.responseGoogle = this.responseGoogle.bind(this);
+        this.responseFacebook = this.responseFacebook.bind(this);
     }
 
     handleBlur=(field)=>(evt)=>
@@ -78,6 +82,37 @@ class Register extends Component {
             errors.email='Email is not valid';
 
         return errors;
+    }
+    responseGoogle(res) {
+        
+        console.log(res.accessToken);
+        console.log(JSON.stringify({"access_token":res.accessToken}));
+        oauthGoogle(res.accessToken).then((data) => {
+            //console.log(data);
+            //console.log(data);
+            if (data.errors) 
+            {
+                this.setState({ ...this.state, error: data.errors[0].msg})
+            } 
+            else
+            {
+                this.setState({ ...this.state, error: '' ,open: true})
+            } 
+        })
+    }
+    responseFacebook(res) {
+        
+        oauthFacebook(res.accessToken).then((data) => {
+            //console.log(data);
+            if (data.errors) 
+            {
+                this.setState({ ...this.state, error: data.errors[0].msg})
+            } 
+            else
+            {
+                this.setState({ ...this.state, error: '' ,open: true})
+            }
+        })
     }
     handleSubmit=(event)=>
     {
@@ -163,8 +198,36 @@ class Register extends Component {
                     </FormGroup>
                 </Form>
                 </div>
+               
             </div>
-
+            <div className="container ml-5">
+                <div className="row row-content ml-5">
+                        <div className="text-center">
+                            <div className="alert alert-primary ml-4">
+                            Or register using third-party services
+                            </div>
+                            <FacebookLogin
+                                appId="435566974381314"
+                                render={renderProps => (
+                                    <button style={{ marginRight: 15 }} className="btn btn-primary" onClick={renderProps.onClick}><i class="fa fa-facebook-square" aria-hidden="true"></i> Facebook</button>
+                                )}
+                                fields="name,email,picture"
+                                callback={this.responseFacebook}
+                                cssClass="btn btn-outline-primary"
+                            />
+                        <GoogleLogin 
+                                clientId="395911397838-qevt8tlmbbrs21h7f5devar2lf2cm120.apps.googleusercontent.com"
+                                render={renderProps => (
+                                    <button className="btn btn-danger" onClick={renderProps.onClick} disabled={renderProps.disabled}><i class="fa fa-google" aria-hidden="true"></i> Google</button>
+                                )}
+                                onSuccess={this.responseGoogle}
+                                onFailure={this.responseGoogle}
+                                cookiePolicy={'single_host_origin'}
+                                className="btn btn-outline-danger"
+                            />
+                        </div>
+                </div>
+            </div>
             <Modal isOpen={this.state.open} toggle={this.toggleModal}>
               <ModalHeader toggle={this.toggleModal}>Register</ModalHeader>
               <ModalBody>

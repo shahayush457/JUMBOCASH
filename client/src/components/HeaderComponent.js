@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import {
   Navbar,
-  NavbarBrand,
   Nav,
   NavbarToggler,
   Collapse,
@@ -40,7 +39,7 @@ class Header extends Component {
         className="navbar shadow-sm p-3 mb-5 bg-white rounded"
         expand="md">
             <Button color="primary" onClick={this.props.toggleSidebar}>
-                <span class="fa fa-align-left"></span>
+                <span className="fa fa-align-left"></span>
             </Button>
             <NavbarToggler onClick={this.toggleNav} />
             <Collapse isOpen={this.state.isNavOpen} navbar>

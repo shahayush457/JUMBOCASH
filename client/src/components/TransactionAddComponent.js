@@ -49,7 +49,8 @@ class AddTransaction extends Component {
     {
         const token=localStorage.getItem('jwtToken');
         read(token).then((data) => {
-            console.log(data);
+            //console.log(data);
+            
             if(data.length!=0)
             {
                 if (data.errors) {
@@ -64,7 +65,7 @@ class AddTransaction extends Component {
             {
                 this.setState({error:'Please add a entity first'})
             }
-            console.log(this.state);
+            //console.log(this.state);
         })
     }
 
@@ -165,9 +166,8 @@ class AddTransaction extends Component {
 
     render() {
         const errors = this.validate(this.state.amount, this.state.type, this.state.mode,this.state.remark,this.state.status);
-
-
         return (
+            
             <div className="container">
                 <div className="row row-content">
                     <div className="col-12 col-md-9">
@@ -189,10 +189,10 @@ class AddTransaction extends Component {
 
 
                             <FormGroup row>
-                                <Col md={2} >
+                                <Col sm={2} >
                                     <p>Type </p>
                                 </Col>
-                                <Col md={2} className="ml-3 mr-0">
+                                <Col sm={2} className="ml-3 mr-0">
                                     <Label>
                                         <Input
                                         type="radio"
@@ -203,7 +203,7 @@ class AddTransaction extends Component {
                                         <span>Credit</span>
                                     </Label>
                                 </Col>
-                                <Col >
+                                <Col sm={2} className="ml-3 mr-0">
                                     <Label>
                                         <Input
                                         type="radio"
@@ -217,10 +217,10 @@ class AddTransaction extends Component {
                             </FormGroup>
 
                             <FormGroup row>
-                                <Col md={2} >
+                                <Col sm={2} >
                                     <p>Status </p>
                                 </Col>
-                                <Col md={2} className="ml-3 mr-0">
+                                <Col sm={2} className="ml-3 mr-0">
                                     <Label>
                                         <Input
                                         type="radio"
@@ -231,7 +231,7 @@ class AddTransaction extends Component {
                                         <span>Pending</span>
                                     </Label>
                                 </Col>
-                                <Col >
+                                <Col className="ml-3 mr-0">
                                     <Label>
                                         <Input
                                         type="radio"
@@ -246,10 +246,10 @@ class AddTransaction extends Component {
 
 
                             <FormGroup row>
-                                <Col md={2} >
+                                <Col sm={2} >
                                     <p>Mode </p>
                                 </Col>
-                                <Col md={2} className="ml-3 mr-0">
+                                <Col sm={2} className="ml-3 mr-0">
                                     <Label>
                                         <Input
                                         type="radio"
@@ -260,7 +260,7 @@ class AddTransaction extends Component {
                                         <span>Cash</span>
                                     </Label>
                                 </Col>
-                                <Col md={2} className="ml-0 mr-0">
+                                <Col sm={2} className="ml-3 mr-0">
                                     <Label>
                                         <Input
                                         type="radio"
@@ -271,7 +271,7 @@ class AddTransaction extends Component {
                                         <span>UPI</span>
                                     </Label>
                                 </Col>
-                                <Col md={2} className="ml-3 mr-0">
+                                <Col sm={2} className="ml-3 mr-0">
                                     <Label>
                                         <Input
                                         type="radio"
@@ -282,7 +282,7 @@ class AddTransaction extends Component {
                                         <span>Debit Card</span>
                                     </Label>
                                 </Col>
-                                <Col >
+                                <Col sm={2} className="ml-3 mr-0" >
                                     <Label>
                                         <Input
                                         type="radio"

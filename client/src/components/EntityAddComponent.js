@@ -69,7 +69,7 @@ class AddEntity extends Component {
         event.preventDefault();
         const token=localStorage.getItem('jwtToken');
         create(entity,token).then((data) => {
-           console.log(data);
+           //console.log(data);
             if (data.errors) {
               this.setState({ ...this.state, error: data.errors[0].msg})
             } else {
@@ -162,7 +162,7 @@ class AddEntity extends Component {
                                         <span>Customer</span>
                                     </Label>
                                 </Col>
-                                <Col >
+                                <Col className="ml-3 mr-0">
                                     <Label>
                                         <Input
                                         type="radio"
