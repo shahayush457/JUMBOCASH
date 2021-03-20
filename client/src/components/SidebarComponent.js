@@ -9,6 +9,7 @@ import auth from "../api/auth-helper"
 import EntityFilter from "../components/EntityFilterComponent";
 import SubMenu from "../components/TransactionFilterComponent";
 import { withRouter } from 'react-router-dom';
+import logo from "../images/logo.png"
 class SideBar extends Component {
 
   constructor(props){
@@ -22,7 +23,7 @@ class SideBar extends Component {
           <span color="info" onClick={this.props.toggle} style={{ color: "#fff" }}>
             &times;
           </span>
-          <h3>Cash Flow</h3>
+          <h3><img src={logo}></img></h3>
         </div>
         <div className="side-menu">
           <Nav vertical className="list-unstyled pb-3">

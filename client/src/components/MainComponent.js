@@ -11,12 +11,13 @@ import UserOverall from "./UserFrontComponent";
 import AddTransaction from "./TransactionAddComponent";
 import Entities from "./EntitiesDisplayComponent";
 import Transactions from "./TransactionDisplayComponent";
+
 class Main extends Component {
 
     constructor(props){
       super(props);
       this.state={
-        sidebarIsOpen:true,
+        sidebarIsOpen:false,
         entities:[],
         trans:[],
       }
@@ -52,6 +53,7 @@ class Main extends Component {
             className={classNames("content", { "is-open": this.state.sidebarIsOpen })}
           >
             <Header toggleSidebar={this.toggleSidebar}/>
+            
             <Switch>
                 <Route
                   exact path='/'

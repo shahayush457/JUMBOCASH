@@ -237,11 +237,11 @@ class SubMenu extends Component{
               >
                 <div>
                     <br></br>
-                    <Row className="ml-2 mt-2">
-                        Transaction Type
+                    <Row id="f2" className="ml-2 mt-2">
+                         Type
                     </Row>
                     
-                    <Row className="ml-3">
+                    <Row id="f2" className="ml-3">
                         {
                         checktype.map(item => (
                             <Label className="mr-4" key={item.key}>
@@ -252,7 +252,7 @@ class SubMenu extends Component{
                         }
                     </Row>
 
-                    <Row className="ml-2 mt-2">
+                    <Row id="f2" className="ml-2 mt-2">
                          Mode
                     </Row>
                     
@@ -267,7 +267,7 @@ class SubMenu extends Component{
                         }
                     </Row>
 
-                    <Row className="ml-2 mt-2">
+                    <Row id="f2" className="ml-2 mt-2">
                         Status 
                     </Row>
                     
@@ -283,7 +283,7 @@ class SubMenu extends Component{
                     </Row>
                     
                     <Form onChange={this.handleInputChange}>
-                        <span className="ml-2">Amount</span>
+                        <span id="f2" className="ml-2">Amount</span>
                         <FormGroup row>
                             <Label htmlFor="sAmount" md={2} className="ml-4">From</Label>
                             <Col md={5}>
@@ -304,7 +304,7 @@ class SubMenu extends Component{
                     </Form>
 
                     <Form onChange={this.handleInputChange}>
-                        <span className="ml-2">Date</span>
+                        <span id="f2" className="ml-2">Date</span>
                         <FormGroup row>
                             <Label htmlFor="sDate" md={2} className="ml-4">From</Label>
                             <Col md={8}>
@@ -324,7 +324,7 @@ class SubMenu extends Component{
                         </FormGroup>
                     </Form>
                     
-                    <Row className="ml-2 mt-2">
+                    <Row id="f2" className="ml-2 mt-2">
                         Entity Type
                     </Row>
                     
@@ -339,7 +339,7 @@ class SubMenu extends Component{
                         }
                     </Row>
                     
-                    <Row className="ml-2 mt-2">
+                    <Row id="f2" className="ml-2 mt-2">
                         Sort By
                     </Row>
                     
@@ -374,7 +374,7 @@ class SubMenu extends Component{
                     </FormGroup >
 
                     
-                    <Row className="ml-2 mt-2">
+                    <Row id="f2" className="ml-2 mt-2">
                         Order By
                     </Row>
                     
@@ -399,7 +399,7 @@ class SubMenu extends Component{
                         </Label>
                     </FormGroup >
                     
-                    <Row className="ml-2 mt-2">
+                    <Row id="f2" className="ml-2 mt-2">
                         Entity
                     </Row>
                     <FormGroup row>
@@ -415,7 +415,7 @@ class SubMenu extends Component{
                     </FormGroup>
 
                     <Row className="ml-4">
-                        <Button color="light btn-sm" onClick={this.handleClick}>
+                        <Button color="light btn-sm" id="fltr" onClick={this.handleClick}>
                           Show Transactions
                         </Button>
                    </Row>

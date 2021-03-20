@@ -186,10 +186,10 @@ class Login extends Component {
                 </Form>
                 </div>
             </div>
-            <div className="container ml-5">
-                <div className="row row-content ml-5">
+            <div className="container ml-md-5">
+                <div className="row row-content ml-md-5">
                         <div className="text-center">
-                            <div className="alert alert-primary ml-4">
+                            <div className="alert alert-primary ml-md-4">
                             Or sign in using third-party services
                             </div>
                             <FacebookLogin

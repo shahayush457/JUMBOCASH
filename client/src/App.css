@@ -23,11 +23,11 @@ a:focus {
     SIDEBAR STYLE
 ----------------------------------------------------- */
 .sidebar {
-  min-width: 250px;
-  max-width: 250px;
-  background: #375efb;
+  min-width: 280px;
+  max-width: 280px;
+  background: #7c96ff;
   color: #fff;
-  margin-left: -250px;
+  margin-left: -280px;
   transition: all 0.5s;
   position: relative;
 }
@@ -35,11 +35,11 @@ a:focus {
 .sidebar.is-open {
   margin-left: 0;
   transition: 0.5s;
-  background: #375efb;
+  background: #7c96ff;
 }
 
 .sidebar-header {
-  background: #375efb;
+  background: #7c96ff;
   
 }
 
@@ -54,7 +54,7 @@ a:focus {
 }
 
 .menu-open {
-  background: #375efb;
+  background: #7c96ff;
 }
 
 .nav-item {
@@ -69,7 +69,7 @@ a:focus {
 
 .items-menu {
   color: #fff;
-  background: #375efb;
+  background: #7c96ff;
 }
 
 li a.dropdown-toggle::after {
@@ -141,4 +141,28 @@ li a.dropdown-toggle::after {
     position: relative;
     left: 68%;
   }
+}
+
+#f1 {
+  font-size: 18px;
+}
+
+#f2 {
+  font-size: 18px;
+}
+
+#userimg {
+  position: absolute;
+  right: 10px;
+  bottom: 20px;
+}
+
+#fltr{
+  border-radius: 10px;
+  border-color: rgb(2, 2, 51);
+  margin: auto;
+  background-color: rgb(2, 2, 51);
+  color: white;
+  padding: 5px;
+  font-weight: 700;
 }

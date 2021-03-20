@@ -112,7 +112,7 @@ class EntityFilter extends Component {
           className={classNames("items-menu", { "mb-1": !this.state.collapsed })}
         >
                 <div>
-                  <Row className="ml-2 mt-2">
+                  <Row id="f1" className="ml-2 mt-2">
                       Entity Type
                   </Row>
                 
@@ -127,7 +127,7 @@ class EntityFilter extends Component {
                     }
                   </Row>
 
-                  <Row className="ml-2">
+                  <Row id="f1" className="ml-2">
                       Order Names By
                   </Row>
 
@@ -153,7 +153,7 @@ class EntityFilter extends Component {
                   </FormGroup >
                   
                   <Row className="ml-4">
-                    <Button color="light btn-sm" onClick={this.handleClick}>
+                    <Button color="light btn-sm primary" id="fltr" onClick={this.handleClick}>
                       Show Enitites
                     </Button>
                   </Row>
