@@ -14,7 +14,7 @@ function RenderTrans({ trans }) {
             <CardBody>
                 <div className="row ml-0">
                     <Col md={8}>
-                        <Row tag="h6"><span className="fa fa-rupee fa-lg justify-content-center" />  {trans.amount} </Row>
+                        <Row tag="h5"><span className="fa fa-rupee fa-lg justify-content-center" />  {trans.amount} </Row>
                         <Row tag="h6" className="mb-2 "><i className="fa fa-print"></i>Entity: {trans.entity[0].name}</Row>
                         <Row><i className="fa fa-calendar">{' '+moment(trans.createdAt).format("dddd, MMMM Do YYYY, h:mm:ss a")}</i></Row>
                         <Row className="mt-1">Remarks: {trans.remark}</Row>
@@ -35,10 +35,7 @@ function RenderTrans({ trans }) {
 
 class Transactions extends Component {
 
-    constructor(props) {
-        super(props);
-        
-    }
+   
     render()
     {
         const menu = this.props.transactions.map(trans => {
@@ -50,7 +47,7 @@ class Transactions extends Component {
         });
         return(
             <div className="container-fluid">
-               
+                     <h5 className="mx-auto">Transactions </h5>
                     <div className="row">
                        {menu} 
                      </div>

@@ -12,9 +12,7 @@ import { withRouter } from 'react-router-dom';
 import logo from "../images/logo.png"
 class SideBar extends Component {
 
-  constructor(props){
-    super(props)
-  }
+  
   render()
   {
     return(
@@ -23,7 +21,7 @@ class SideBar extends Component {
           <span color="info" onClick={this.props.toggle} style={{ color: "#fff" }}>
             &times;
           </span>
-          <h3><img src={logo}></img></h3>
+          <h3><img src={logo} alt="logo"></img></h3>
         </div>
         <div className="side-menu">
           <Nav vertical className="list-unstyled pb-3">
@@ -53,7 +51,7 @@ class SideBar extends Component {
             <br></br>
             {
               auth.isAuthenticated() && (
-                        <EntityFilter  setData={this.props.setEntities}  title="Entities"/>
+                        <EntityFilter  toggleside={this.props.toggle} setData={this.props.setEntities}  title="Entities"/>
 
                     
                 )
@@ -62,7 +60,7 @@ class SideBar extends Component {
             {
               auth.isAuthenticated() && (
                    
-                          <SubMenu  setData={this.props.setTrans} title="Transactions"/>
+                          <SubMenu  toggleside={this.props.toggle} setData={this.props.setTrans} title="Transactions"/>
                 )
             }
           </Nav>

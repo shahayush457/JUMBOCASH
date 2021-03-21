@@ -51,7 +51,7 @@ class AddTransaction extends Component {
         read(token).then((data) => {
             //console.log(data);
             
-            if(data.length!=0)
+            if(data.length!==0)
             {
                 if (data.errors) {
                     this.setState({ ...this.state,error:data.errors[0].msg})

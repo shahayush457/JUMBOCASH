@@ -63,7 +63,7 @@ class Login extends Component {
     }
 
     responseGoogle(res) {
-        console.log(JSON.stringify({"access_token":res.accessToken}));
+        //console.log(JSON.stringify({"access_token":res.accessToken}));
         oauthGoogle(res.accessToken).then((data) => {
             //console.log(data);
             //console.log(data);

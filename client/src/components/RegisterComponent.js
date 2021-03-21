@@ -10,7 +10,7 @@ import {Button,
         ModalHeader,
         ModalBody,
         Alert,
-        Row} from 'reactstrap'
+        } from 'reactstrap'
 import {Link} from 'react-router-dom'
 import {create} from '../api/api-auth'
 import {oauthGoogle , oauthFacebook} from '../api/api-oauth'
@@ -85,8 +85,8 @@ class Register extends Component {
     }
     responseGoogle(res) {
         
-        console.log(res.accessToken);
-        console.log(JSON.stringify({"access_token":res.accessToken}));
+        //console.log(res.accessToken);
+        //console.log(JSON.stringify({"access_token":res.accessToken}));
         oauthGoogle(res.accessToken).then((data) => {
             //console.log(data);
             //console.log(data);

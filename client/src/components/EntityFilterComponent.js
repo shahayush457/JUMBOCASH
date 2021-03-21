@@ -11,6 +11,7 @@ import {Row,
 import Checkbox from "../components/Checkbox"
 import { find } from "../api/api-entities";
 import { Link } from "react-router-dom";
+import {withRouter} from "react-router";
 const checkboxes = [
   {
     name: 'customer',
@@ -29,7 +30,6 @@ class EntityFilter extends Component {
 
   constructor(props){
     super(props);
-
     this.state={
       entities:'',
       collapsed:true,
@@ -54,9 +54,24 @@ class EntityFilter extends Component {
         }
         return part;
   }
+  componentDidMount()
+  {
+    var url=this.generateurlmap(this.state.eType,"eType")
+    url+='&orderBy=' + this.state.orderBy        
+    const token=localStorage.getItem('jwtToken');
+    //console.log(this.props);
+    find(url,token).then((data) => {
+      if (data.error) {
+          this.setState({ ...this.state})
+      } else {
+          this.props.setData(data);
+      }
+     
+    })
+  }
   handleClick(e)
   {
-    
+    this.props.toggleside()
     var url=this.generateurlmap(this.state.eType,"eType")
     url+='&orderBy=' + this.state.orderBy        
     e.preventDefault();
@@ -70,6 +85,12 @@ class EntityFilter extends Component {
       }
      
     })
+    if(this.props.location.pathname!="/showentities")
+      {
+        this.props.history.push('/showentities');
+        //console.log(this.props.location);
+      }
+    //this.props.history.push('/showenitites');
   }
 
   handleChange(e) {
@@ -164,4 +185,4 @@ class EntityFilter extends Component {
   }
 }
 
-export default EntityFilter;
+export default withRouter(EntityFilter);

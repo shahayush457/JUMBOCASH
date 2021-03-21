@@ -90,7 +90,7 @@ class UserOverall extends Component {
                    
                 </div>
                     <div className="d-none d-md-block ">
-                        <img id="userimg" src={i2} alt="Hero Image"/>
+                        <img id="userimg" src={i2} alt="Hero"/>
                     </div>
                 </div>
             )
@@ -117,7 +117,7 @@ class UserOverall extends Component {
                         </div> 
                         <div className="header-hero-image d-flex align-items-center wow fadeInRightBig" data-wow-duration="1s" data-wow-delay="1.1s">
                             <div className="image">
-                                <img src={i2} alt="Hero Image"/>
+                                <img src={i2} alt="Hero"/>
                             </div>
                         </div>
                     </div> 

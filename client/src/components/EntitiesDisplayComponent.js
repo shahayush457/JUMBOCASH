@@ -23,10 +23,7 @@ function RenderEntity({ entity }) {
 
 class Entities extends Component {
 
-    constructor(props) {
-        super(props);
-        
-    }
+   
     render()
     {
         const menu = this.props.entities.map(entity => {
@@ -38,7 +35,7 @@ class Entities extends Component {
         });
         return(
             <div className="container-fluid">
-               
+                <h5 className="mx-auto">Entities </h5>
                     <div className="row">
                        {menu} 
                      </div>

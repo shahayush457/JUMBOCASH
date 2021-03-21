@@ -5,6 +5,7 @@ import Checkbox from "../components/Checkbox"
 import { Link } from "react-router-dom";
 import {find} from "../api/api-trans"
 import {read} from '../api/api-entities';
+import {withRouter} from "react-router"
 const checktype = [
     {
       name: 'credit',
@@ -112,6 +113,28 @@ class SubMenu extends Component{
             }
             //console.log(this.state);
         })
+        var url=this.generateurlmap(this.state.tType,"tType")
+        +this.generateurlmap(this.state.eType,"eType")
+        +this.generateurlmap(this.state.tMode,"tMode")
+        +this.generateurlmap(this.state.tStatus,"tStatus")
+        +this.generateurlval(this.state.sAmount,"sAmount")
+        +this.generateurlval(this.state.eAmount,"eAmount")
+        +this.generateurlval(this.state.sDate,"sDate")
+        +this.generateurlval(this.state.eDate,"eDate")
+        +'&orderBy=' + this.state.orderBy
+        +'&sortBy=' + this.state.sortBy
+        if(this.state.entityId)
+        {
+            url+='&entityId=' + this.state.entityId
+        }
+        find(url,token).then((data) => {
+        if (data.error) {
+            this.setState({ ...this.state})
+        } else {
+            this.props.setData(data);
+        }
+  
+        })
     }
     toggle()
     {
@@ -187,6 +210,7 @@ class SubMenu extends Component{
     handleClick(e)
     {
         
+        this.props.toggleside()
         var url=this.generateurlmap(this.state.tType,"tType")
                   +this.generateurlmap(this.state.eType,"eType")
                   +this.generateurlmap(this.state.tMode,"tMode")
@@ -212,6 +236,12 @@ class SubMenu extends Component{
             }
             
         })
+        //console.log(this.props.location);
+        if(this.props.location.pathname!="/showtransaction")
+        {
+            this.props.history.push('/showtransaction');
+            //console.log(this.props.location);
+        }
 
     }
     render()
@@ -427,4 +457,4 @@ class SubMenu extends Component{
 
 }
 
-export default SubMenu;
+export default withRouter(SubMenu);
