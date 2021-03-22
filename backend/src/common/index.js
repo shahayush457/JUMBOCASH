@@ -1,7 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const db = require("./mongo");
+const db = require("../database/mongo");
 const { port } = require("../config/config");
 const log = require("./logger");
 

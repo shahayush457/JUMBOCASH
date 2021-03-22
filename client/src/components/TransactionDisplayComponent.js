@@ -6,7 +6,7 @@ import {
     Col,
     Row
 } from "reactstrap";
-// A functional compoennet to render single entity
+// A functional component to render single entity
 function RenderTrans({ trans }) {
     //console.log(trans);
     return (
@@ -47,7 +47,7 @@ class Transactions extends Component {
         });
         return(
             <div className="container-fluid">
-                     <h5 className="mx-auto">Transactions </h5>
+                     <h5 className="mx-auto">Transactions History </h5>
                     <div className="row">
                        {menu} 
                      </div>

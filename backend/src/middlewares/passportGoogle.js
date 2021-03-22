@@ -1,11 +1,11 @@
 const passport = require("passport");
-const GooglePlusTokenStrategy = require("passport-google-plus-token");
-const User = require("../models/users.model");
+const GoogleTokenStrategy = require("passport-google-token").Strategy;
+const db = require("../database/dbQueries");
 const { clientId, clientSecret } = require("../config/config").oauth.google;
 
 passport.use(
   "google-token",
-  new GooglePlusTokenStrategy(
+  new GoogleTokenStrategy(
     {
       clientID: clientId,
       clientSecret: clientSecret
@@ -15,7 +15,11 @@ passport.use(
         console.log(profile);
 
         // find user in db by email
-        const userInDb = await User.findOne({ email: profile.emails[0].value });
+        const userInDb = await db.findOneDocument(
+          "user",
+          { email: profile.emails[0].value },
+          false
+        );
 
         // if user already signed in using google
         if (userInDb && userInDb.method.includes("google", 0))
@@ -24,22 +28,22 @@ passport.use(
         // if user registered with some other method but not using google
         if (userInDb) {
           userInDb.method.push("google");
-          await userInDb.save();
+          await db.updateData(userInDb);
           return done(null, userInDb);
         }
 
         // if user is registering to the app for the first time
-        const newUser = new User({
+        const newUser = await db.createData("user", {
           method: ["google"],
           name: profile.displayName,
           email: profile.emails[0].value
         });
-        await newUser.save();
+
         done(null, newUser);
       } catch (err) {
         done(err, false, {
           status: 400,
-          message: [{ msg: error.message }]
+          message: [{ msg: err.message }]
         });
       }
     }

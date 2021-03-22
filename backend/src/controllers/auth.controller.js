@@ -1,31 +1,32 @@
 const jwt = require("jsonwebtoken");
 const { validationResult } = require("express-validator");
 const { jwt_secret } = require("../config/config");
-const db = require("../models/users.model");
+const db = require("../database/dbQueries");
 
 // for development only
 exports.getUsers = async (req, res, next) => {
   try {
-    const users = await db.find();
+    const users = await db.find("user", {}, {}, true);
     return res.status(200).json(users);
   } catch (err) {
     return next({
       status: 400,
-      message: [{ msg: error.message }]
+      message: [{ msg: err.message }]
     });
   }
 };
 
-exports.getUserbyId = async (req,res,next) =>{
-  try{
+exports.getUserbyId = async (req, res, next) => {
+  try {
     const { id: userId } = req.decoded;
-    const user= await db.findById(userId);
+    const user = await db.findById("user", userId, true);
     return res.status(200).json(user);
-  }
-  catch(err){
+  } catch (err) {
     return next({ status: 400, message: err.message });
   }
-}
+};
+
+
 // For registering user
 exports.register = async (req, res, next) => {
   try {
@@ -39,9 +40,13 @@ exports.register = async (req, res, next) => {
       return;
     }
 
-    const user = await db.findOne({
-      email: req.body.email
-    });
+    const user = await db.findOneDocument(
+      "user",
+      {
+        email: req.body.email
+      },
+      false
+    );
 
     if (user) {
       // registered user
@@ -53,9 +58,11 @@ exports.register = async (req, res, next) => {
       } else {
         user.password = req.body.password;
         user.method.push("local");
-        await user.save();
-        const { id, email } = user;
-        const token = jwt.sign({ id, email }, jwt_secret);
+
+        await db.updateData(user);
+
+        const { id, name, email } = user;
+        const token = jwt.sign({ id, name, email }, jwt_secret);
         return res.status(201).json({
           id,
           email,
@@ -66,9 +73,9 @@ exports.register = async (req, res, next) => {
 
     // first time
     req.body.method = ["local"];
-    const newuser = await db.create(req.body);
-    const { id, email,name } = newuser;
-    const token = jwt.sign({ id,name }, jwt_secret);
+    const newuser = await db.createData("user", req.body);
+    const { id, name, email } = newuser;
+    const token = jwt.sign({ id, name, email }, jwt_secret);
 
     return res.status(201).json({
       id,
@@ -81,7 +88,7 @@ exports.register = async (req, res, next) => {
     }
     return next({
       status: 400,
-      message: [{ msg: error.message }]
+      message: [{ msg: err.message }]
     });
   }
 };
@@ -98,15 +105,20 @@ exports.login = async (req, res, next) => {
       return;
     }
 
-    const user = await db.findOne({
-      email: req.body.email
-    });
-    const { id, email,name } = user;
+    const user = await db.findOneDocument(
+      "user",
+      {
+        email: req.body.email
+      },
+      false
+    );
+
+    const { id, name, email } = user;
 
     if (user.method.includes("local", 0)) {
       const valid = await user.comparePassword(req.body.password);
       if (valid) {
-        const token = jwt.sign({ id,name  }, jwt_secret);
+        const token = jwt.sign({ id, name, email }, jwt_secret);
         return res.status(200).json({
           id,
           email,
@@ -130,6 +142,6 @@ exports.login = async (req, res, next) => {
       });
     }
   } catch (err) {
-    return next({ status: 400, message: [{ msg: error.message }] });
+    return next({ status: 400, message: [{ msg: err.message }] });
   }
 };

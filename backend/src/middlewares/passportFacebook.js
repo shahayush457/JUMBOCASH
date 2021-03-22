@@ -1,6 +1,6 @@
 const passport = require("passport");
 const FacebookTokenStrategy = require("passport-facebook-token");
-const User = require("../models/users.model");
+const db = require("../database/dbQueries");
 const { clientId, clientSecret } = require("../config/config").oauth.facebook;
 
 passport.use(
@@ -16,7 +16,11 @@ passport.use(
         console.log(profile);
 
         // find user in db by email
-        const userInDb = await User.findOne({ email: profile.emails[0].value });
+        const userInDb = await db.findOneDocument(
+          "user",
+          { email: profile.emails[0].value },
+          false
+        );
 
         // if user already signed in using facebook
         if (userInDb && userInDb.method.includes("facebook", 0))
@@ -25,22 +29,21 @@ passport.use(
         // if user registered with some other method but not using facebook
         if (userInDb) {
           userInDb.method.push("facebook");
-          await userInDb.save();
+          await db.updateData(userInDb);
           return done(null, userInDb);
         }
 
         // if user is registering to the app for the first time
-        const newUser = new User({
+        const newUser = await db.createData("user", {
           method: ["facebook"],
           name: profile.displayName,
           email: profile.emails[0].value
         });
-        await newUser.save();
         done(null, newUser);
       } catch (err) {
         done(err, false, {
           status: 400,
-          message: [{ msg: error.message }]
+          message: [{ msg: err.message }]
         });
       }
     }

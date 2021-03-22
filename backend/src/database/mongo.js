@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const log = require("./logger");
+const log = require("../common/logger");
 const { db_url } = require("../config/config");
 
 mongoose
