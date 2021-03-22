@@ -16,6 +16,7 @@ import {create} from '../api/api-auth'
 import {oauthGoogle , oauthFacebook} from '../api/api-oauth'
 import GoogleLogin from 'react-google-login';
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
+import config from '../config'
 class Register extends Component {
     
     constructor(props)
@@ -104,7 +105,7 @@ class Register extends Component {
         
         oauthFacebook(res.accessToken).then((data) => {
             //console.log(data);
-            if (data.errors) 
+            if (data.error) 
             {
                 this.setState({ ...this.state, error: data.errors[0].msg})
             } 
@@ -207,7 +208,7 @@ class Register extends Component {
                             Or register using third-party services
                             </div>
                             <FacebookLogin
-                                appId="435566974381314"
+                                appId={config.facebook}
                                 render={renderProps => (
                                     <button style={{ marginRight: 15 }} className="btn btn-primary" onClick={renderProps.onClick}><i class="fa fa-facebook-square" aria-hidden="true"></i> Facebook</button>
                                 )}
@@ -216,7 +217,7 @@ class Register extends Component {
                                 cssClass="btn btn-outline-primary"
                             />
                         <GoogleLogin 
-                                clientId="395911397838-qevt8tlmbbrs21h7f5devar2lf2cm120.apps.googleusercontent.com"
+                                clientId={config.google}
                                 render={renderProps => (
                                     <button className="btn btn-danger" onClick={renderProps.onClick} disabled={renderProps.disabled}><i class="fa fa-google" aria-hidden="true"></i> Google</button>
                                 )}
