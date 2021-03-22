@@ -25,7 +25,7 @@ class SideBar extends Component {
         </div>
         <div className="side-menu">
           <Nav vertical className="list-unstyled pb-3">
-            <p className="ml-5">Dashboard</p> 
+            {/* <p className="ml-5">Dashboard</p>  */}
             {
               auth.isAuthenticated() && (
                   <NavItem>
@@ -52,7 +52,6 @@ class SideBar extends Component {
             {
               auth.isAuthenticated() && (
                         <EntityFilter  toggleside={this.props.toggle} setData={this.props.setEntities}  title="Entities"/>
-
                     
                 )
             }

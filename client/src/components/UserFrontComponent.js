@@ -90,7 +90,7 @@ class UserOverall extends Component {
                    
                 </div>
                     <div className="d-none d-md-block ">
-                        <img id="userimg" src={i2} alt="Hero"/>
+                        {/* <img id="userimg" src={i2} alt="Hero"/> */}
                     </div>
                 </div>
             )

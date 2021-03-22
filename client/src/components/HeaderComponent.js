@@ -44,11 +44,16 @@ class Header extends Component {
             <NavbarToggler onClick={this.toggleNav} />
             <Collapse isOpen={this.state.isNavOpen} navbar>
               <Nav navbar className="ml-auto">
-                <NavItem>
-                  <NavLink className="nav-link" to="/">
-                    <span className="fa fa-home fa-lg" /> Dashboard
-                  </NavLink>
-                </NavItem>
+                  {
+                    auth.isAuthenticated() && (
+                      <NavItem>
+                        <NavLink className="nav-link" to="/">
+                          <span className="fa fa-home fa-lg" /> Dashboard
+                        </NavLink>
+                      </NavItem>
+                      )
+                  }
+                     
                   {
                     !auth.isAuthenticated() && (
                         <NavItem>
