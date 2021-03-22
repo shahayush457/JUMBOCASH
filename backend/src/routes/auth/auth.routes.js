@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const handle = require("../../controllers/auth.controller");
+const auth = require("../../middlewares/isAuthenticated.jwt")
 const validator = require("../../utils/validators/validateAuth");
 const sanitiser = require("../../utils/sanitisers/sanitiseAuth");
 
@@ -9,6 +10,13 @@ const sanitiser = require("../../utils/sanitisers/sanitiseAuth");
  * @access    Public
  */
 router.get("/", handle.getUsers);
+
+/**
+ * @route     GET /api/v1/user
+ * @desc      Get all users (for development only)
+ * @access    Private
+ */
+ router.get("/user", auth,handle.getUserbyId);
 
 /**
  * @route     POST /api/v1/auth/register

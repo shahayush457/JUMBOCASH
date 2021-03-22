@@ -8,9 +8,9 @@ exports.validate = method => {
         body("email", "A valid email is required")
           .exists()
           .isEmail(),
-        body("password", "Password of length atleast 5 is required")
+        body("password", "Password of length atleast 6 is required")
           .exists()
-          .isLength({ min: 5 })
+          .isLength({ min: 6 })
       ];
     }
 
@@ -19,8 +19,7 @@ exports.validate = method => {
         body("email", "A valid email is required")
           .exists()
           .isEmail(),
-        body("password", "Password is required")
-          .exists()
+        body("password", "Password is required").exists()
       ];
     }
   }

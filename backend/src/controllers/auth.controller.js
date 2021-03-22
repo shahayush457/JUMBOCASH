@@ -16,6 +16,17 @@ exports.getUsers = async (req, res, next) => {
   }
 };
 
+exports.getUserbyId = async (req,res,next) =>{
+  try{
+    const { id: userId } = req.decoded;
+    const user= await db.findById(userId);
+    return res.status(200).json(user);
+  }
+  catch(err){
+    return next({ status: 400, message: err.message });
+  }
+}
+// For registering user
 exports.register = async (req, res, next) => {
   try {
     // Finds the validation errors in this request and wraps them in an object
@@ -37,7 +48,7 @@ exports.register = async (req, res, next) => {
       if (user.method.includes("local", 0)) {
         return next({
           status: 409,
-          message: [{ msg: "Email is already registered. Please Signin" }]
+          message: [{ msg: "Email is already registered. Please login" }]
         });
       } else {
         user.password = req.body.password;
@@ -56,8 +67,8 @@ exports.register = async (req, res, next) => {
     // first time
     req.body.method = ["local"];
     const newuser = await db.create(req.body);
-    const { id, email } = newuser;
-    const token = jwt.sign({ id, email }, jwt_secret);
+    const { id, email,name } = newuser;
+    const token = jwt.sign({ id,name }, jwt_secret);
 
     return res.status(201).json({
       id,
@@ -66,7 +77,7 @@ exports.register = async (req, res, next) => {
     });
   } catch (err) {
     if (err.code === 11000) {
-      err.message = "Email is already registered. Please Signin";
+      err.message = "Email is already registered. Please login";
     }
     return next({
       status: 400,
@@ -90,12 +101,12 @@ exports.login = async (req, res, next) => {
     const user = await db.findOne({
       email: req.body.email
     });
-    const { id, email } = user;
+    const { id, email,name } = user;
 
     if (user.method.includes("local", 0)) {
       const valid = await user.comparePassword(req.body.password);
       if (valid) {
-        const token = jwt.sign({ id, email }, jwt_secret);
+        const token = jwt.sign({ id,name  }, jwt_secret);
         return res.status(200).json({
           id,
           email,

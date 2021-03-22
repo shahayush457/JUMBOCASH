@@ -274,11 +274,6 @@ exports.getFilteredTransactions = async (req, res, next) => {
       $in: req.query.tStatus
     };
 
-    if (req.query.entityId)
-      filter.entityId = {
-        $in: req.query.entityId.map(id => mongoose.Types.ObjectId(id))
-      };
-
     filter.amount = {
       $gte: req.query.sAmount,
       $lte: req.query.eAmount
@@ -301,6 +296,26 @@ exports.getFilteredTransactions = async (req, res, next) => {
       };
     }
 
+    // Add filter queries for entities fields
+    filter["entity.entityType"] = {
+      $in: req.query.eType
+    };
+
+    if (req.query.eName)
+      filter["entity.name"] = {
+        $in: req.query.eName
+      };
+
+    if (req.query.eAddress)
+      filter["entity.address"] = {
+        $in: req.query.eAddress
+      };
+
+    if (req.query.entityId)
+      filter.entityId = {
+        $in: req.query.entityId.map(id => mongoose.Types.ObjectId(id))
+      };
+
     // Add sorting queries applied by the user
     sort[req.query.sortBy] = req.query.orderBy;
 
@@ -308,9 +323,17 @@ exports.getFilteredTransactions = async (req, res, next) => {
     const limit = req.query.limit;
     const skip = req.query.pageNo * limit - limit;
 
-    console.log(filter);
+    log.info(filter);
 
     const transactions = await Transaction.aggregate([
+      {
+        $lookup: {
+          from: Entity.collection.name, // Mongoose pluralize the collection name at the time of creation (Entity -> entities)
+          localField: "entityId",
+          foreignField: "_id",
+          as: "entity"
+        }
+      },
       { $match: filter },
       { $sort: sort },
       { $skip: skip },

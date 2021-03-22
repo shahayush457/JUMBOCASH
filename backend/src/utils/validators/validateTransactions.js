@@ -75,6 +75,9 @@ exports.validate = method => {
         query("tStatus")
           .optional()
           .isIn(["pending", "paid"]),
+        query("eType")
+          .optional()
+          .isIn(["vendor", "customer"]),
         query("sAmount")
           .optional()
           .isInt(),
