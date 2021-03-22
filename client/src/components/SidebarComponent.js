@@ -2,18 +2,17 @@ import React,{Component} from "react";
 import { NavItem, 
          NavLink, 
          Nav,
-         Button } from "reactstrap";
+        } from "reactstrap";
 import classNames from "classnames";
 import { Link } from "react-router-dom";
 import auth from "../api/auth-helper"
 import EntityFilter from "../components/EntityFilterComponent";
 import SubMenu from "../components/TransactionFilterComponent";
 import { withRouter } from 'react-router-dom';
+import logo from "../images/logo.png"
 class SideBar extends Component {
 
-  constructor(props){
-    super(props)
-  }
+  
   render()
   {
     return(
@@ -22,15 +21,15 @@ class SideBar extends Component {
           <span color="info" onClick={this.props.toggle} style={{ color: "#fff" }}>
             &times;
           </span>
-          <h3>Cash Flow</h3>
+          <h3><img src={logo} alt="logo"></img></h3>
         </div>
         <div className="side-menu">
           <Nav vertical className="list-unstyled pb-3">
-            <p className="ml-5">Dashboard</p> 
+            {/* <p className="ml-5">Dashboard</p>  */}
             {
               auth.isAuthenticated() && (
                   <NavItem>
-                    <NavLink tag={Link} to={"/entity"}>
+                    <NavLink onClick={this.props.toggle} tag={Link} to={"/entity"}>
                       <span className="fa fa-plus ml-4 mr-2"/>
                       Add Entity
                     </NavLink>
@@ -42,7 +41,7 @@ class SideBar extends Component {
             {
               auth.isAuthenticated() && (
                   <NavItem>
-                    <NavLink tag={Link} to={"/transaction"}>
+                    <NavLink onClick={this.props.toggle} tag={Link} to={"/transaction"}>
                       <span className="fa fa-plus ml-4 mr-2"/>
                       Add Transaction
                     </NavLink>
@@ -52,8 +51,7 @@ class SideBar extends Component {
             <br></br>
             {
               auth.isAuthenticated() && (
-                        <EntityFilter  setData={this.props.setEntities}  title="Entities"/>
-
+                        <EntityFilter  toggleside={this.props.toggle} setData={this.props.setEntities}  title="Entities"/>
                     
                 )
             }
@@ -61,7 +59,7 @@ class SideBar extends Component {
             {
               auth.isAuthenticated() && (
                    
-                          <SubMenu  setData={this.props.setTrans} title="Transactions"/>
+                          <SubMenu  toggleside={this.props.toggle} setData={this.props.setTrans} title="Transactions"/>
                 )
             }
           </Nav>

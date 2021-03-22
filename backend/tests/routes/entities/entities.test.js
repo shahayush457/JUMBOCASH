@@ -19,7 +19,7 @@ describe("Integration Tests - Entity routes", () => {
       .send({
         name: "Ayush Shah",
         email: "shahayush457@gmail.com",
-        password: "test"
+        password: "testtest"
       })
       .end((err, user) => {
         expect(user.status).to.equal(201);
@@ -108,7 +108,7 @@ describe("Integration Tests - Entity routes", () => {
       expect(res.body.userId).to.be.equal(userId);
     });
 
-    it("It should return status 400 - Missing entityType", async () => {
+    it("It should return status 422 - Missing entityType", async () => {
       const entity = {
         userId,
         name: "Ayush Shah",
@@ -120,10 +120,10 @@ describe("Integration Tests - Entity routes", () => {
         .post("/api/v1/entities")
         .set("authorization", "Bearer " + token)
         .send(entity);
-      expect(res.status).to.equal(400);
+      expect(res.status).to.equal(422);
     });
 
-    it("It should return status 400 - Missing name", async () => {
+    it("It should return status 422 - Missing name", async () => {
       const entity = {
         userId,
         address: "India",
@@ -135,10 +135,10 @@ describe("Integration Tests - Entity routes", () => {
         .post("/api/v1/entities")
         .set("authorization", "Bearer " + token)
         .send(entity);
-      expect(res.status).to.equal(400);
+      expect(res.status).to.equal(422);
     });
 
-    it("It should return status 400 - Missing contactNo", async () => {
+    it("It should return status 422 - Missing contactNo", async () => {
       const entity = {
         userId,
         name: "Ayush Shah",
@@ -150,10 +150,10 @@ describe("Integration Tests - Entity routes", () => {
         .post("/api/v1/entities")
         .set("authorization", "Bearer " + token)
         .send(entity);
-      expect(res.status).to.equal(400);
+      expect(res.status).to.equal(422);
     });
 
-    it("It should return status 400 - Missing address", async () => {
+    it("It should return status 422 - Missing address", async () => {
       const entity = {
         userId,
         name: "Ayush Shah",
@@ -165,7 +165,7 @@ describe("Integration Tests - Entity routes", () => {
         .post("/api/v1/entities")
         .set("authorization", "Bearer " + token)
         .send(entity);
-      expect(res.status).to.equal(400);
+      expect(res.status).to.equal(422);
     });
   });
 
@@ -175,12 +175,12 @@ describe("Integration Tests - Entity routes", () => {
       done();
     });
 
-    it("It should return status 404 - Invalid entity id", async () => {
+    it("It should return status 422 - Entity id not a mongo id", async () => {
       const res = await chai
         .request(app)
         .get("/api/v1/entities/ddd")
         .set("authorization", "Bearer " + token);
-      expect(res.status).to.equal(404);
+      expect(res.status).to.equal(422);
     });
 
     it("It should return status 200 and entity object of given entity id", async () => {
@@ -207,7 +207,7 @@ describe("Integration Tests - Entity routes", () => {
       done();
     });
 
-    it("It should return status 404 - Invalid entity id", async () => {
+    it("It should return status 422 - Entity id not a mongo id", async () => {
       const entity = {
         name: "Ayush Shah",
         address: "USA",
@@ -219,7 +219,7 @@ describe("Integration Tests - Entity routes", () => {
         .patch("/api/v1/entities/ddd")
         .set("authorization", "Bearer " + token)
         .send(entity);
-      expect(res.status).to.equal(404);
+      expect(res.status).to.equal(422);
     });
 
     it("It should successfully update the entityType", async () => {

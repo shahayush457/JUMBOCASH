@@ -1,23 +1,23 @@
 import React, { Component } from "react";
-import { Switch, Route, Redirect, withRouter } from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
 import Header from "../components/HeaderComponent"
 import Register from "../components/RegisterComponent"
 import Login from "../components/LoginComponent"
 import SideBar from "../components/SidebarComponent"
 import classNames from "classnames";
 import { Container } from "reactstrap";
-import auth from "../api/auth-helper"
 import AddEntity from "./EntityAddComponent";
 import UserOverall from "./UserFrontComponent";
 import AddTransaction from "./TransactionAddComponent";
 import Entities from "./EntitiesDisplayComponent";
 import Transactions from "./TransactionDisplayComponent";
+
 class Main extends Component {
 
     constructor(props){
       super(props);
       this.state={
-        sidebarIsOpen:true,
+        sidebarIsOpen:false,
         entities:[],
         trans:[],
       }
@@ -53,6 +53,7 @@ class Main extends Component {
             className={classNames("content", { "is-open": this.state.sidebarIsOpen })}
           >
             <Header toggleSidebar={this.toggleSidebar}/>
+            
             <Switch>
                 <Route
                   exact path='/'
@@ -60,19 +61,19 @@ class Main extends Component {
                 />  
                 <Route
                   exact path='/showtransaction'
-                  component={() => <Transactions transactions={this.state.trans} />}
+                  component={() => <Transactions toggleSidebar={this.toggleSidebar} transactions={this.state.trans} />}
                 />
                  <Route
                   exact path='/showentities'
                   component={() => {
-                                      return <Entities entities={this.state.entities}/>
+                                      return <Entities toggleSidebar={this.toggleSidebar} entities={this.state.entities}/>
                                   }
                             }
                 />
-                <Route exact path='/transaction' component={AddTransaction}/>
+                <Route exact path='/transaction' toggleSidebar={this.toggleSidebar} component={AddTransaction}/>
                 <Route exact path='/register' component={Register}/>
                 <Route exact path='/login' component={Login}/>
-                <Route exact path='/entity' component={AddEntity}/>
+                <Route exact path='/entity' toggleSidebar={this.toggleSidebar} component={AddEntity}/>
             </Switch>
           </Container>
         </div>

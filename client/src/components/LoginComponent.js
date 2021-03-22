@@ -5,7 +5,6 @@ import {Button,
         Label,
         Input,
         Col,
-        Row,
         FormFeedback, 
         Modal,
         ModalHeader,
@@ -13,6 +12,9 @@ import {Button,
         Alert} from 'reactstrap'
 import {signin} from '../api/api-auth'
 import auth from '../api/auth-helper'
+import {oauthGoogle , oauthFacebook} from '../api/api-oauth'
+import GoogleLogin from 'react-google-login';
+import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
 
 class Login extends Component {
     
@@ -32,6 +34,8 @@ class Login extends Component {
         this.toggleModal=this.toggleModal.bind(this);
         this.handleSubmit=this.handleSubmit.bind(this);
         this.handleInputChange=this.handleInputChange.bind(this);
+        this.responseGoogle = this.responseGoogle.bind(this);
+        this.responseFacebook = this.responseFacebook.bind(this);
     }
 
     handleBlur=(field)=>(evt)=>
@@ -56,6 +60,41 @@ class Login extends Component {
         const value = target.value;
         const name=target.name;
         this.setState({[name]:value})
+    }
+
+    responseGoogle(res) {
+        //console.log(JSON.stringify({"access_token":res.accessToken}));
+        oauthGoogle(res.accessToken).then((data) => {
+            //console.log(data);
+            //console.log(data);
+            if (data.errors) 
+            {
+                this.setState({ ...this.state, error: data.errors[0].msg})
+            } 
+            else
+            {
+                auth.authenticate(data.token, () => {
+                    this.setState({ ...this.state, error: '' ,open: true})
+                })
+            } 
+        })
+    }
+    
+    responseFacebook(res) {
+        //console.log(JSON.stringify({"access_token":res.accessToken}));
+        oauthFacebook(res.accessToken).then((data) => {
+            //console.log(data);
+            if (data.errors) 
+            {
+                this.setState({ ...this.state, error: data.errors[0].msg})
+            } 
+            else
+            {
+                auth.authenticate(data.token, () => {
+                    this.setState({ ...this.state, error: '' ,open: true})
+                })
+            } 
+        })
     }
 
     validate=(email,password)=>
@@ -147,7 +186,33 @@ class Login extends Component {
                 </Form>
                 </div>
             </div>
-            
+            <div className="container ml-md-5">
+                <div className="row row-content ml-md-5">
+                        <div className="text-center">
+                            <div className="alert alert-primary ml-md-4">
+                            Or sign in using third-party services
+                            </div>
+                            <FacebookLogin
+                                appId="435566974381314"
+                                render={renderProps => (
+                                    <button style={{ marginRight: 15 }} className="btn btn-primary" onClick={renderProps.onClick}><i class="fa fa-facebook" aria-hidden="true"></i> Facebook</button>
+                                )}
+                                fields="name,email,picture"
+                                callback={this.responseFacebook}
+                                cssClass="btn btn-outline-primary"
+                            />
+                        <GoogleLogin 
+                                clientId="395911397838-qevt8tlmbbrs21h7f5devar2lf2cm120.apps.googleusercontent.com"
+                                render={renderProps => (
+                                    <button className="btn btn-danger" onClick={renderProps.onClick} disabled={renderProps.disabled}><i class="fa fa-google" aria-hidden="true"></i> Google</button>
+                                )}
+                                onSuccess={this.responseGoogle}
+                                onFailure={this.responseGoogle}
+                                className="btn btn-outline-danger"
+                            />
+                        </div>
+                </div>
+            </div>
             <Modal isOpen={this.state.open} toggle={this.toggleModal}>
               <ModalHeader toggle={this.toggleModal}>Login</ModalHeader>
               <ModalBody>

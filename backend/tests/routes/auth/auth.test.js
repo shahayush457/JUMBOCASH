@@ -18,7 +18,7 @@ describe("Integration Tests - Auth routes", () => {
         .send({
           name: "Ayush Shah",
           email: "fake@gmail.com",
-          password: "test"
+          password: "testtest"
         });
       expect(user.status).to.be.equal(201);
       expect(user.body).to.be.have.property("token");
@@ -31,9 +31,9 @@ describe("Integration Tests - Auth routes", () => {
         .send({
           name: "Ayush Shah",
           email: "fake@gmail.com",
-          password: "test"
+          password: "testtest"
         });
-      expect(user.status).to.be.equal(400);
+      expect(user.status).to.be.equal(409);
     });
 
     it("It should not register the user - email field missing", async () => {
@@ -44,7 +44,19 @@ describe("Integration Tests - Auth routes", () => {
           name: "Ayush Shah",
           password: "test"
         });
-      expect(user.status).to.be.equal(400);
+      expect(user.status).to.be.equal(422);
+    });
+
+    it("It should not register the user - password should be atleast 6 characters long", async () => {
+      const user = await chai
+        .request(app)
+        .post("/api/v1/auth/register")
+        .send({
+          name: "Ayush Shah",
+          email: "fake@gmail.com",
+          password: "test"
+        });
+      expect(user.status).to.be.equal(422);
     });
   });
 
@@ -56,16 +68,17 @@ describe("Integration Tests - Auth routes", () => {
         .send({
           name: "Ayush Shah",
           email: "login@gmail.com",
-          password: "test"
+          password: "testtest"
         });
     });
+    
     it("It should successfully login the user", async () => {
       const user = await chai
         .request(app)
         .post("/api/v1/auth/login")
         .send({
           email: "login@gmail.com",
-          password: "test"
+          password: "testtest"
         });
       expect(user.status).to.be.equal(200);
       expect(user.body).to.be.have.property("token");
@@ -77,18 +90,7 @@ describe("Integration Tests - Auth routes", () => {
         .post("/api/v1/auth/login")
         .send({
           email: "fakelogin@gmail.com",
-          password: "test"
-        });
-      expect(user.status).to.be.equal(400);
-    });
-
-    it("It should not login the user - invalid email", async () => {
-      const user = await chai
-        .request(app)
-        .post("/api/v1/auth/login")
-        .send({
-          email: "fakelogin@gmail.com",
-          password: "test"
+          password: "testtest"
         });
       expect(user.status).to.be.equal(400);
     });
@@ -101,7 +103,7 @@ describe("Integration Tests - Auth routes", () => {
           email: "login@gmail.com",
           password: "fake"
         });
-      expect(user.status).to.be.equal(400);
+      expect(user.status).to.be.equal(401);
     });
   });
 

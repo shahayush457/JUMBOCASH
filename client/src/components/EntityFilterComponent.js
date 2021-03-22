@@ -1,4 +1,4 @@
-import React, { Component, useState } from "react";
+import React, { Component } from "react";
 import classNames from "classnames";
 import {Row,
         Collapse, 
@@ -11,6 +11,7 @@ import {Row,
 import Checkbox from "../components/Checkbox"
 import { find } from "../api/api-entities";
 import { Link } from "react-router-dom";
+import {withRouter} from "react-router";
 const checkboxes = [
   {
     name: 'customer',
@@ -29,7 +30,6 @@ class EntityFilter extends Component {
 
   constructor(props){
     super(props);
-
     this.state={
       entities:'',
       collapsed:true,
@@ -54,9 +54,24 @@ class EntityFilter extends Component {
         }
         return part;
   }
+  componentDidMount()
+  {
+    var url=this.generateurlmap(this.state.eType,"eType")
+    url+='&orderBy=' + this.state.orderBy        
+    const token=localStorage.getItem('jwtToken');
+    //console.log(this.props);
+    find(url,token).then((data) => {
+      if (data.error) {
+          this.setState({ ...this.state})
+      } else {
+          this.props.setData(data);
+      }
+     
+    })
+  }
   handleClick(e)
   {
-    
+    this.props.toggleside()
     var url=this.generateurlmap(this.state.eType,"eType")
     url+='&orderBy=' + this.state.orderBy        
     e.preventDefault();
@@ -70,6 +85,12 @@ class EntityFilter extends Component {
       }
      
     })
+    if(this.props.location.pathname!="/showentities")
+      {
+        this.props.history.push('/showentities');
+        //console.log(this.props.location);
+      }
+    //this.props.history.push('/showenitites');
   }
 
   handleChange(e) {
@@ -93,7 +114,7 @@ class EntityFilter extends Component {
   }
   render()
   {
-    const { title, items } = this.props;
+    
     return (
       <div>
         <NavItem
@@ -112,7 +133,7 @@ class EntityFilter extends Component {
           className={classNames("items-menu", { "mb-1": !this.state.collapsed })}
         >
                 <div>
-                  <Row className="ml-2 mt-2">
+                  <Row id="f1" className="ml-2 mt-2">
                       Entity Type
                   </Row>
                 
@@ -127,12 +148,12 @@ class EntityFilter extends Component {
                     }
                   </Row>
 
-                  <Row className="ml-2">
+                  <Row id="f1" className="ml-2">
                       Order Names By
                   </Row>
 
                   <FormGroup row>
-                    <Label className="ml-5 col-4">
+                    <Label className="ml-5 col-3">
                         <Input
                         type="radio"
                         value="1"
@@ -141,7 +162,7 @@ class EntityFilter extends Component {
                         />
                         Ascending
                     </Label>
-                    <Label className="ml-4 col">
+                    <Label className="ml-5 col">
                         <Input
                         type="radio"
                         value="-1"
@@ -153,7 +174,7 @@ class EntityFilter extends Component {
                   </FormGroup >
                   
                   <Row className="ml-4">
-                    <Button color="primary" onClick={this.handleClick}>
+                    <Button color="light btn-sm primary" id="fltr" onClick={this.handleClick}>
                       Show Enitites
                     </Button>
                   </Row>
@@ -164,4 +185,4 @@ class EntityFilter extends Component {
   }
 }
 
-export default EntityFilter;
+export default withRouter(EntityFilter);

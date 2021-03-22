@@ -1,11 +1,11 @@
 const passport = require("passport");
-const GooglePlusTokenStrategy = require("passport-google-plus-token");
+const GoogleTokenStrategy = require("passport-google-token").Strategy;
 const db = require("../database/dbQueries");
 const { clientId, clientSecret } = require("../config/config").oauth.google;
 
 passport.use(
   "google-token",
-  new GooglePlusTokenStrategy(
+  new GoogleTokenStrategy(
     {
       clientID: clientId,
       clientSecret: clientSecret

@@ -9,7 +9,7 @@ const auth = {
   },
   authenticate(jwtToken, cb) {
     localStorage.setItem('jwtToken', JSON.stringify(jwtToken))
-    console.log(decode(localStorage.jwtToken))
+    //console.log(decode(localStorage.jwtToken))
     cb()
   },
   clearJWT() {
