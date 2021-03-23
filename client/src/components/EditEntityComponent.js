@@ -122,7 +122,7 @@ class EditEntity extends Component {
         const reg = /^\d+$/;
 
         if (this.state.touched.contactNo && !reg.test(contactNo))
-            errors.contactNo = 'contact number should contain only numbers';
+            errors.contactNo = 'Contact number should contain only numbers';
 
         return errors;
     };

@@ -105,8 +105,8 @@ class Login extends Component {
             email:''
         }
 
-        if(this.state.touched.password && password.length<6)
-            errors.password='Password should be greater than 6 characters';
+        if(this.state.touched.password && password.length<0)
+            errors.password='Password is required';
 
         if(this.state.touched.email && email.split('').filter(x=>x==='@').length!=1)
             errors.email='Email is not valid';

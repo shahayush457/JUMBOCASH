@@ -172,7 +172,7 @@ class EditTransaction extends Component {
         const reg = /^\d+$/;
 
         if (this.state.touched.amount && !reg.test(amount))
-            errors.amount = 'amount should contain only numbers';
+            errors.amount = 'Amount should contain only numbers';
 
         return errors;
     };
