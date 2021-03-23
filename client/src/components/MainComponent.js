@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, BrowserRouter } from "react-router-dom";
 import Header from "../components/HeaderComponent"
 import Register from "../components/RegisterComponent"
 import Login from "../components/LoginComponent"
@@ -47,6 +47,7 @@ class Main extends Component {
     {
       return (
         <div className="App wrapper">
+          <BrowserRouter>
           <SideBar setEntities={this.setEntities} setTrans={this.setTrans} toggle={this.toggleSidebar} isOpen={this.state.sidebarIsOpen} />
           <Container
             fluid
@@ -76,6 +77,7 @@ class Main extends Component {
                 <Route exact path='/entity' toggleSidebar={this.toggleSidebar} component={AddEntity}/>
             </Switch>
           </Container>
+          </BrowserRouter>
         </div>
       );
     }

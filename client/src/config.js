@@ -1,5 +1,5 @@
 const config = {
-    server: 'http://localhost:8081/api/v1',
+    server: 'https://jumbocash.herokuapp.com/api/v1/',
     base: 'http://localhost:3000'
 };
 
