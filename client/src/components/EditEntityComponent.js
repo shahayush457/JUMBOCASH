@@ -8,9 +8,9 @@ import { Alert,
          Input, 
          Col, 
          FormFeedback } from 'reactstrap';
-import {create} from '../api/api-entities'
+import {editone,readone} from '../api/api-entities'
 
-class AddEntity extends Component {
+class EditEntity extends Component {
 
     constructor(props) {
         super(props);
@@ -34,7 +34,22 @@ class AddEntity extends Component {
         this.handleBlur = this.handleBlur.bind(this);
         this.toggleModal=this.toggleModal.bind(this);
     }
-
+    componentDidMount()
+    {   
+        const token=localStorage.getItem('jwtToken');
+        console.log(this.props)
+        readone(token,this.props.match.params.entityId).then((data) => {
+            if(data && data.errors) 
+            {
+              this.setState({...this.state, error: data.errors[0].msg})
+            } 
+            else 
+            {
+              this.setState({...this.state,name: data.name,address: data.address,contactNo: data.contactNo,entityType:data.entityType})
+            }
+        })
+        console.log(this.state);
+    }
     toggleModal() {
       
         this.setState({
@@ -68,7 +83,7 @@ class AddEntity extends Component {
 
         event.preventDefault();
         const token=localStorage.getItem('jwtToken');
-        create(entity,token).then((data) => {
+        editone(token,this.props.match.params.entityId,entity).then((data) => {
            //console.log(data);
             if (data.errors) {
               this.setState({ ...this.state, error: data.errors[0].msg})
@@ -101,13 +116,13 @@ class AddEntity extends Component {
         else if (this.state.touched.address && address.length > 30)
             errors.lastname = 'Last name shouldbe <= 30 characters';
 
+        if (this.state.touched.contactNo && contactNo.length!=10)
+        errors.contactNo = 'Contact number must be of 10 digits';
+        
         const reg = /^\d+$/;
 
-        if (this.state.touched.contactNo && contactNo.length!=10)
-            errors.contactNo = 'Contact number must be of 10 digits';
-
         if (this.state.touched.contactNo && !reg.test(contactNo))
-            errors.contactNo = 'Contact number should contain only numbers';
+            errors.contactNo = 'contact number should contain only numbers';
 
         return errors;
     };
@@ -180,7 +195,7 @@ class AddEntity extends Component {
 
                             <FormGroup row>
                                 <Col md={{ size: 10, offset: 2 }}>
-                                    <Button type="submit" color="primary">ADD</Button>
+                                    <Button type="submit" color="primary">Edit</Button>
                                 </Col>
                             </FormGroup>
                         </Form>
@@ -190,7 +205,7 @@ class AddEntity extends Component {
                 <Modal isOpen={this.state.open} toggle={this.toggleModal}>
                 <ModalHeader toggle={this.toggleModal}>Entity</ModalHeader>
                 <ModalBody>
-                    You have successfully added the Entity!
+                    You have successfully edited the Entity!
                 </ModalBody>
                 </Modal>
             </div>
@@ -198,4 +213,4 @@ class AddEntity extends Component {
     };
 }
 
-export default AddEntity;
+export default EditEntity;

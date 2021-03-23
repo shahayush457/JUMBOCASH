@@ -171,13 +171,11 @@ class AddTransaction extends Component {
             <div className="container">
                 <div className="row row-content">
                     <div className="col-12 col-md-9">
-                    
                         { 
                             this.state.error && <Alert color="danger">
                                 {this.state.error}
                             </Alert>
                         }
-
                         <Form onSubmit={this.handleSubmit}>
                             <FormGroup row>
                                 <Label htmlFor="amount" md={2}>Amount</Label>
