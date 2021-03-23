@@ -7,7 +7,8 @@ import SideBar from "../components/SidebarComponent"
 import classNames from "classnames";
 import { Container } from "reactstrap";
 import AddEntity from "./EntityAddComponent";
-import EditEntity from "./EditEntityComponent"
+import EditEntity from "./EditEntityComponent";
+import EditTransaction from "./EditTransactionComponent";
 import UserOverall from "./UserFrontComponent";
 import AddTransaction from "./TransactionAddComponent";
 import Entities from "./EntitiesDisplayComponent";
@@ -77,6 +78,7 @@ class Main extends Component {
                 <Route exact path='/login' component={Login}/>
                 <Route exact path='/entity' toggleSidebar={this.toggleSidebar} component={AddEntity}/>
                 <Route exact path='/entity/edit/:entityId' toggleSidebar={this.toggleSidebar} component={EditEntity}/>
+                <Route exact path='/transaction/edit/:transId' toggleSidebar={this.toggleSidebar} component={EditTransaction}/>
             </Switch>
           </Container>
           </BrowserRouter>

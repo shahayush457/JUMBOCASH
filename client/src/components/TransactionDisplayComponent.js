@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import {Link} from 'react-router-dom';
 import moment from 'moment'
 import {
     Card,
@@ -25,6 +26,7 @@ function RenderTrans({ trans }) {
                         <Row><i className="fa fa-phone" aria-hidden="true"></i>:{trans.entity[0].contactNo}</Row>
                         <Row><span > Mode : {trans.transactionMode}</span> </Row>
                         <Row>Type : {trans.transactionType}</Row>
+                        <Row className="mt-2"><span className="float-right justify-content-right"><Link to={"transaction/edit/"+trans._id}>Edit</Link></span></Row>
                     </Col>
                 </div>
             </CardBody>
