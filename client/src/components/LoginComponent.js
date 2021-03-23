@@ -15,6 +15,7 @@ import auth from '../api/auth-helper'
 import {oauthGoogle , oauthFacebook} from '../api/api-oauth'
 import GoogleLogin from 'react-google-login';
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
+import config from '../config'
 
 class Login extends Component {
     
@@ -193,7 +194,7 @@ class Login extends Component {
                             Or sign in using third-party services
                             </div>
                             <FacebookLogin
-                                appId="435566974381314"
+                                appId={config.facebook}
                                 render={renderProps => (
                                     <button style={{ marginRight: 15 }} className="btn btn-primary" onClick={renderProps.onClick}><i class="fa fa-facebook" aria-hidden="true"></i> Facebook</button>
                                 )}
@@ -202,7 +203,7 @@ class Login extends Component {
                                 cssClass="btn btn-outline-primary"
                             />
                         <GoogleLogin 
-                                clientId="395911397838-qevt8tlmbbrs21h7f5devar2lf2cm120.apps.googleusercontent.com"
+                                clientId={config.google}
                                 render={renderProps => (
                                     <button className="btn btn-danger" onClick={renderProps.onClick} disabled={renderProps.disabled}><i class="fa fa-google" aria-hidden="true"></i> Google</button>
                                 )}
