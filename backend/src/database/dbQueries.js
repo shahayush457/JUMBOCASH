@@ -59,6 +59,11 @@ exports.findByIdAndUpdate = async (
   else return model.findByIdAndUpdate(id, updateData, { new: isNew });
 };
 
+exports.deleteAll = async (modelName, deleteQuery) => {
+  const model = giveModel(modelName);
+  return model.deleteMany(deleteQuery);
+};
+
 exports.updateData = async updatedDocument => {
   return updatedDocument.save();
 };
