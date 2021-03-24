@@ -34,6 +34,7 @@ class EditEntity extends Component {
         this.handleBlur = this.handleBlur.bind(this);
         this.toggleModal=this.toggleModal.bind(this);
     }
+    //fetch a the entity
     componentDidMount()
     {   
         const token=localStorage.getItem('jwtToken');
@@ -48,7 +49,7 @@ class EditEntity extends Component {
               this.setState({...this.state,name: data.name,address: data.address,contactNo: data.contactNo,entityType:data.entityType})
             }
         })
-        console.log(this.state);
+        
     }
     toggleModal() {
       
