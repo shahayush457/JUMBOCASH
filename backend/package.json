@@ -12,6 +12,7 @@
   "author": "",
   "license": "PRIVATE",
   "dependencies": {
+    "agenda": "^4.1.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
@@ -21,6 +22,7 @@
     "express-validator": "^6.10.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.11.18",
+    "nodemailer": "^6.5.0",
     "passport": "^0.4.1",
     "passport-facebook-token": "^4.0.0",
     "passport-google-token": "^0.1.2",
