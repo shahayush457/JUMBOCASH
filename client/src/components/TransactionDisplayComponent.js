@@ -5,7 +5,8 @@ import {
     Card,
     CardBody,
     Col,
-    Row
+    Row,
+    Button
 } from "reactstrap";
 // A functional component to render single entity
 function RenderTrans({ trans }) {
@@ -26,7 +27,11 @@ function RenderTrans({ trans }) {
                         <Row><i className="fa fa-phone" aria-hidden="true"></i>:{trans.entity[0].contactNo}</Row>
                         <Row><span > Mode : {trans.transactionMode}</span> </Row>
                         <Row>Type : {trans.transactionType}</Row>
-                        <Row className="mt-2"><span className="float-right justify-content-right"><Link to={"transaction/edit/"+trans._id}>Edit</Link></span></Row>
+                        <Row className="mt-2"><span className="float-right justify-content-right"><Link to={"transaction/edit/"+trans._id}>
+                            <Button type="submit" color="primary" className="btn-sm">
+                                Edit
+                            </Button>
+                        </Link></span></Row>
                     </Col>
                 </div>
             </CardBody>
