@@ -1,6 +1,7 @@
 const { validationResult } = require("express-validator");
 const log = require("../common/logger");
 const db = require("../database/dbQueries");
+const agenda = require("../jobScheduler/agenda");
 
 exports.getTransactionsByUser = async (req, res, next) => {
   // Retrieve user id from the decoded JWT
@@ -75,6 +76,15 @@ exports.createTransactions = async (req, res, next) => {
     }
 
     await db.updateData(user);
+
+    if (transaction.reminderDate && transaction.transactionStatus === "pending") {
+      await agenda.schedule(transaction.reminderDate, "send email reminder", {
+        to: user.email,
+        transactionType: transaction.transactionType,
+        amount: transaction.amount,
+        entityName: entity.name
+      });
+    }
 
     res.status(201).json(transaction);
   } catch (error) {
