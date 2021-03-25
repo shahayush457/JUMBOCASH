@@ -47,7 +47,7 @@ class Transactions extends Component {
     {
         const menu = this.props.transactions.map(trans => {
             return (
-              <div className="col-md-4 mt-3" key={trans.id}>
+              <div className="col-md-4 mt-3" key={trans._id}>
                 <RenderTrans trans={trans} />
               </div>
             );
