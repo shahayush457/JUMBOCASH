@@ -19,10 +19,11 @@ module.exports = async agenda => {
   agenda.define("send email reminder", async job => {
     const {
       to,
+      userName,
       transactionType,
       transactionMode,
       amount,
-      remarks,
+      remark,
       entityName,
       entityType,
       entityAddress,
@@ -33,15 +34,15 @@ module.exports = async agenda => {
       from: email,
       to: to,
       subject: "Reminder, pending transaction",
-      text: `<h1>You have a pending transaction.</h1>
-             <h2>Transaction details</h2>
+      html: `<h2>Hi ${userName}! You have a pending transaction.</h2>
+             <h3>Transaction details</h3>
              <ol type="1">
              <li>Amount - ${amount}</li>
              <li>Transaction type - ${transactionType}</li>
              <li>Transaction mode - ${transactionMode}</li>
-             <li>Remarks - ${remarks}</li>
+             <li>Remark - ${remark}</li>
              </ol>
-             <h2>Entity details</h2>
+             <h3>Entity details</h3>
              <ol type="1">
              <li>Name - ${entityName}</li>
              <li>Entity Type - ${entityType}</li>
