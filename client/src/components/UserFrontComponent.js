@@ -28,6 +28,9 @@ function RenderTrans({ trans }) {
                         <Row><i className="fa fa-calendar">{' '+moment(trans.createdAt).format("dddd, MMMM Do YYYY, h:mm:ss a")}</i></Row>
                         <Row className="mt-1">Remarks: {trans.remark}</Row>
                         <Row><i className="fa fa-building"></i> : {trans.entity[0].address}</Row>
+                        { 
+                           trans.transactionStatus=="pending" && <Row><i className="fa fa-bell"></i> : {moment(trans.reminderDate).format("MMMM Do YYYY")}</Row>
+                        }
                     </Col>
                     <Col md={4} className="mr-auto">
                         <Row><span>Status : {trans.transactionStatus}</span></Row>
@@ -73,7 +76,7 @@ class UserOverall extends Component {
                 })
             }
         })
-        find('',token).then((data) => {
+        find('limit=6',token).then((data) => {
             //console.log(data);
             if (data.errors) {
                 this.setState({ ...this.state})

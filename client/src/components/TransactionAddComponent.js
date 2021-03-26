@@ -29,6 +29,7 @@ class AddTransaction extends Component {
             open:'',
             entityId:'',
             entities:[],
+            pDate:'',
             touched: {
                 amount: false,
                 type: false,
@@ -113,15 +114,18 @@ class AddTransaction extends Component {
 
     handleSubmit(event) {
        
-        const transaction={
+        var transaction={
             "amount":this.state.amount,
             "transactionType":this.state.type,
             "transactionMode":this.state.mode,
             "transactionStatus":this.state.status,
             "remark":this.state.remark,
-            "entityId":this.state.entityId
+            "entityId":this.state.entityId,
         }
-
+        if(this.state.status=="pending")
+        {
+            transaction.reminderDate=this.state.pDate;
+        }
         event.preventDefault();
         const token=localStorage.getItem('jwtToken');
 
@@ -241,6 +245,21 @@ class AddTransaction extends Component {
                                     </Label>
                                 </Col>
                             </FormGroup>
+
+                            {
+                                this.state.status=="pending" && (
+
+                                    <FormGroup row>
+                                        <Label htmlFor="pDate" md={2} className="ml-0 mb-2">Reminder</Label>
+                                        <Col md={8}>
+                                            <Input type="date" id="pDate" name="pDate"
+                                            placeholder="Reminder" value={this.state.pDate} 
+                                            onChange={this.handleInputChange}
+                                            />
+                                        </Col> 
+                                    </FormGroup>
+                                )
+                            }
 
 
                             <FormGroup row>

@@ -10,7 +10,7 @@ import { Alert,
          Input, 
          Col, 
          FormFeedback } from 'reactstrap';
-
+import moment from 'moment'
 import {readone,editone} from '../api/api-trans';
 import {read} from '../api/api-entities';
 
@@ -29,6 +29,7 @@ class EditTransaction extends Component {
             open:'',
             entityId:'',
             entities:[],
+            pDate:'',
             touched: {
                 amount: false,
                 type: false,
@@ -76,7 +77,7 @@ class EditTransaction extends Component {
             } 
             else 
             {
-              this.setState({...this.state,amount: data.amount,type: data.transactionType,mode: data.transactionMode,remark:data.remark,status:data.transactionStatus,entityId:data.entityId})
+              this.setState({...this.state,amount: data.amount,type: data.transactionType,mode: data.transactionMode,remark:data.remark,status:data.transactionStatus,entityId:data.entityId,pDate:moment(data.reminderDate).format("YYYY-MM-DD")})
             }
         })
 
@@ -134,7 +135,10 @@ class EditTransaction extends Component {
             "remark":this.state.remark,
             "entityId":this.state.entityId
         }
-
+        if(this.state.status=="pending")
+        {
+            transaction.reminderDate=this.state.pDate;
+        }
         event.preventDefault();
         const token=localStorage.getItem('jwtToken');
 
@@ -254,6 +258,20 @@ class EditTransaction extends Component {
                                     </Label>
                                 </Col>
                             </FormGroup>
+                            {
+                                this.state.status=="pending" && (
+
+                                    <FormGroup row>
+                                        <Label htmlFor="pDate" md={2} className="ml-0 mb-2">Reminder</Label>
+                                        <Col md={8}>
+                                            <Input type="date" id="pDate" name="pDate"
+                                            placeholder="Reminder" value={this.state.pDate} 
+                                            onChange={this.handleInputChange}
+                                            />
+                                        </Col> 
+                                    </FormGroup>
+                                )
+                            }
 
 
                             <FormGroup row>
