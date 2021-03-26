@@ -3,8 +3,8 @@ const { email, password } = require("../config/config");
 
 function createText(transactionType, amount, entityName) {
   return transactionType === "debit"
-    ? `You have to pay Rs ${amount} to ${entityName}`
-    : `You will get Rs ${amount} from ${entityName}`;
+    ? `You have a pending payment of Rs ${amount} to ${entityName}`
+    : `You have a pending payment of Rs ${amount} from ${entityName}`;
 }
 
 module.exports = async agenda => {
