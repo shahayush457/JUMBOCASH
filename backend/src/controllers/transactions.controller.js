@@ -144,7 +144,6 @@ exports.getTransactionsById = async (req, res, next) => {
 };
 
 exports.updateTransaction = async (req, res, next) => {
-  console.log(req.body.amount)
   const session = await mongoose.startSession();
   session.startTransaction();
 
