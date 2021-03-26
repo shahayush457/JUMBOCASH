@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const { validationResult } = require("express-validator");
 const log = require("../common/logger");
 const db = require("../database/dbQueries");
@@ -24,6 +25,10 @@ exports.userEntities = async (req, res, next) => {
 
 exports.createEntity = async (req, res, next) => {
   const { id: userId } = req.decoded;
+
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
   try {
     // Finds the validation errors in this request and wraps them in an object
     const errors = validationResult(req);
@@ -36,18 +41,29 @@ exports.createEntity = async (req, res, next) => {
     }
 
     const user = await db.findById("user", userId, false);
-    const entity = await db.createData("entity", {
-      userId,
-      ...req.body
-    });
-    user.entities.push(entity._id);
-    await db.updateData(user);
-    return res.status(201).json(entity);
+    const entity = await db.createData(
+      "entity",
+      {
+        userId,
+        ...req.body
+      },
+      { session }
+    );
+
+    user.entities.push(entity[0]._id);
+    await db.updateData(user, { session });
+
+    await session.commitTransaction();
+
+    return res.status(201).json(entity[0]);
   } catch (err) {
+    await session.abortTransaction();
     return next({
       status: 400,
       message: [{ msg: err.message }]
     });
+  } finally {
+    session.endSession();
   }
 };
 
@@ -109,7 +125,8 @@ exports.updateEntity = async (req, res, next) => {
       req.params.id,
       req.body,
       true,
-      true
+      true,
+      { session: null }
     );
 
     if (!updatedEntity) {
