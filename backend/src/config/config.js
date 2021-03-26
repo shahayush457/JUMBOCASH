@@ -8,6 +8,8 @@ module.exports = {
   log_enabled: process.env.LOG_ENABLED,
   db_url: process.env.DB_URL,
   jwt_secret: process.env.JWT_SECRET,
+  email: process.env.EMAIL_ID,
+  password: process.env.PASSWORD,
   oauth: {
     google: {
       clientId: process.env.GOOGLE_CLIENT_ID,

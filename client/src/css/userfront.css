@@ -32,12 +32,12 @@
     01.COMMON css 
 ===========================*/
 @import url("https://fonts.googleapis.com/css?family=Nunito:300,400,700,800&display=swap");
-body {
+/* body {
   font-family: "Nunito", sans-serif;
   font-weight: normal;
   font-style: normal;
   color: #798795;
-  overflow-X: hidden; }
+  overflow-X: hidden; } */
 
 * {
   margin: 0;

@@ -5,6 +5,49 @@ import auth from '../api/auth-helper';
 import i1 from '../images/header-hero.jpg'
 import i2 from '../images/header.png'
 import '../css/userfront.css'
+import {find} from '../api/api-trans'
+import moment from 'moment'
+import {
+    Card,
+    CardBody,
+    Col,
+    Row,
+    Button
+} from "reactstrap";
+
+
+function RenderTrans({ trans }) {
+    //console.log(trans);
+    return (
+          <Card >
+            <CardBody>
+                <div className="row ml-0">
+                    <Col md={8}>
+                        <Row tag="h5"><span className="fa fa-rupee fa-lg justify-content-center" />  {trans.amount} </Row>
+                        <Row tag="h6" className="mb-2 "><i className="fa fa-print"></i>Entity: {trans.entity[0].name}</Row>
+                        <Row><i className="fa fa-calendar">{' '+moment(trans.createdAt).format("dddd, MMMM Do YYYY, h:mm:ss a")}</i></Row>
+                        <Row className="mt-1">Remarks: {trans.remark}</Row>
+                        <Row><i className="fa fa-building"></i> : {trans.entity[0].address}</Row>
+                        { 
+                           trans.transactionStatus=="pending" && <Row><i className="fa fa-bell"></i> : {moment(trans.reminderDate).format("MMMM Do YYYY")}</Row>
+                        }
+                    </Col>
+                    <Col md={4} className="mr-auto">
+                        <Row><span>Status : {trans.transactionStatus}</span></Row>
+                        <Row><i className="fa fa-phone" aria-hidden="true"></i>:{trans.entity[0].contactNo}</Row>
+                        <Row><span > Mode : {trans.transactionMode}</span> </Row>
+                        <Row>Type : {trans.transactionType}</Row>
+                        <Row className="mt-2"><span className="float-right justify-content-right"><Link to={"transaction/edit/"+trans._id}> <Button type="submit" color="primary" className="btn-sm">
+                                Edit
+                            </Button></Link></span></Row>
+                    </Col>
+                </div>
+            </CardBody>
+          </Card>
+    );
+}
+
+
 class UserOverall extends Component {
 
     constructor(props) {
@@ -13,11 +56,12 @@ class UserOverall extends Component {
         this.state = {
             balance:'',
             pendingDebit:'',
-            pendingCredit:''
+            pendingCredit:'',
+            trans:[],
         };
     }
 
-    componentWillMount()
+    componentDidMount()
     {
         const token=localStorage.getItem('jwtToken');
         read(token).then((data) => {
@@ -32,13 +76,33 @@ class UserOverall extends Component {
                 })
             }
         })
+        find('limit=6',token).then((data) => {
+            //console.log(data);
+            if (data.errors) {
+                this.setState({ ...this.state})
+            } else {
+                this.setState({
+                    trans:data
+                })
+            }
+        })
+        //console.log(this.state);
+
     }
     render()
     {
         //console.log(auth.isAuthenticated)
+        const menu = this.state.trans.map(trans => {
+            return (
+              <div className="col-md-4 mt-3" key={trans.id}>
+                <RenderTrans trans={trans} />
+              </div>
+            );
+        });
         if(auth.isAuthenticated())
         {
             return(
+                <div className="container-fluid">
                 <div className="row">
                         <div className="col-xl-3 col-md-6 mb-4 ml-5 mr-5">
                             <div className="card border-left-primary shadow h-100 py-2">
@@ -87,12 +151,13 @@ class UserOverall extends Component {
                             </div>
                         </div>
                     </div>
-                   
-                </div>
-                    <div className="d-none d-md-block ">
-                        {/* <img id="userimg" src={i2} alt="Hero"/> */}
                     </div>
                 </div>
+                <h5 className="ml-5 mt-5"><i class="fa fa-history"></i> Recent Transactions </h5>
+                <div className="row ml-4 mt-2">
+                    {menu}
+                </div>
+            </div>
             )
             
         }
@@ -121,7 +186,6 @@ class UserOverall extends Component {
                             </div>
                         </div>
                     </div> 
-
                 </div>
             )
         }

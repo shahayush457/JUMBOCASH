@@ -47,6 +47,10 @@ const transaction = new Schema({
     default: Date.now,
     required: true,
     description: "Date of the transaction"
+  },
+  reminderDate: {
+    type: Date,
+    description: "Date to send the reminder"
   }
 });
 
