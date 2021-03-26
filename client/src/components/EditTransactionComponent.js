@@ -10,11 +10,11 @@ import { Alert,
          Input, 
          Col, 
          FormFeedback } from 'reactstrap';
-
-import {create} from '../api/api-trans';
+import moment from 'moment'
+import {readone,editone} from '../api/api-trans';
 import {read} from '../api/api-entities';
 
-class AddTransaction extends Component {
+class EditTransaction extends Component {
 
     constructor(props) {
         super(props);
@@ -68,6 +68,19 @@ class AddTransaction extends Component {
             }
             //console.log(this.state);
         })
+
+        readone(token,this.props.match.params.transId).then((data) => {
+            
+            if(data && data.errors) 
+            {
+              this.setState({...this.state, error: data.errors[0].msg})
+            } 
+            else 
+            {
+              this.setState({...this.state,amount: data.amount,type: data.transactionType,mode: data.transactionMode,remark:data.remark,status:data.transactionStatus,entityId:data.entityId,pDate:moment(data.reminderDate).format("YYYY-MM-DD")})
+            }
+        })
+
     }
 
     toggleModal() {
@@ -114,13 +127,13 @@ class AddTransaction extends Component {
 
     handleSubmit(event) {
        
-        var transaction={
+        const transaction={
             "amount":Number(this.state.amount),
             "transactionType":this.state.type,
             "transactionMode":this.state.mode,
             "transactionStatus":this.state.status,
             "remark":this.state.remark,
-            "entityId":this.state.entityId,
+            "entityId":this.state.entityId
         }
         if(this.state.status=="pending")
         {
@@ -129,14 +142,14 @@ class AddTransaction extends Component {
         event.preventDefault();
         const token=localStorage.getItem('jwtToken');
 
-        create(transaction,token).then((data) => {
-           
-            if (data.errors) {
-              this.setState({ ...this.state, error: data.errors[0].msg})
-            } else {
-              this.setState({ ...this.state, error:'',open:true})
-            }
-        })
+        editone(token,this.props.match.params.transId,transaction).then((data) => {
+            //console.log(data);
+             if (data.errors) {
+               this.setState({ ...this.state, error: data.errors[0].msg})
+             } else {
+               this.setState({ ...this.state, error:'',open:true})
+             }
+        }) 
         
     }
 
@@ -245,7 +258,6 @@ class AddTransaction extends Component {
                                     </Label>
                                 </Col>
                             </FormGroup>
-
                             {
                                 this.state.status=="pending" && (
 
@@ -336,7 +348,7 @@ class AddTransaction extends Component {
 
                             <FormGroup row>
                                 <Col md={{ size: 10, offset: 2 }}>
-                                    <Button type="submit" color="primary">ADD</Button>
+                                    <Button type="submit" color="primary">Edit</Button>
                                 </Col>
                             </FormGroup>
 
@@ -347,7 +359,7 @@ class AddTransaction extends Component {
                 <Modal isOpen={this.state.open} toggle={this.toggleModal}>
                 <ModalHeader toggle={this.toggleModal}>Transaction</ModalHeader>
                 <ModalBody>
-                    You have successfully added the Transaction!
+                    You have successfully edited the Transaction!
                 </ModalBody>
                 </Modal>
             </div>
@@ -355,4 +367,4 @@ class AddTransaction extends Component {
     };
 }
 
-export default AddTransaction;
+export default EditTransaction;

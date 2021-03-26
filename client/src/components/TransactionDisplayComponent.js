@@ -1,14 +1,16 @@
 import React, { Component } from 'react';
+import {Link} from 'react-router-dom';
 import moment from 'moment'
 import {
     Card,
     CardBody,
     Col,
-    Row
+    Row,
+    Button
 } from "reactstrap";
 // A functional component to render single entity
 function RenderTrans({ trans }) {
-    //console.log(trans);
+    console.log(trans);
     return (
           <Card >
             <CardBody>
@@ -19,12 +21,20 @@ function RenderTrans({ trans }) {
                         <Row><i className="fa fa-calendar">{' '+moment(trans.createdAt).format("dddd, MMMM Do YYYY, h:mm:ss a")}</i></Row>
                         <Row className="mt-1">Remarks: {trans.remark}</Row>
                         <Row><i className="fa fa-building"></i> : {trans.entity[0].address}</Row>
+                        { 
+                           trans.transactionStatus=="pending" && <Row><i className="fa fa-bell"></i> : {moment(trans.reminderDate).format("MMMM Do YYYY")}</Row>
+                        }
                     </Col>
                     <Col md={4} className="mr-auto">
                         <Row><span>Status : {trans.transactionStatus}</span></Row>
                         <Row><i className="fa fa-phone" aria-hidden="true"></i>:{trans.entity[0].contactNo}</Row>
                         <Row><span > Mode : {trans.transactionMode}</span> </Row>
                         <Row>Type : {trans.transactionType}</Row>
+                        <Row className="mt-2"><span className="float-right justify-content-right"><Link to={"transaction/edit/"+trans._id}>
+                            <Button type="submit" color="primary" className="btn-sm">
+                                Edit
+                            </Button>
+                        </Link></span></Row>
                     </Col>
                 </div>
             </CardBody>
@@ -40,7 +50,7 @@ class Transactions extends Component {
     {
         const menu = this.props.transactions.map(trans => {
             return (
-              <div className="col-md-4 mt-3" key={trans.id}>
+              <div className="col-md-4 mt-3" key={trans._id}>
                 <RenderTrans trans={trans} />
               </div>
             );
