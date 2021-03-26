@@ -128,7 +128,7 @@ class EditTransaction extends Component {
     handleSubmit(event) {
        
         const transaction={
-            "amount":this.state.amount,
+            "amount":Number(this.state.amount),
             "transactionType":this.state.type,
             "transactionMode":this.state.mode,
             "transactionStatus":this.state.status,

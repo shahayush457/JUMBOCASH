@@ -16,6 +16,7 @@ const create = async (transaction,token) => {
     }
 }
 const editone = async (token,transId,transaction) => {
+  //console.log(JSON.stringify(transaction));
   try {
     let response = await fetch(config.server+'/transactions/'+transId, {
       method: 'PATCH',
