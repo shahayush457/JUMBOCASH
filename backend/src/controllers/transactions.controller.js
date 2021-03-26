@@ -95,10 +95,11 @@ exports.createTransactions = async (req, res, next) => {
     ) {
       await agenda.schedule(transaction.reminderDate, "send email reminder", {
         to: user.email,
+        userName: user.name,
         transactionType: transaction.transactionType,
         transactionMode: transaction.transactionMode,
         amount: transaction.amount,
-        remarks: transaction.remarks,
+        remark: transaction.remark,
         entityName: entity.name,
         entityType: entity.entityType,
         entityAddress: entity.address,
