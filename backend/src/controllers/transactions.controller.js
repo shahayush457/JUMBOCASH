@@ -1,6 +1,8 @@
+const mongoose = require("mongoose");
 const { validationResult } = require("express-validator");
 const log = require("../common/logger");
 const db = require("../database/dbQueries");
+const agenda = require("../jobScheduler/agenda");
 
 exports.getTransactionsByUser = async (req, res, next) => {
   // Retrieve user id from the decoded JWT
@@ -22,6 +24,9 @@ exports.getTransactionsByUser = async (req, res, next) => {
 };
 
 exports.createTransactions = async (req, res, next) => {
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
   try {
     // Finds the validation errors in this request and wraps them in an object
     const errors = validationResult(req);
@@ -46,10 +51,18 @@ exports.createTransactions = async (req, res, next) => {
       return;
     }
 
-    const transaction = await db.createData("transaction", {
-      userId,
-      ...req.body
-    });
+    const transactions = await db.createData(
+      "transaction",
+      {
+        userId,
+        ...req.body
+      },
+      {
+        session
+      }
+    );
+
+    const transaction = transactions[0];
 
     let user = await db.findById("user", userId, false);
 
@@ -65,23 +78,40 @@ exports.createTransactions = async (req, res, next) => {
     } else {
       if (transaction.transactionType === "credit") {
         /* transaction (type = Credit) then add transaction amount 
-        to total pending amount that the user will get*/
+          to total pending amount that the user will get*/
         user.pendingAmountCredit += transaction.amount;
       } else {
         /* transaction (type = Debit) then add transaction amount 
-        to total pending amount that the user will get*/
+          to total pending amount that the user will get*/
         user.pendingAmountDebit += transaction.amount;
       }
     }
 
-    await db.updateData(user);
+    await db.updateData(user, { session });
+
+    if (
+      transaction.reminderDate &&
+      transaction.transactionStatus === "pending"
+    ) {
+      await agenda.schedule(transaction.reminderDate, "send email reminder", {
+        to: user.email,
+        transactionType: transaction.transactionType,
+        amount: transaction.amount,
+        entityName: entity.name
+      });
+    }
+
+    await session.commitTransaction();
 
     res.status(201).json(transaction);
   } catch (error) {
+    await session.abortTransaction();
     next({
       status: 400,
       message: [{ msg: error.message }]
     });
+  } finally {
+    session.endSession();
   }
 };
 
@@ -114,6 +144,9 @@ exports.getTransactionsById = async (req, res, next) => {
 };
 
 exports.updateTransaction = async (req, res, next) => {
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
   try {
     // Finds the validation errors in this request and wraps them in an object
     const errors = validationResult(req);
@@ -222,7 +255,7 @@ exports.updateTransaction = async (req, res, next) => {
     }
 
     // save updated user info in the database
-    await db.updateData(user);
+    await db.updateData(user, { session });
 
     // update the transaction info in the database
     const newTransaction = await db.findByIdAndUpdate(
@@ -230,15 +263,21 @@ exports.updateTransaction = async (req, res, next) => {
       req.params.id,
       req.body,
       true,
-      true
+      true,
+      { session }
     );
+
+    await session.commitTransaction();
 
     res.status(200).json(newTransaction);
   } catch (error) {
+    await session.abortTransaction();
     next({
       status: 400,
       message: [{ msg: error.message }]
     });
+  } finally {
+    session.endSession();
   }
 };
 

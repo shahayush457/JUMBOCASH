@@ -18,6 +18,23 @@ const create = async (entity,token) => {
     }
 }
 
+const editone = async (token,entityId,entity) => {
+  try {
+    let response = await fetch(config.server+'/entities/'+entityId, {
+      method: 'PATCH',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer '+JSON.parse(token)
+      },
+      body: JSON.stringify(entity)
+    })
+    return await response.json()
+  } catch(err) {
+    console.log(err)
+  }
+}
+
 const read = async (token) => {
   try {
       
@@ -34,6 +51,24 @@ const read = async (token) => {
     console.log(err)
   }
 }
+
+const readone = async (token , entityId) => {
+  try {
+      
+      let response = await fetch(config.server+'/entities/'+entityId, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer '+JSON.parse(token)
+        }
+      })
+    return await response.json()
+  } catch(err) {
+    console.log(err)
+  }
+}
+
 const find = async (url, token) => {
   try {
     //console.log(config.server+'/entities/filter?'+url);
@@ -53,5 +88,7 @@ const find = async (url, token) => {
 export {
     create,
     read,
-    find
+    find,
+    readone,
+    editone
 }
