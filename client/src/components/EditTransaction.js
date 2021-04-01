@@ -7,17 +7,17 @@ import { Alert,
          Input, 
          Col, 
          FormFeedback } from 'reactstrap';
-import auth from "../api/auth-helper";
-import Container from "@material-ui/core/Container";
-import Box from "@material-ui/core/Box";
-import SideBar from './sideBar';
-import { withStyles } from '@material-ui/core/styles';
-import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+import moment from 'moment'
+import { createMuiTheme, ThemeProvider, withStyles } from "@material-ui/core/styles";
 import { blue, lightBlue } from "@material-ui/core/colors";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import {create} from '../api/api-trans';
-import {read} from '../api/api-entities';
+import Container from "@material-ui/core/Container";
+import Box from "@material-ui/core/Box";
 import Copyright from "./Copyright"
+import SideBar from './sideBar';
+import {readone,editone} from '../api/api-trans';
+import {read} from '../api/api-entities';
+import {withRouter} from 'react-router'
 
 const darkTheme = createMuiTheme({
     palette: {
@@ -59,7 +59,7 @@ const styles = theme => ({
     }
 });
 
-class AddTransaction extends Component {
+class EditTransaction extends Component {
 
     constructor(props) {
         super(props);
@@ -74,6 +74,7 @@ class AddTransaction extends Component {
             open:'',
             entityId:'',
             entities:[],
+            pDate:'',
             touched: {
                 amount: false,
                 type: false,
@@ -110,14 +111,29 @@ class AddTransaction extends Component {
             {
                 this.setState({error:'Please add a entity first'})
             }
+            //console.log(this.state);
         })
+
+        readone(token,this.props.match.params.transId).then((data) => {
+            
+            if(data && data.errors) 
+            {
+              this.setState({...this.state, error: data.errors[0].msg})
+            } 
+            else 
+            {
+              this.setState({...this.state,amount: data.amount,type: data.transactionType,mode: data.transactionMode,remark:data.remark,status:data.transactionStatus,entityId:data.entityId,pDate:moment(data.reminderDate).format("YYYY-MM-DD")})
+            }
+        })
+
     }
 
     toggleModal() {
+        this.props.history.push('/');
         this.setState({
           open: !this.state.open
         });
-    }
+      }
 
     onRadioChange = (e) => {
        
@@ -149,36 +165,34 @@ class AddTransaction extends Component {
     }
 
     handleEntityChange(e) {
+
         this.setState({entityId:e.target.value});
+        
     }
 
     handleSubmit(event) {
        
-        let transaction={
-            "amount":this.state.amount,
+        var transaction={
+            "amount":Number(this.state.amount),
             "transactionType":this.state.type,
             "transactionMode":this.state.mode,
             "transactionStatus":this.state.status,
             "remark":this.state.remark,
             "entityId":this.state.entityId
         }
-
-        if(this.state.status=="pending")
-        {
-            transaction.reminderDate = this.state.pDate;
-        }
-
+        
         event.preventDefault();
         const token=localStorage.getItem('jwtToken');
 
-        create(transaction,token).then((data) => {
-           
-            if (data.errors) {
-              this.setState({ ...this.state, error: data.errors[0].msg})
-            } else {
-              this.setState({ ...this.state, error:'',open:true})
-            }
-        })
+        editone(token,this.props.match.params.transId,transaction).then((data) => {
+            //console.log(data);
+             if (data.errors) {
+               this.setState({ ...this.state, error: data.errors[0].msg})
+             } else {
+               this.setState({ ...this.state, error:'',open:true})
+             }
+        }) 
+        
     }
 
     handleBlur = (field) => (evt) => {
@@ -204,16 +218,14 @@ class AddTransaction extends Component {
         const reg = /^\d+$/;
 
         if (this.state.touched.amount && !reg.test(amount))
-            errors.amount = 'amount should contain only numbers';
+            errors.amount = 'Amount should contain only numbers';
 
         return errors;
     };
 
-    
     render() {
         const errors = this.validate(this.state.amount, this.state.type, this.state.mode,this.state.remark,this.state.status);
         const { classes } = this.props;
-        if (auth.isAuthenticated()) {
         return (
             <ThemeProvider theme={darkTheme}>
             <CssBaseline />
@@ -230,7 +242,7 @@ class AddTransaction extends Component {
                             </Alert>
                         }
                         <Alert severity="success" isOpen={this.state.open} toggle={this.toggleModal}>
-                          Transaction added successfully — <a href="/"><strong>check it out!</strong></a>
+                          Transaction edited successfully — <a href="/"><strong>check it out!</strong></a>
                         </Alert>
                         <Form onSubmit={this.handleSubmit}>
                             <FormGroup row>
@@ -240,6 +252,7 @@ class AddTransaction extends Component {
                                     <FormFeedback>{errors.contactNo}</FormFeedback>
                                 </Col>
                             </FormGroup>
+
 
                             <FormGroup row>
                                 <Col sm={2} >
@@ -298,12 +311,14 @@ class AddTransaction extends Component {
                             </FormGroup>
                             {
                                 this.state.status=="pending" && (
+
                                     <FormGroup row>
                                         <Label htmlFor="pDate" md={2} className="ml-0 mb-2">Reminder</Label>
                                         <Col md={8}>
                                             <Input type="date" id="pDate" name="pDate"
+                                            disabled
                                             placeholder="Reminder" value={this.state.pDate} 
-                                            onChange={this.handleInputChange}
+                                            //onChange={this.handleInputChange}
                                             />
                                         </Col> 
                                     </FormGroup>
@@ -378,26 +393,27 @@ class AddTransaction extends Component {
                                     <Input type="text" id="remark" name="remark" placeholder="Remark" value={this.state.remark} valid={errors.remark === ''} invalid={errors.remark !== ''} onChange={this.handleInputChange} onBlur={this.handleBlur('remark')} />
                                     <FormFeedback>{errors.remark}</FormFeedback>
                                 </Col>
-                            </FormGroup>                        
+                            </FormGroup>
+
+                            
 
                             <FormGroup row>
                                 <Col md={{ size: 10, offset: 2 }}>
-                                    <Button type="submit" color="primary">ADD</Button>
+                                    <Button type="submit" color="primary">Edit</Button>
                                 </Col>
-                            </FormGroup>
+                            </FormGroup>  
                         </Form>
                     </div>
                 </div>
-                <Box pt={4}>
-                  <Copyright />
-                </Box>
+            <Box pt={4}>
+              <Copyright />
+            </Box>
             </Container>
             </main>
             </div>
             </ThemeProvider>
         );
-    }
     };
 }
 
-export default withStyles(styles)(AddTransaction);
+export default withRouter(withStyles(styles)(EditTransaction));

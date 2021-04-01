@@ -93,6 +93,9 @@ exports.createTransactions = async (req, res, next) => {
       transaction.reminderDate &&
       transaction.transactionStatus === "pending"
     ) {
+      // The third parameter to `schedule()` is an object that can contain
+      // arbitrary data. This data will be stored in the `data` property
+      // in the document in mongodb
       await agenda.schedule(transaction.reminderDate, "send email reminder", {
         to: user.email,
         userName: user.name,
@@ -328,20 +331,18 @@ exports.getFilteredTransactions = async (req, res, next) => {
 
     if (req.query.sDate && req.query.eDate) {
       let endDate = req.query.eDate;
-      endDate.setDate(endDate.getDate() + 1);
+      endDate.setDate(endDate.getDate() + 1);      
       filter.createdAt = {
         $gte: req.query.sDate,
-        $lte: req.query.eDate
+        $lte: endDate
       };
     } else if (req.query.sDate)
       filter.createdAt = {
         $gte: req.query.sDate
       };
     else if (req.query.eDate) {
-      let endDate = req.query.eDate;
-      endDate.setDate(endDate.getDate() + 1);
       filter.createdAt = {
-        $lte: endDate
+        $lte: req.query.eDate
       };
     }
 
@@ -371,7 +372,6 @@ exports.getFilteredTransactions = async (req, res, next) => {
     // Paging
     const limit = req.query.limit; // default = 10
     const skip = req.query.pageNo * limit - limit; // default pageNo = 1
-
     log.info(filter);
 
     const pipelines = [
@@ -385,14 +385,25 @@ exports.getFilteredTransactions = async (req, res, next) => {
       },
       { $match: filter },
       { $sort: sort },
-      { $skip: skip },
-      { $limit: limit }
+      {
+        $facet: {
+          transactions: [{ $skip: skip }, { $limit: limit }],
+          totalCount: [
+            {
+              $count: "count"
+            }
+          ]
+        }
+      }
     ];
 
     const transactions = await db.aggregateData("transaction", pipelines);
 
+    if (!transactions[0].totalCount[0])
+      transactions[0].totalCount.push({ count: 0 });
     log.info(transactions);
-    res.status(200).json(transactions);
+
+    res.status(200).json(transactions[0]);
   } catch (error) {
     next({
       status: 400,

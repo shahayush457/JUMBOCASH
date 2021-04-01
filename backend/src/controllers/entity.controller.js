@@ -163,6 +163,8 @@ exports.getFilteredEntity = async (req, res, next) => {
     let filter = {},
       sort = {};
 
+    filter.userId = db.getObjectId(userId);
+
     // Add filter queries applied by the user
     filter.entityType = {
       $in: req.query.eType
@@ -175,7 +177,29 @@ exports.getFilteredEntity = async (req, res, next) => {
     const limit = req.query.limit; // default limit = 10
     const skip = req.query.pageNo * limit - limit; // default pageNo = 1
 
-    const user = await db.getPopulatedData(
+    const pipelines = [
+      { $match: filter },
+      { $sort: sort },
+      {
+        $facet: {
+          entities: [{ $skip: skip }, { $limit: limit }],
+          totalCount: [
+            {
+              $count: "count"
+            }
+          ]
+        }
+      }
+    ];
+
+    const entities = await db.aggregateData("entity", pipelines);
+
+    if (!entities[0].totalCount[0]) entities[0].totalCount.push({ count: 0 });
+    log.info(entities);
+
+    res.status(200).json(entities[0]);
+
+    /*const user = await db.getPopulatedData(
       "user",
       userId,
       {
@@ -191,7 +215,7 @@ exports.getFilteredEntity = async (req, res, next) => {
     );
 
     log.info(user.entities);
-    res.status(200).json(user.entities);
+    res.status(200).json(user.entities);*/
   } catch (error) {
     next({
       status: 400,
