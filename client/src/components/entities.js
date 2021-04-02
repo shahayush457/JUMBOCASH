@@ -10,6 +10,7 @@ import TableRow from "@material-ui/core/TableRow";
 import Box from "@material-ui/core/Box";
 import { Search } from "@material-ui/icons";
 import EditIcon from "@material-ui/icons/Edit";
+import Tooltip from "@material-ui/core/Tooltip";
 import IconButton from "@material-ui/core/IconButton";
 import Input from "./Input";
 import Title from "./Title";
@@ -58,9 +59,11 @@ class Entities extends Component {
       <TableRow key={row.id}>
         <TableCell>
           <Link to={"entity/edit/" + row._id}>
-            <IconButton color="inherit">
-              <EditIcon />
-            </IconButton>
+            <Tooltip title="Edit" placement="right">
+              <IconButton color="inherit">
+                <EditIcon />
+              </IconButton>
+            </Tooltip>
           </Link>
         </TableCell>
         <TableCell>{row.name}</TableCell>

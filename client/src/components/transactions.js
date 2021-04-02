@@ -9,8 +9,9 @@ import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import { Search } from "@material-ui/icons";
-import EditIcon from '@material-ui/icons/Edit';
+import EditIcon from "@material-ui/icons/Edit";
 import IconButton from "@material-ui/core/IconButton";
+import Tooltip from "@material-ui/core/Tooltip";
 import Title from "./Title";
 import Input from "./Input";
 import StatusBullet from "./StatusBullet";
@@ -69,11 +70,13 @@ class Transactions extends Component {
     const menu = recordsAfterPagingAndSorting().map(row => (
       <TableRow key={row.id}>
         <TableCell>
-         <Link to={"transaction/edit/" + row._id}>
-          <IconButton color="inherit">
-            <EditIcon />
-          </IconButton>
-         </Link>
+          <Link to={"transaction/edit/" + row._id}>
+            <Tooltip title="Edit" placement="right">
+              <IconButton color="inherit">
+                <EditIcon />
+              </IconButton>
+            </Tooltip>
+          </Link>
         </TableCell>
         <TableCell>
           {moment(row.createdAt).format("dddd, MMMM Do YYYY, h:mm:ss a")}

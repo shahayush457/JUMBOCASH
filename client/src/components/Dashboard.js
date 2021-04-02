@@ -113,7 +113,7 @@ const useStyles = makeStyles(theme => ({
     flexDirection: "column"
   },
   fixedHeight: {
-    height: 80,
+    height: 85,
     [theme.breakpoints.up("sm")]: {
       height: 120
     }
@@ -329,31 +329,30 @@ export default function Dashboard() {
         <ThemeProvider theme={darkTheme}>
           <CssBaseline />
           <SideBar title="Dashboard" />
-
           <main className={classes.content}>
             <div className={classes.appBarSpacer} />
             <Container maxWidth="lg" className={classes.container}>
               <Grid container spacing={5}>
                 {/* Balance */}
-                <Grid item xs>
+                <Grid item lg>
                   <Paper className={fixedHeightPaper}>
                     <Balance title="Balance" balance={balance} />
                   </Paper>
                 </Grid>
 
-                <Grid item xs>
+                <Grid item lg>
                   <Paper className={fixedHeightPaper}>
                     <Balance title="You'll Get" balance={pendingCredit} />
                   </Paper>
                 </Grid>
 
-                <Grid item xs>
+                <Grid item lg>
                   <Paper className={fixedHeightPaper}>
                     <Balance title="You'll Give" balance={pendingDebit} />
                   </Paper>
                 </Grid>
 
-                {/* Recent Transactions */}
+                {/* Transactions */}
                 <Grid item xs={12}>
                   <Paper className={classes.paper}>
                   <Title>Transactions</Title>

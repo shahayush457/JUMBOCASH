@@ -12,7 +12,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import ListSubheader from "@material-ui/core/ListSubheader";
 import DashboardIcon from "@material-ui/icons/Dashboard";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import IconButton from "@material-ui/core/IconButton";
 import Divider from "@material-ui/core/Divider";
 import AddCircleRoundedIcon from "@material-ui/icons/AddCircleRounded";
@@ -22,6 +22,7 @@ import LayersIcon from "@material-ui/icons/Layers";
 import MenuIcon from "@material-ui/icons/Menu";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import AssignmentIcon from "@material-ui/icons/Assignment";
+import Tooltip from "@material-ui/core/Tooltip";
 import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
 import auth from "../api/auth-helper";
@@ -36,7 +37,7 @@ const useStyles = makeStyles(theme => ({
     paddingRight: 24 // keep right padding when drawer closed
   },
   logOut: {
-    marginLeft: 24 
+    marginLeft: 24
   },
   toolbarIcon: {
     display: "flex",
@@ -113,33 +114,43 @@ const useStyles = makeStyles(theme => ({
 const mainListItems = (
   <div>
     <ListItem button component={Link} to="/">
-      <ListItemIcon>
-        <DashboardIcon />
-      </ListItemIcon>
+      <Tooltip title="Dashboard" placement="right">
+        <ListItemIcon>
+          <DashboardIcon />
+        </ListItemIcon>
+      </Tooltip>
       <ListItemText primary="Dashboard" />
     </ListItem>
     <ListItem button component={Link} to="/transaction">
-      <ListItemIcon>
-        <AddCircleRoundedIcon />
-      </ListItemIcon>
+      <Tooltip title="Add transaction" placement="right">
+        <ListItemIcon>
+          <AddCircleRoundedIcon />
+        </ListItemIcon>
+      </Tooltip>
       <ListItemText primary="Add transaction" />
     </ListItem>
     <ListItem button component={Link} to="/entity">
-      <ListItemIcon>
-        <PersonAddTwoToneIcon />
-      </ListItemIcon>
+      <Tooltip title="Add Entity" placement="right">
+        <ListItemIcon>
+          <PersonAddTwoToneIcon />
+        </ListItemIcon>
+      </Tooltip>
       <ListItemText primary="Add Entity" />
     </ListItem>
     <ListItem button component={Link} to="/showentities">
-      <ListItemIcon>
-        <LayersIcon />
-      </ListItemIcon>
+      <Tooltip title="List Entities" placement="right">
+        <ListItemIcon>
+          <LayersIcon />
+        </ListItemIcon>
+      </Tooltip>
       <ListItemText primary="List Entities" />
     </ListItem>
     <ListItem button>
-      <ListItemIcon>
-        <BarChartIcon />
-      </ListItemIcon>
+      <Tooltip title="Insights" placement="right">
+        <ListItemIcon>
+          <BarChartIcon />
+        </ListItemIcon>
+      </Tooltip>
       <ListItemText primary="Insights" />
     </ListItem>
   </div>
@@ -147,23 +158,29 @@ const mainListItems = (
 
 const secondaryListItems = (
   <div>
-    <ListSubheader inset>Saved reports</ListSubheader>
+    <ListSubheader inset>Reports</ListSubheader>
     <ListItem button>
-      <ListItemIcon>
-        <AssignmentIcon />
-      </ListItemIcon>
+      <Tooltip title="Current Week" placement="right">
+        <ListItemIcon>
+          <AssignmentIcon />
+        </ListItemIcon>
+      </Tooltip>
       <ListItemText primary="Current Week" />
     </ListItem>
     <ListItem button>
-      <ListItemIcon>
-        <AssignmentIcon />
-      </ListItemIcon>
+      <Tooltip title="Current Month" placement="right">
+        <ListItemIcon>
+          <AssignmentIcon />
+        </ListItemIcon>
+      </Tooltip>
       <ListItemText primary="Current Month" />
     </ListItem>
     <ListItem button>
-      <ListItemIcon>
-        <AssignmentIcon />
-      </ListItemIcon>
+      <Tooltip title="Current Year" placement="right">
+        <ListItemIcon>
+          <AssignmentIcon />
+        </ListItemIcon>
+      </Tooltip>
       <ListItemText primary="Current Year" />
     </ListItem>
   </div>
@@ -215,22 +232,26 @@ export default function Sidebar(props) {
           >
             {props.title}
           </Typography>
-          <IconButton color="inherit">
-            <Badge badgeContent={4} color="secondary">
-              <NotificationsIcon />
-            </Badge>
-          </IconButton>
-          <IconButton
-            color="inherit"
-            onClick={SignOut}
-            className={classes.logout}
-          >
-            <ExitToAppIcon />
-          </IconButton>
+          <Tooltip title="Notifications" placement="bottom">
+            <IconButton color="inherit">
+              <Badge badgeContent={4} color="secondary">
+                <NotificationsIcon />
+              </Badge>
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Logout" placement="bottom">
+            <IconButton
+              color="inherit"
+              onClick={SignOut}
+              className={classes.logout}
+            >
+              <ExitToAppIcon />
+            </IconButton>
+          </Tooltip>
         </Toolbar>
       </AppBar>
       <Drawer
-        variant="permanent"
+        variant="temporary"
         classes={{
           paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose)
         }}
