@@ -330,19 +330,25 @@ exports.getFilteredTransactions = async (req, res, next) => {
     };
 
     if (req.query.sDate && req.query.eDate) {
+      let startDate = req.query.sDate;
+      startDate.setHours(00, 00, 00, 000);
       let endDate = req.query.eDate;
-      endDate.setDate(endDate.getDate() + 1);      
+      endDate.setHours(23, 59, 59, 999);
       filter.createdAt = {
-        $gte: req.query.sDate,
+        $gte: startDate,
         $lte: endDate
       };
-    } else if (req.query.sDate)
+    } else if (req.query.sDate) {
+      let startDate = req.query.sDate;
+      startDate.setHours(00, 00, 00, 000);
       filter.createdAt = {
-        $gte: req.query.sDate
+        $gte: startDate
       };
-    else if (req.query.eDate) {
+    } else if (req.query.eDate) {
+      let endDate = req.query.eDate;
+      endDate.setHours(23, 59, 59, 999);
       filter.createdAt = {
-        $lte: req.query.eDate
+        $lte: endDate
       };
     }
 
