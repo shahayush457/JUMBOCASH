@@ -42,7 +42,8 @@ const styles = theme => ({
     content: {
       flexGrow: 1,
       height: "100vh",
-      overflow: "auto"
+      overflow: "auto",
+      fontSize: 16
     },
     container: {
       paddingTop: theme.spacing(4),
@@ -74,6 +75,8 @@ class AddTransaction extends Component {
             open:'',
             entityId:'',
             entities:[],
+            pDate:'',
+            tDate:'',
             touched: {
                 amount: false,
                 type: false,
@@ -117,6 +120,27 @@ class AddTransaction extends Component {
         this.setState({
           open: !this.state.open
         });
+
+        this.setState({
+            amount:'',
+            type:'',
+            mode:'',
+            remark:'',
+            status:'',
+            error:'',
+            open:'',
+            entityId:'',
+            entities:[],
+            pDate:'',
+            tDate: '',
+            touched: {
+                amount: false,
+                type: false,
+                mode: false,
+                remark: false,
+                status: false,
+            }
+        })
     }
 
     onRadioChange = (e) => {
@@ -167,6 +191,8 @@ class AddTransaction extends Component {
         {
             transaction.reminderDate = this.state.pDate;
         }
+
+        if (this.state.tDate) transaction.createdAt = this.state.tDate;
 
         event.preventDefault();
         const token=localStorage.getItem('jwtToken');
@@ -240,6 +266,16 @@ class AddTransaction extends Component {
                                     <FormFeedback>{errors.contactNo}</FormFeedback>
                                 </Col>
                             </FormGroup>
+
+                            <FormGroup row>
+                               <Label htmlFor="tDate" md={2} className="ml-0 mb-2">Date</Label>
+                                    <Col md={8}>
+                                        <Input type="date" id="tDate" name="tDate"
+                                            placeholder="Date of transaction" value={this.state.tDate} 
+                                            onChange={this.handleInputChange}
+                                        />
+                                    </Col> 
+                             </FormGroup>
 
                             <FormGroup row>
                                 <Col sm={2} >

@@ -75,6 +75,7 @@ class EditTransaction extends Component {
             entityId:'',
             entities:[],
             pDate:'',
+            tDate:'',
             touched: {
                 amount: false,
                 type: false,
@@ -122,7 +123,7 @@ class EditTransaction extends Component {
             } 
             else 
             {
-              this.setState({...this.state,amount: data.amount,type: data.transactionType,mode: data.transactionMode,remark:data.remark,status:data.transactionStatus,entityId:data.entityId,pDate:moment(data.reminderDate).format("YYYY-MM-DD")})
+              this.setState({...this.state,amount: data.amount,type: data.transactionType,mode: data.transactionMode,remark:data.remark,status:data.transactionStatus,entityId:data.entityId,pDate:moment(data.reminderDate).format("YYYY-MM-DD"), tDate: moment(data.createdAt).format("YYYY-MM-DD")})
             }
         })
 
@@ -180,6 +181,8 @@ class EditTransaction extends Component {
             "remark":this.state.remark,
             "entityId":this.state.entityId
         }
+
+        if (this.state.tDate) transaction.createdAt = this.state.tDate;
         
         event.preventDefault();
         const token=localStorage.getItem('jwtToken');
@@ -253,6 +256,15 @@ class EditTransaction extends Component {
                                 </Col>
                             </FormGroup>
 
+                            <FormGroup row>
+                               <Label htmlFor="tDate" md={2} className="ml-0 mb-2">Date</Label>
+                                    <Col md={8}>
+                                        <Input type="date" id="tDate" name="tDate"
+                                            placeholder="Date of transaction" value={this.state.tDate} 
+                                            onChange={this.handleInputChange}
+                                        />
+                                    </Col> 
+                             </FormGroup>
 
                             <FormGroup row>
                                 <Col sm={2} >

@@ -200,8 +200,8 @@ export default function Dashboard() {
   const [order, setOrder] = React.useState("desc");
   const [orderBy, setOrderBy] = React.useState("createdAt");
 
-  const [startDate, setStartDate] = React.useState();
-  const [finishDate, setFinishDate] = React.useState();
+  const [startDate, setStartDate] = React.useState(null);
+  const [finishDate, setFinishDate] = React.useState(null);
   const [priceFilter, setPriceFilter] = React.useState([0, 100000]);
 
   const [statusValue, statusSetValue] = React.useState(["pending", "paid"]);

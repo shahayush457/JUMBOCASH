@@ -43,7 +43,8 @@ const styles = theme => ({
   content: {
     flexGrow: 1,
     height: "100vh",
-    overflow: "auto"
+    overflow: "auto",
+    fontSize: 16
   },
   container: {
     paddingTop: theme.spacing(4),

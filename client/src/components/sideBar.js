@@ -18,10 +18,10 @@ import Divider from "@material-ui/core/Divider";
 import AddCircleRoundedIcon from "@material-ui/icons/AddCircleRounded";
 import PersonAddTwoToneIcon from "@material-ui/icons/PersonAddTwoTone";
 import BarChartIcon from "@material-ui/icons/BarChart";
+import TimelineIcon from '@material-ui/icons/Timeline';
 import LayersIcon from "@material-ui/icons/Layers";
 import MenuIcon from "@material-ui/icons/Menu";
 import NotificationsIcon from "@material-ui/icons/Notifications";
-import AssignmentIcon from "@material-ui/icons/Assignment";
 import Tooltip from "@material-ui/core/Tooltip";
 import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
@@ -148,7 +148,7 @@ const mainListItems = (
     <ListItem button component={Link} to="/insights">
       <Tooltip title="Insights" placement="right">
         <ListItemIcon>
-          <BarChartIcon />
+          <TimelineIcon />
         </ListItemIcon>
       </Tooltip>
       <ListItemText primary="Insights" />
@@ -162,7 +162,7 @@ const secondaryListItems = (
     <ListItem button>
       <Tooltip title="Current Week" placement="right">
         <ListItemIcon>
-          <AssignmentIcon />
+          <BarChartIcon />
         </ListItemIcon>
       </Tooltip>
       <ListItemText primary="Current Week" />
@@ -170,7 +170,7 @@ const secondaryListItems = (
     <ListItem button>
       <Tooltip title="Current Month" placement="right">
         <ListItemIcon>
-          <AssignmentIcon />
+          <BarChartIcon />
         </ListItemIcon>
       </Tooltip>
       <ListItemText primary="Current Month" />
@@ -178,7 +178,7 @@ const secondaryListItems = (
     <ListItem button>
       <Tooltip title="Current Year" placement="right">
         <ListItemIcon>
-          <AssignmentIcon />
+          <BarChartIcon />
         </ListItemIcon>
       </Tooltip>
       <ListItemText primary="Current Year" />

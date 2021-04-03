@@ -26,6 +26,12 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(1),
     backgroundColor: theme.palette.secondary.main,
   },
+  content: {
+    flexGrow: 1,
+    height: "100vh",
+    overflow: "auto",
+    fontSize: 16
+  },
   form: {
     width: '100%', // Fix IE 11 issue.
     marginTop: theme.spacing(1),

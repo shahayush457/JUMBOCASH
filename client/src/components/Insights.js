@@ -36,7 +36,8 @@ const darkTheme = createMuiTheme({
 
 const styles = theme => ({
     root: {
-      display: "flex"
+      display: "flex",
+      height: "100%"
     },
     title: {
       flexGrow: 1,
@@ -129,7 +130,6 @@ class Insights extends Component {
 
             <Grid container maxWidth="lg" className={classes.container} spacing={4} justify="center">
                 
-
                 <Grid item md={2}>
                     <Card className={classes.root} variant="outlined">
                         <CardContent>
@@ -213,7 +213,7 @@ class Insights extends Component {
                                 <BusinessIcon/> {this.state.favvendor.address}
                             </Typography>
                             <Typography variant="body2" component="p">
-                                <TimelineIcon/> Traded more than {this.state.venc} times
+                                <TimelineIcon/> Traded {this.state.venc} times
                             </Typography>
                         </CardContent>
                         {/* <CardActions>
@@ -235,7 +235,7 @@ class Insights extends Component {
                                 <BusinessIcon/> {this.state.favcust.address}
                             </Typography>
                             <Typography variant="body2" component="p">
-                                <TimelineIcon/> Traded more than {this.state.custc} times
+                                <TimelineIcon/> Traded {this.state.custc} times
                             </Typography>
                         </CardContent>
                         {/* <CardActions>

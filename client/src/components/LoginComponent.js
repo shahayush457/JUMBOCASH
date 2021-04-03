@@ -7,9 +7,6 @@ import {
   Input,
   Col,
   FormFeedback,
-  Modal,
-  ModalHeader,
-  ModalBody,
   Alert
 } from "reactstrap";
 import { signin } from "../api/api-auth";
@@ -40,6 +37,9 @@ const darkTheme = createMuiTheme({
 });
 
 const useStyles = makeStyles(theme => ({
+  root: {
+    display: "flex"
+  },
   paper: {
     marginTop: 50,
     display: "flex",
@@ -49,6 +49,12 @@ const useStyles = makeStyles(theme => ({
   avatar: {
     margin: theme.spacing(1),
     backgroundColor: theme.palette.secondary.main
+  },
+  content: {
+    flexGrow: 1,
+    height: "100vh",
+    overflow: "auto",
+    fontSize: 30
   },
   form: {
     width: "100%", // Fix IE 11 issue.
@@ -286,7 +292,7 @@ class Login extends Component {
           </Paper>
           <Box pt={4}>
             <Copyright />
-          </Box>
+          </Box>  
         </div>
       </ThemeProvider>
     );
