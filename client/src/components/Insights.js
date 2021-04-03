@@ -34,6 +34,13 @@ const darkTheme = createMuiTheme({
     }
 });
 
+const TTypography = withStyles({
+    root: {
+      color: "#FFFFFF"
+    }
+})(Typography);
+
+
 const styles = theme => ({
     root: {
       display: "flex",
@@ -127,6 +134,7 @@ class Insights extends Component {
     render() {
         console.log()
         const { classes } = this.props;
+        
         if (auth.isAuthenticated()) {
         return (
             <ThemeProvider theme={darkTheme}>
@@ -144,9 +152,9 @@ class Insights extends Component {
                             <Typography className={classes.title} color="textSecondary" gutterBottom>
                                 <AccountBalanceWalletIcon/> Total Credit
                             </Typography>
-                            <Typography variant="h5" component="h2">
+                            <TTypography variant="h5" component="h2">
                                 Rs. {this.state.intotal}
-                            </Typography>
+                            </TTypography>
                         </CardContent>
                         {/* <CardActions>
                             <Button size="small">Learn More</Button>
@@ -160,9 +168,9 @@ class Insights extends Component {
                             <Typography className={classes.title} color="textSecondary" gutterBottom>
                                 <AccountBalanceWalletIcon/> Total Debit
                             </Typography>
-                            <Typography variant="h5" component="h2">
+                            <TTypography variant="h5" component="h2">
                                 Rs. {this.state.outtotal}
-                            </Typography>
+                            </TTypography>
                         </CardContent>
                         {/* <CardActions>
                             <Button size="small">Learn More</Button>
@@ -176,9 +184,9 @@ class Insights extends Component {
                             <Typography className={classes.title} color="textSecondary" gutterBottom>
                                 <PaymentIcon/> Cash Payments
                             </Typography>
-                            <Typography variant="h5" component="h2">
+                            <TTypography variant="h5" component="h2">
                                 {this.state.cash}
-                            </Typography>
+                            </TTypography>
                         </CardContent>
                         {/* <CardActions>
                             <Button size="small">Learn More</Button>
@@ -193,9 +201,9 @@ class Insights extends Component {
                             <Typography className={classes.title} color="textSecondary" gutterBottom>
                                 <PaymentIcon/> Online Payments
                             </Typography>
-                            <Typography variant="h5" component="h2">
+                            <TTypography variant="h5" component="h2">
                                 {this.state.online}
-                            </Typography>
+                            </TTypography>
                         </CardContent>
                         {/* <CardActions>
                             <Button size="small">Learn More</Button>
@@ -208,15 +216,15 @@ class Insights extends Component {
 
             <Grid container maxWidth="lg" className={classes.container} spacing={4} justify="center">
                 
-                <Grid item md={4} lg={3}>
+                {this.state.favvendor && (<Grid item md={4} lg={3}>
                     <Card className={classes.root} variant="outlined">
                         <CardContent>
                             <Typography className={classes.title} color="textSecondary" gutterBottom>
                                 <StarsIcon/> Favourite Vendor
                             </Typography>
-                            <Typography variant="h6" component="h2">
+                            <TTypography variant="h6" component="h2">
                                 <PersonOutlineIcon/> { this.state.favvendor.name}
-                            </Typography>
+                            </TTypography>
                             <Typography className={classes.pos} color="textSecondary">
                                 <BusinessIcon/> {this.state.favvendor.address}
                             </Typography>
@@ -228,17 +236,17 @@ class Insights extends Component {
                             <Button size="small">Learn More</Button>
                         </CardActions> */}
                     </Card>
-                </Grid>
+                </Grid>)}
 
-                <Grid item md={4} lg={3}>
+                { this.state.favcust && (<Grid item md={4} lg={3}>
                     <Card className={classes.root} variant="outlined">
                         <CardContent>
                             <Typography className={classes.title} color="textSecondary" gutterBottom>
                                 <StarsIcon/> Favourite Customer
                             </Typography>
-                            <Typography variant="h6" component="h2">
+                            <TTypography variant="h6" component="h2">
                                 <PersonOutlineIcon/> {this.state.favcust.name}
-                            </Typography>
+                            </TTypography>
                             <Typography className={classes.pos} color="textSecondary">
                                 <BusinessIcon/> {this.state.favcust.address}
                             </Typography>
@@ -250,7 +258,7 @@ class Insights extends Component {
                             <Button size="small">Learn More</Button>
                         </CardActions> */}
                     </Card>
-                </Grid>
+                </Grid>)}
 
 
                 
