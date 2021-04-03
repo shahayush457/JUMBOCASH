@@ -18,6 +18,9 @@ import Grid from '@material-ui/core/Grid';
 import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
 import BusinessIcon from '@material-ui/icons/Business';
 import TimelineIcon from '@material-ui/icons/Timeline';
+import StarsIcon from '@material-ui/icons/Stars';
+import PaymentIcon from '@material-ui/icons/Payment';
+import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 
 const darkTheme = createMuiTheme({
     palette: {
@@ -131,7 +134,7 @@ class Insights extends Component {
                     <Card className={classes.root} variant="outlined">
                         <CardContent>
                             <Typography className={classes.title} color="textSecondary" gutterBottom>
-                                Total Credit
+                                <AccountBalanceWalletIcon/> Total Credit
                             </Typography>
                             <Typography variant="h5" component="h2">
                                 Rs. {this.state.intotal}
@@ -147,7 +150,7 @@ class Insights extends Component {
                     <Card className={classes.root} variant="outlined">
                         <CardContent>
                             <Typography className={classes.title} color="textSecondary" gutterBottom>
-                                Total Debit
+                                <AccountBalanceWalletIcon/> Total Debit
                             </Typography>
                             <Typography variant="h5" component="h2">
                                 Rs. {this.state.outtotal}
@@ -163,7 +166,7 @@ class Insights extends Component {
                     <Card className={classes.root} variant="outlined">
                         <CardContent>
                             <Typography className={classes.title} color="textSecondary" gutterBottom>
-                                Cash Payments
+                                <PaymentIcon/> Cash Payments
                             </Typography>
                             <Typography variant="h5" component="h2">
                                 {this.state.cash}
@@ -180,7 +183,7 @@ class Insights extends Component {
                     <Card className={classes.root} variant="outlined">
                         <CardContent>
                             <Typography className={classes.title} color="textSecondary" gutterBottom>
-                                Online Payments
+                                <PaymentIcon/> Online Payments
                             </Typography>
                             <Typography variant="h5" component="h2">
                                 {this.state.online}
@@ -201,10 +204,10 @@ class Insights extends Component {
                     <Card className={classes.root} variant="outlined">
                         <CardContent>
                             <Typography className={classes.title} color="textSecondary" gutterBottom>
-                                Favourite Vendor
+                                <StarsIcon/> Favourite Vendor
                             </Typography>
                             <Typography variant="h6" component="h2">
-                                <PersonOutlineIcon/>{ this.state.favvendor.name}
+                                <PersonOutlineIcon/> { this.state.favvendor.name}
                             </Typography>
                             <Typography className={classes.pos} color="textSecondary">
                                 <BusinessIcon/> {this.state.favvendor.address}
@@ -223,7 +226,7 @@ class Insights extends Component {
                     <Card className={classes.root} variant="outlined">
                         <CardContent>
                             <Typography className={classes.title} color="textSecondary" gutterBottom>
-                                 Favourite Customer
+                                <StarsIcon/> Favourite Customer
                             </Typography>
                             <Typography variant="h6" component="h2">
                                 <PersonOutlineIcon/> {this.state.favcust.name}
@@ -240,6 +243,7 @@ class Insights extends Component {
                         </CardActions> */}
                     </Card>
                 </Grid>
+
 
                 
             </Grid>
