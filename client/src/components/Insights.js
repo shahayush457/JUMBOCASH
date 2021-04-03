@@ -62,6 +62,16 @@ const styles = theme => ({
     },
     fixedHeight: {
       height: 120
+    },
+    card: {
+        width: "270px",
+        display: "block",
+        margin: theme.spacing(2)
+    },
+    card2: {
+        width: "340px",
+        display: "block",
+        padding: theme.spacing(2)
     }
 });
 
@@ -81,9 +91,7 @@ class Insights extends Component {
            cash:0,
            online:0
         };
-
-        
-        
+   
     }
 
     componentWillMount()
@@ -128,7 +136,7 @@ class Insights extends Component {
             <main className={classes.content}>
             <div className={classes.appBarSpacer} />
 
-            <Grid container maxWidth="lg" className={classes.container} spacing={4} justify="center">
+            <Grid container maxWidth="lg" className={classes.container} spacing={2} justify="center">
                 
                 <Grid item md={2}>
                     <Card className={classes.root} variant="outlined">
@@ -146,7 +154,7 @@ class Insights extends Component {
                     </Card>
                 </Grid>
 
-                <Grid item md={2}>
+                <Grid item md={4} lg={2}>
                     <Card className={classes.root} variant="outlined">
                         <CardContent>
                             <Typography className={classes.title} color="textSecondary" gutterBottom>
@@ -162,7 +170,7 @@ class Insights extends Component {
                     </Card>
                 </Grid>
 
-                <Grid item md={2}>
+                <Grid item md={4} lg={2}>
                     <Card className={classes.root} variant="outlined">
                         <CardContent>
                             <Typography className={classes.title} color="textSecondary" gutterBottom>
@@ -179,7 +187,7 @@ class Insights extends Component {
                 </Grid>
                 
 
-                <Grid item md={2}>
+                <Grid item md={4} lg={2}>
                     <Card className={classes.root} variant="outlined">
                         <CardContent>
                             <Typography className={classes.title} color="textSecondary" gutterBottom>
@@ -200,7 +208,7 @@ class Insights extends Component {
 
             <Grid container maxWidth="lg" className={classes.container} spacing={4} justify="center">
                 
-                <Grid item md={3}>
+                <Grid item md={4} lg={3}>
                     <Card className={classes.root} variant="outlined">
                         <CardContent>
                             <Typography className={classes.title} color="textSecondary" gutterBottom>
@@ -222,7 +230,7 @@ class Insights extends Component {
                     </Card>
                 </Grid>
 
-                <Grid item md={3}>
+                <Grid item md={4} lg={3}>
                     <Card className={classes.root} variant="outlined">
                         <CardContent>
                             <Typography className={classes.title} color="textSecondary" gutterBottom>
