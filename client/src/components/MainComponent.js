@@ -9,6 +9,7 @@ import Entities from "./EntitiesDisplayComponent";
 import Transactions from "./transactions";
 import EditEntity from "./EditEntity";
 import EditTransaction from "./EditTransaction";
+import Insights from "./Insights"
 
 class Main extends Component {
   constructor(props) {
@@ -47,6 +48,7 @@ class Main extends Component {
             path="/showtransaction"
             component={() => <Transactions transactions={this.state.trans} />}
           />
+          <Route exact path="/insights" component={Insights} />
           <Route exact path="/showentities" component={Entities} />
           <Route exact path="/transaction" component={AddTransaction} />
           <Route exact path="/register" component={Register} />

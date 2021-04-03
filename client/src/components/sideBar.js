@@ -145,7 +145,7 @@ const mainListItems = (
       </Tooltip>
       <ListItemText primary="List Entities" />
     </ListItem>
-    <ListItem button>
+    <ListItem button component={Link} to="/insights">
       <Tooltip title="Insights" placement="right">
         <ListItemIcon>
           <BarChartIcon />
