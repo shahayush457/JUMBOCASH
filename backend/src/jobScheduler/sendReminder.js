@@ -1,12 +1,6 @@
 let nodemailer = require("nodemailer");
 const { email, password } = require("../config/config");
 
-function createPaymentText(transactionType, amount, entityName) {
-  return transactionType === "debit"
-    ? `You have a pending payment of Rs ${amount} to ${entityName}`
-    : `You have a pending payment of Rs ${amount} from ${entityName}`;
-}
-
 module.exports = async agenda => {
   let transporter = nodemailer.createTransport({
     service: "gmail",
@@ -16,6 +10,11 @@ module.exports = async agenda => {
     }
   });
 
+  // Define a "job", an email sending function that agenda can execute
+  // `job` is an object representing the job that agenda schedules.
+  // `job.attrs` contains the raw document that's stored in MongoDB, so
+  // `job.attrs.data` is how you get the `data` that application passes
+  // to `schedule()`
   agenda.define("send email reminder", async job => {
     const {
       to,

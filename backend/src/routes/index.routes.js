@@ -8,4 +8,6 @@ router.use("/transactions", require("./transactions/transactions.routes"));
 
 router.use("/entities", require("./entities/entities.routes"));
 
+router.use("/insights", require("./insights/insights.routes"));
+
 module.exports = router;

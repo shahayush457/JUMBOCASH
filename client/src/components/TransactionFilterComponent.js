@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import {find} from "../api/api-trans"
 import {read} from '../api/api-entities';
 import {withRouter} from "react-router"
+
 const checktype = [
     {
       name: 'credit',
@@ -103,7 +104,6 @@ class SubMenu extends Component{
         const token=localStorage.getItem('jwtToken');
         read(token).then((data) => {
             //console.log(data);
-            
             if (data.errors) {
                 this.setState({ ...this.state,error:data.errors[0].msg})
             } else {

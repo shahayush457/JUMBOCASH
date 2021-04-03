@@ -1,7 +1,6 @@
 import decode from 'jwt-decode';
 const auth = {
   isAuthenticated() {
-
     if (localStorage.jwtToken)
         return (decode(localStorage.jwtToken))
     else
