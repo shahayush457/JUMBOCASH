@@ -108,8 +108,6 @@ class Report extends Component {
           net.push(this.state.year[month[i]].totalAmount);
         }
 
-        console.log(paid);
-
         this.setState({
           data1: {
             labels: month,
