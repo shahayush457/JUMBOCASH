@@ -67,6 +67,93 @@ class Report extends Component {
           year:'',
         }
     }
+    componentDidUpdate()
+    {
+      const token=localStorage.getItem('jwtToken');
+        readyear(token).then((data) => {
+              
+              if (data.errors) {
+                  this.setState({ ...this.state,error:data.errors[0].msg})
+              } else {
+                  this.setState({
+                      year:data
+                  })
+                  let paid = [],pending=[],total=[],credit=[],debit=[],net=[];
+                  for (let i = 0;i < month.length; i++) 
+                  {
+                    paid.push(this.state.year[month[i]].paid)
+                    pending.push(this.state.year[month[i]].pending)
+                    total.push(this.state.year[month[i]].total)
+
+                    credit.push(this.state.year[month[i]].credit)
+                    debit.push(this.state.year[month[i]].debit)
+                    net.push(this.state.year[month[i]].totalAmount)
+                  }
+                 
+                  
+                  
+
+                  data1 = {
+                    labels: month,
+                    datasets: [
+                      {
+                        label: 'Total',
+                        data: total,
+                        backgroundColor: 'rgb(255, 99, 132)',
+                      },
+                      {
+                        label: 'Paid',
+                        data: paid,
+                        backgroundColor: 'rgb(54, 162, 235)',
+                      },
+                      {
+                        label: 'Pending',
+                        data: pending,
+                        backgroundColor: 'rgb(75, 192, 192)',
+                      },
+                    ],
+                  }
+                  
+                  data2 = {
+                    labels: month,
+                    datasets: [
+                      {
+                        label: 'Amount',
+                        data: net,
+                        backgroundColor: 'rgb(255, 99, 132)',
+                      }
+                    ],
+                  }
+                  options = {
+                    legend: {
+                      labels: {
+                          fontColor: "#FFFF",
+                          fontSize: 15
+                      }
+                    },
+                    scales: {
+                      yAxes: [
+                        {
+                          ticks: {
+                            fontColor: "#FFFF",
+                            beginAtZero: true,
+                          },
+                        },
+                      ],
+                      xAxes: [
+                        {
+                          ticks: {
+                            fontColor: "#FFFF",
+                            beginAtZero: true,
+                          },
+                        },
+                      ],
+                    },
+                  }
+              }
+            
+        })
+    }
     componentWillMount()
     {
         const token=localStorage.getItem('jwtToken');
