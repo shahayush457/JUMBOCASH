@@ -10,6 +10,9 @@ import Transactions from "./transactions";
 import EditEntity from "./EditEntity";
 import EditTransaction from "./EditTransaction";
 import Insights from "./Insights"
+import Report from "./Report";
+
+
 
 class Main extends Component {
   constructor(props) {
@@ -17,12 +20,14 @@ class Main extends Component {
     this.state = {
       sidebarIsOpen: false,
       entities: [],
-      trans: []
+      trans: [],
     };
     this.setEntities = this.setEntities.bind(this);
     this.setTrans = this.setTrans.bind(this);
     this.toggleSidebar = this.toggleSidebar.bind(this);
   }
+  
+
   toggleSidebar() {
     this.setState({
       sidebarIsOpen: !this.state.sidebarIsOpen
@@ -54,6 +59,7 @@ class Main extends Component {
           <Route exact path="/register" component={Register} />
           <Route exact path="/login" component={Login} />
           <Route exact path="/entity" component={AddEntity} />
+          <Route exact path="/report"  component={Report} />
           <Route exact path="/entity/edit/:entityId" component={EditEntity} />
           <Route
             exact

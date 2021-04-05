@@ -175,7 +175,7 @@ const secondaryListItems = (
       </Tooltip>
       <ListItemText primary="Current Month" />
     </ListItem>
-    <ListItem button>
+    <ListItem button button component={Link} to="/report" >
       <Tooltip title="Current Year" placement="right">
         <ListItemIcon>
           <BarChartIcon />
