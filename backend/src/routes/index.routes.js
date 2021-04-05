@@ -10,4 +10,6 @@ router.use("/entities", require("./entities/entities.routes"));
 
 router.use("/insights", require("./insights/insights.routes"));
 
+router.use("/reports", require("./reports/reports.routes"));
+
 module.exports = router;
