@@ -10,6 +10,7 @@ import Copyright from "./Copyright";
 import auth from "../api/auth-helper";
 import { readyear } from "../api/api-report";
 import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
 import { Bar } from "@reactchartjs/react-chart.js";
 
 var month = [
@@ -44,7 +45,9 @@ const styles = theme => ({
     display: "flex"
   },
   title: {
-    flexGrow: 1
+    flexGrow: 1,
+    fontSize: 20,
+    color: lightBlue[700]
   },
   appBarSpacer: theme.mixins.toolbar,
   content: {
@@ -136,6 +139,11 @@ class Report extends Component {
             labels: month,
             datasets: [
               {
+                label: "Total",
+                data: total,
+                backgroundColor: "rgb(255, 99, 132)"
+              },
+              {
                 label: "Credit",
                 data: credit,
                 backgroundColor: "rgb(54, 162, 235)"
@@ -210,18 +218,21 @@ class Report extends Component {
               >
                 <Grid item md={5}>
                   <Paper className={classes.paper}>
+                  <Typography className={classes.title} color="textSecondary">Total amount in each month</Typography>
                     <Bar data={this.state.data2} options={this.state.options} />
                   </Paper>
                 </Grid>
 
                 <Grid item md={5}>
                   <Paper className={classes.paper}>
+                  <Typography className={classes.title} color="textSecondary">Total number of transactions for Pending and Paid</Typography>
                     <Bar data={this.state.data1} options={this.state.options} />
                   </Paper>
                 </Grid>
 
                 <Grid item md={5}>
                   <Paper className={classes.paper}>
+                  <Typography className={classes.title} color="textSecondary">Total number of transactions for Credit and Debit</Typography>
                     <Bar data={this.state.data3} options={this.state.options} />
                   </Paper>
                 </Grid>
