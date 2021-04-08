@@ -92,7 +92,7 @@ class Login extends Component {
   };
 
   toggleModal() {
-    window.location.href = "/";
+    
     this.setState({
       open: !this.state.open
     });
@@ -112,6 +112,7 @@ class Login extends Component {
       } else {
         auth.authenticate(data.token, () => {
           this.setState({ ...this.state, error: "", open: true });
+          window.location.href = "/";
         });
       }
     });
@@ -126,6 +127,7 @@ class Login extends Component {
       } else {
         auth.authenticate(data.token, () => {
           this.setState({ ...this.state, error: "", open: true });
+          window.location.href = "/";
         });
       }
     });
@@ -162,6 +164,7 @@ class Login extends Component {
       } else {
         auth.authenticate(data.token, () => {
           this.setState({ ...this.state, error: "", open: true });
+          window.location.href = "/";
         });
       }
     });

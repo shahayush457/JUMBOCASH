@@ -167,7 +167,7 @@ const secondaryListItems = (
       </Tooltip>
       <ListItemText primary="Current Week" />
     </ListItem>
-    <ListItem button>
+    <ListItem button component={Link} to="/month">
       <Tooltip title="Current Month" placement="right">
         <ListItemIcon>
           <BarChartIcon />

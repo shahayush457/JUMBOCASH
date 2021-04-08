@@ -11,7 +11,7 @@ import EditEntity from "./EditEntity";
 import EditTransaction from "./EditTransaction";
 import Insights from "./Insights"
 import Report from "./Report";
-
+import MonthReport from './MonthReport'
 
 
 class Main extends Component {
@@ -60,6 +60,7 @@ class Main extends Component {
           <Route exact path="/login" component={Login} />
           <Route exact path="/entity" component={AddEntity} />
           <Route exact path="/report"  component={Report} />
+          <Route exact path="/month"  component={MonthReport} />
           <Route exact path="/entity/edit/:entityId" component={EditEntity} />
           <Route
             exact
