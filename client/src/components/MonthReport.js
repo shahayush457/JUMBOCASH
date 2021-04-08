@@ -119,7 +119,7 @@ class MonthReport extends Component {
                 label: "Pending",
                 data: pending,
                 fill:false,
-                borderColor: "rgb(75, 192, 192)"
+                borderColor: "rgb(33, 228, 98)"
               }
             ]
           }
@@ -145,7 +145,7 @@ class MonthReport extends Component {
                 label: "Debit",
                 data: debit,
                 fill:false,
-                borderColor: "rgb(75, 192, 192)"
+                borderColor: "rgb(33, 228, 98)"
               }
             ]
           }
@@ -201,7 +201,7 @@ class MonthReport extends Component {
               >
                 <Grid item md={5}>
                   <Paper className={classes.paper}>
-                  <Typography className={classes.title} color="textSecondary">Net Amount Per Day</Typography>
+                  <Typography className={classes.title} color="textSecondary">Total amount of transaction in each day</Typography>
                     <Line data={this.state.data2} options={this.state.options} />
                   </Paper>
                 </Grid>

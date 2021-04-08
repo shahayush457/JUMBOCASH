@@ -218,7 +218,7 @@ class Report extends Component {
               >
                 <Grid item md={5}>
                   <Paper className={classes.paper}>
-                  <Typography className={classes.title} color="textSecondary">Total amount in each month</Typography>
+                  <Typography className={classes.title} color="textSecondary">Total amount of transaction in each month</Typography>
                     <Bar data={this.state.data2} options={this.state.options} />
                   </Paper>
                 </Grid>
