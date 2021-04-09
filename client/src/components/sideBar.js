@@ -159,7 +159,7 @@ const mainListItems = (
 const secondaryListItems = (
   <div>
     <ListSubheader inset>Reports</ListSubheader>
-    <ListItem button>
+    <ListItem button component={Link} to="/weekReport">
       <Tooltip title="Current Week" placement="right">
         <ListItemIcon>
           <BarChartIcon />
