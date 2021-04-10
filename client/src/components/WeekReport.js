@@ -14,7 +14,7 @@ import Typography from "@material-ui/core/Typography";
 import { Bar } from "@reactchartjs/react-chart.js";
 
 var month = [
-    'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'
+  'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'
 ];
 
 const darkTheme = createMuiTheme({

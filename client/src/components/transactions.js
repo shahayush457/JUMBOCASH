@@ -23,7 +23,7 @@ const statusColors = {
 };
 
 const headCells = [
-  { id: "createdAt", label: "Date" },
+  { id: "createdAt", label: "Date (GMT +5:30)" },
   { id: "entity.name", label: "Name", disableSorting: true },
   { id: "eType", label: "Entity Type", disableSorting: true },
   { id: "transactionType", label: "Type" },
