@@ -11,8 +11,8 @@ import EditEntity from "./EditEntity";
 import EditTransaction from "./EditTransaction";
 import Insights from "./Insights"
 import Report from "./Report";
-
-
+import MonthReport from './MonthReport'
+import WeekReport from './WeekReport'
 
 class Main extends Component {
   constructor(props) {
@@ -59,7 +59,9 @@ class Main extends Component {
           <Route exact path="/register" component={Register} />
           <Route exact path="/login" component={Login} />
           <Route exact path="/entity" component={AddEntity} />
-          <Route exact path="/report"  component={Report} />
+          <Route exact path="/yearReport"  component={Report} />
+          <Route exact path="/monthReport"  component={MonthReport} />
+          <Route exact path="/weekReport"  component={WeekReport} />
           <Route exact path="/entity/edit/:entityId" component={EditEntity} />
           <Route
             exact

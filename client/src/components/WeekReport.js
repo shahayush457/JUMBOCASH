@@ -8,24 +8,13 @@ import { blue, lightBlue } from "@material-ui/core/colors";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Copyright from "./Copyright";
 import auth from "../api/auth-helper";
-import { readyear } from "../api/api-report";
+import { readweek } from "../api/api-report";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import { Bar } from "@reactchartjs/react-chart.js";
 
 var month = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December"
+  'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'
 ];
 
 const darkTheme = createMuiTheme({
@@ -75,7 +64,7 @@ const styles = theme => ({
   }
 });
 
-class Report extends Component {
+class WeekReport extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -88,7 +77,7 @@ class Report extends Component {
   }
   componentWillMount() {
     const token = localStorage.getItem("jwtToken");
-    readyear(token).then(data => {
+    readweek(token).then(data => {
       if (data.errors) {
         this.setState({ ...this.state, error: data.errors[0].msg });
       } else {
@@ -218,7 +207,7 @@ class Report extends Component {
               >
                 <Grid item md={5}>
                   <Paper className={classes.paper}>
-                  <Typography className={classes.title} color="textSecondary">Total amount of transaction in each month</Typography>
+                  <Typography className={classes.title} color="textSecondary">Total amount per day</Typography>
                     <Bar data={this.state.data2} options={this.state.options} />
                   </Paper>
                 </Grid>
@@ -248,4 +237,4 @@ class Report extends Component {
   }
 }
 
-export default withStyles(styles)(Report);
+export default withStyles(styles)(WeekReport);

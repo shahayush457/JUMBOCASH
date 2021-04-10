@@ -159,7 +159,7 @@ const mainListItems = (
 const secondaryListItems = (
   <div>
     <ListSubheader inset>Reports</ListSubheader>
-    <ListItem button>
+    <ListItem button component={Link} to="/weekReport">
       <Tooltip title="Current Week" placement="right">
         <ListItemIcon>
           <BarChartIcon />
@@ -167,7 +167,7 @@ const secondaryListItems = (
       </Tooltip>
       <ListItemText primary="Current Week" />
     </ListItem>
-    <ListItem button>
+    <ListItem button component={Link} to="/monthReport">
       <Tooltip title="Current Month" placement="right">
         <ListItemIcon>
           <BarChartIcon />
@@ -175,7 +175,7 @@ const secondaryListItems = (
       </Tooltip>
       <ListItemText primary="Current Month" />
     </ListItem>
-    <ListItem button button component={Link} to="/report" >
+    <ListItem button button component={Link} to="/yearReport" >
       <Tooltip title="Current Year" placement="right">
         <ListItemIcon>
           <BarChartIcon />

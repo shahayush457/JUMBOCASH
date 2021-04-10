@@ -8,25 +8,11 @@ import { blue, lightBlue } from "@material-ui/core/colors";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Copyright from "./Copyright";
 import auth from "../api/auth-helper";
-import { readyear } from "../api/api-report";
+import { readmonth } from "../api/api-report";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
-import { Bar } from "@reactchartjs/react-chart.js";
+import { Line } from "@reactchartjs/react-chart.js";
 
-var month = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December"
-];
 
 const darkTheme = createMuiTheme({
   palette: {
@@ -47,7 +33,7 @@ const styles = theme => ({
   title: {
     flexGrow: 1,
     fontSize: 20,
-    color: lightBlue[700]
+    color: lightBlue[700],
   },
   appBarSpacer: theme.mixins.toolbar,
   content: {
@@ -75,7 +61,7 @@ const styles = theme => ({
   }
 });
 
-class Report extends Component {
+class MonthReport extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -88,12 +74,12 @@ class Report extends Component {
   }
   componentWillMount() {
     const token = localStorage.getItem("jwtToken");
-    readyear(token).then(data => {
+    readmonth(token).then(data => {
       if (data.errors) {
         this.setState({ ...this.state, error: data.errors[0].msg });
       } else {
         this.setState({
-          year: data
+          year: data.report
         });
         let paid = [],
           pending = [],
@@ -101,16 +87,18 @@ class Report extends Component {
           credit = [],
           debit = [],
           net = [];
-        for (let i = 0; i < month.length; i++) {
-          paid.push(this.state.year[month[i]].paid);
-          pending.push(this.state.year[month[i]].pending);
-          total.push(this.state.year[month[i]].total);
+        for (let i = 0; i < 30; i++) {
+          paid.push(this.state.year[i].paid);
+          pending.push(this.state.year[i].pending);
+          total.push(this.state.year[i].total);
 
-          credit.push(this.state.year[month[i]].credit);
-          debit.push(this.state.year[month[i]].debit);
-          net.push(this.state.year[month[i]].totalAmount);
+          credit.push(this.state.year[i].credit);
+          debit.push(this.state.year[i].debit);
+          net.push(this.state.year[i].totalAmount);
         }
-
+        let month=[];
+        for(let i=1;i<=30;i++)
+        month.push(i);
         this.setState({
           data1: {
             labels: month,
@@ -118,17 +106,20 @@ class Report extends Component {
               {
                 label: "Total",
                 data: total,
-                backgroundColor: "rgb(255, 99, 132)"
+                fill:false,
+                borderColor: "rgb(255, 99, 132)"
               },
               {
                 label: "Paid",
                 data: paid,
-                backgroundColor: "rgb(54, 162, 235)"
+                fill:false,
+                borderColor: "rgb(54, 162, 235)"
               },
               {
                 label: "Pending",
                 data: pending,
-                backgroundColor: "rgb(75, 192, 192)"
+                fill:false,
+                borderColor: "rgb(33, 228, 98)"
               }
             ]
           }
@@ -141,17 +132,20 @@ class Report extends Component {
               {
                 label: "Total",
                 data: total,
-                backgroundColor: "rgb(255, 99, 132)"
+                fill:false,
+                borderColor: "rgb(255, 99, 132)"
               },
               {
                 label: "Credit",
                 data: credit,
-                backgroundColor: "rgb(54, 162, 235)"
+                fill:false,
+                borderColor: "rgb(54, 162, 235)"
               },
               {
                 label: "Debit",
                 data: debit,
-                backgroundColor: "rgb(75, 192, 192)"
+                fill:false,
+                borderColor: "rgb(33, 228, 98)"
               }
             ]
           }
@@ -164,36 +158,25 @@ class Report extends Component {
               {
                 label: "Amount",
                 data: net,
-                backgroundColor: "rgb(255, 99, 132)"
+                fill:false,
+                borderColor: "rgb(255, 99, 132)"
               }
             ]
           }
         });
 
         this.setState({
-          options: {
-            legend: {
-              labels: {
-                fontSize: 15
-              }
-            },
-            scales: {
-              yAxes: [
-                {
-                  ticks: {
-                    beginAtZero: true
-                  }
-                }
-              ],
-              xAxes: [
-                {
-                  ticks: {
-                    beginAtZero: true
-                  }
-                }
-              ]
+            options:{
+                scales: {
+                  yAxes: [
+                    {
+                      ticks: {
+                        beginAtZero: true,
+                      },
+                    },
+                  ],
+                },
             }
-          }
         });
       }
     });
@@ -218,22 +201,22 @@ class Report extends Component {
               >
                 <Grid item md={5}>
                   <Paper className={classes.paper}>
-                  <Typography className={classes.title} color="textSecondary">Total amount of transaction in each month</Typography>
-                    <Bar data={this.state.data2} options={this.state.options} />
+                  <Typography className={classes.title} color="textSecondary">Total amount of transaction in each day</Typography>
+                    <Line data={this.state.data2} options={this.state.options} />
                   </Paper>
                 </Grid>
 
                 <Grid item md={5}>
                   <Paper className={classes.paper}>
-                  <Typography className={classes.title} color="textSecondary">Total number of transactions for Pending and Paid</Typography>
-                    <Bar data={this.state.data1} options={this.state.options} />
+                  <Typography className={classes.title} color="textSecondary">Number of Pending and Paid Transactions Per Day</Typography>
+                    <Line data={this.state.data1} options={this.state.options} />
                   </Paper>
                 </Grid>
 
                 <Grid item md={5}>
                   <Paper className={classes.paper}>
-                  <Typography className={classes.title} color="textSecondary">Total number of transactions for Credit and Debit</Typography>
-                    <Bar data={this.state.data3} options={this.state.options} />
+                  <Typography className={classes.title} color="textSecondary">Number of Credit and Debit Transactions Per Day</Typography>
+                    <Line data={this.state.data3} options={this.state.options} />
                   </Paper>
                 </Grid>
               </Grid>
@@ -248,4 +231,4 @@ class Report extends Component {
   }
 }
 
-export default withStyles(styles)(Report);
+export default withStyles(styles)(MonthReport);

@@ -45,7 +45,8 @@ const styles = theme => ({
   content: {
     flexGrow: 1,
     height: "100vh",
-    overflow: "auto"
+    overflow: "auto",
+    fontSize: 16
   },
   container: {
     paddingTop: theme.spacing(4),
@@ -139,7 +140,8 @@ class EditEntity extends Component {
       if (data.errors) {
         this.setState({ ...this.state, error: data.errors[0].msg });
       } else {
-        this.setState({ ...this.state, error: "", open: true });
+        //this.setState({ ...this.state, error: "", open: true });
+        window.location.href = "/";
       }
     });
   }
@@ -189,7 +191,7 @@ class EditEntity extends Component {
       <ThemeProvider theme={darkTheme}>
         <CssBaseline />
         <div className={classes.root}>
-          <SideBar title="Add Transaction" />
+          <SideBar title="Edit Entity" />
           <main className={classes.content}>
             <div className={classes.appBarSpacer} />
             <Container maxWidth="lg" className={classes.container}>

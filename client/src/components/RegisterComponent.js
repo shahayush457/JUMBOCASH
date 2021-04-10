@@ -84,7 +84,7 @@ class Register extends Component {
     });
   };
   toggleModal() {
-    window.location.href = "/";
+    
     this.setState({
       open: !this.state.open
     });
@@ -127,6 +127,7 @@ class Register extends Component {
         //this.setState({ ...this.state, error: "", open: true });
         auth.authenticate(data.token, () => {
           this.setState({ ...this.state, error: "", open: true });
+          window.location.href = "/";
         });
       }
     });
@@ -141,6 +142,7 @@ class Register extends Component {
         //this.setState({ ...this.state, error: "", open: true });
         auth.authenticate(data.token, () => {
           this.setState({ ...this.state, error: "", open: true });
+          window.location.href = "/";
         });
       }
     });
@@ -161,6 +163,7 @@ class Register extends Component {
         //this.setState({ ...this.state, error: "", open: true });
         auth.authenticate(data.token, () => {
           this.setState({ ...this.state, error: "", open: true });
+          window.location.href = "/";
         });
       }
     });
