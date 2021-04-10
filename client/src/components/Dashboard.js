@@ -336,7 +336,7 @@ export default function Dashboard() {
                 {/* Balance */}
                 <Grid item lg>
                   <Paper className={fixedHeightPaper}>
-                    <Balance title="Balance" balance={balance} />
+                    <Balance title="Total Profit (Only Paid)" balance={balance} />
                   </Paper>
                 </Grid>
 

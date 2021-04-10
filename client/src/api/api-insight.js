@@ -1,9 +1,9 @@
 import config from "../config";
 
-const read = async (token) => {
+const read = async (token, url) => {
     try {
       //console.log(config.server+'/transactions/filter?'+url)
-      let response = await fetch(config.server + "/insights", {
+      let response = await fetch(config.server + "/insights?" + url, {
         method: "GET",
         headers: {
           Accept: "application/json",
