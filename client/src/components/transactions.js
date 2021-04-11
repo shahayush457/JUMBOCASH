@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import moment from "moment";
 import Table from "@material-ui/core/Table";
-import { Toolbar, InputAdornment } from "@material-ui/core";
+import { Toolbar, InputAdornment, Button } from "@material-ui/core";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -15,7 +15,10 @@ import Tooltip from "@material-ui/core/Tooltip";
 import Title from "./Title";
 import Input from "./Input";
 import StatusBullet from "./StatusBullet";
-
+import { CsvBuilder } from 'filefy';
+import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
+import { spacing } from '@material-ui/system';
+import Box from '@material-ui/core/Box';
 const statusColors = {
   paid: "success",
   processing: "info",
@@ -32,6 +35,9 @@ const headCells = [
   { id: "amount", label: "Amount" }
 ];
 
+
+
+
 class Transactions extends Component {
   constructor(props) {
     super(props);
@@ -43,8 +49,33 @@ class Transactions extends Component {
       }
     };
     this.handleSearch = this.handleSearch.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
+  handleClick ()
+  {
+    
+    var csvBuilder = new CsvBuilder("trasactions.csv")
+                     .setColumns(["Date","Name","Entity Type","Type","Status","Mode", "Amount"])
+  
+    this.state.filterFn.fn(this.props.transactions).forEach(function(row) {
+        //console.log(row);
+        let currow=[];
+      
+        currow.push(moment(row.createdAt).format("dddd, MMMM Do YYYY, h:mm:ss a"))
+        currow.push(row.entity[0].name)
+        currow.push(row.entity[0].entityType)
+        currow.push(row.transactionType)
+        currow.push(row.transactionStatus)
+        currow.push(row.transactionMode)
+        currow.push(row.amount)
+        
+        
 
+        csvBuilder.addRow(currow);
+    });
+    csvBuilder.exportFile();
+    
+  }
   handleSearch = e => {
     let target = e.target;
     this.setState({
@@ -92,7 +123,7 @@ class Transactions extends Component {
         <TableCell align="right">{row.amount}</TableCell>
       </TableRow>
     ));
-
+    
     return (
       <React.Fragment>
         <Toolbar>
@@ -107,6 +138,11 @@ class Transactions extends Component {
             }}
             onChange={this.handleSearch}
           />
+           <Box ml="auto" >
+              <Button variant="contained" color="primary" onClick={this.handleClick}>
+                <ArrowDownwardIcon/>
+              </Button>
+          </Box>
         </Toolbar>
         <Table size="small">
           <TableHead>
