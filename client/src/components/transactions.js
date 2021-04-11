@@ -19,6 +19,7 @@ import { CsvBuilder } from 'filefy';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import { spacing } from '@material-ui/system';
 import Box from '@material-ui/core/Box';
+
 const statusColors = {
   paid: "success",
   processing: "info",
@@ -34,9 +35,6 @@ const headCells = [
   { id: "transactionMode", label: "Mode" },
   { id: "amount", label: "Amount" }
 ];
-
-
-
 
 class Transactions extends Component {
   constructor(props) {
@@ -55,7 +53,7 @@ class Transactions extends Component {
   {
     
     var csvBuilder = new CsvBuilder("trasactions.csv")
-                     .setColumns(["Date","Name","Entity Type","Type","Status","Mode", "Amount"])
+                     .setColumns(["Date (GMT +5:30)","Name","Entity Type","Type","Status","Mode", "Amount"])
   
     this.state.filterFn.fn(this.props.transactions).forEach(function(row) {
         //console.log(row);
@@ -68,14 +66,12 @@ class Transactions extends Component {
         currow.push(row.transactionStatus)
         currow.push(row.transactionMode)
         currow.push(row.amount)
-        
-        
 
         csvBuilder.addRow(currow);
     });
-    csvBuilder.exportFile();
-    
+    csvBuilder.exportFile(); 
   }
+
   handleSearch = e => {
     let target = e.target;
     this.setState({
@@ -139,9 +135,11 @@ class Transactions extends Component {
             onChange={this.handleSearch}
           />
            <Box ml="auto" >
+            <Tooltip title="Export CSV" placement="bottom">
               <Button variant="contained" color="primary" onClick={this.handleClick}>
                 <ArrowDownwardIcon/>
               </Button>
+            </Tooltip>
           </Box>
         </Toolbar>
         <Table size="small">
