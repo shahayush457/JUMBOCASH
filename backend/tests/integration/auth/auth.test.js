@@ -10,11 +10,11 @@ const User = require("../../../src/models/users.model");
 const app = require("../../../src/common/index");
 
 describe("Integration Tests - Auth routes", () => {
-  describe("POST /api/v1/auth/register", () => {
+  describe("POST /api/v2/auth/register", () => {
     it("It should successfully register a user", async () => {
       const user = await chai
         .request(app)
-        .post("/api/v1/auth/register")
+        .post("/api/v2/auth/register")
         .send({
           name: "Ayush Shah",
           email: "fake@gmail.com",
@@ -27,7 +27,7 @@ describe("Integration Tests - Auth routes", () => {
     it("It should not register the user - email already registered", async () => {
       const user = await chai
         .request(app)
-        .post("/api/v1/auth/register")
+        .post("/api/v2/auth/register")
         .send({
           name: "Ayush Shah",
           email: "fake@gmail.com",
@@ -39,7 +39,7 @@ describe("Integration Tests - Auth routes", () => {
     it("It should not register the user - email field missing", async () => {
       const user = await chai
         .request(app)
-        .post("/api/v1/auth/register")
+        .post("/api/v2/auth/register")
         .send({
           name: "Ayush Shah",
           password: "test"
@@ -50,7 +50,7 @@ describe("Integration Tests - Auth routes", () => {
     it("It should not register the user - password should be atleast 6 characters long", async () => {
       const user = await chai
         .request(app)
-        .post("/api/v1/auth/register")
+        .post("/api/v2/auth/register")
         .send({
           name: "Ayush Shah",
           email: "fake@gmail.com",
@@ -60,11 +60,11 @@ describe("Integration Tests - Auth routes", () => {
     });
   });
 
-  describe("POST /api/v1/auth/login", () => {
+  describe("POST /api/v2/auth/login", () => {
     before("Save a user for login tests", async () => {
       await chai
         .request(app)
-        .post("/api/v1/auth/register")
+        .post("/api/v2/auth/register")
         .send({
           name: "Ayush Shah",
           email: "login@gmail.com",
@@ -75,7 +75,7 @@ describe("Integration Tests - Auth routes", () => {
     it("It should successfully login the user", async () => {
       const user = await chai
         .request(app)
-        .post("/api/v1/auth/login")
+        .post("/api/v2/auth/login")
         .send({
           email: "login@gmail.com",
           password: "testtest"
@@ -87,7 +87,7 @@ describe("Integration Tests - Auth routes", () => {
     it("It should not login the user - email not registered", async () => {
       const user = await chai
         .request(app)
-        .post("/api/v1/auth/login")
+        .post("/api/v2/auth/login")
         .send({
           email: "fakelogin@gmail.com",
           password: "testtest"
@@ -98,7 +98,7 @@ describe("Integration Tests - Auth routes", () => {
     it("It should not login the user - invalid password", async () => {
       const user = await chai
         .request(app)
-        .post("/api/v1/auth/login")
+        .post("/api/v2/auth/login")
         .send({
           email: "login@gmail.com",
           password: "fake"
