@@ -5,7 +5,6 @@ const expect = chai.expect;
 chai.use(chaiHttp);
 
 const mongoose = require("mongoose");
-const User = require("../../../src/models/users.model");
 const Entity = require("../../../src/models/entities.model");
 const Transaction = require("../../../src/models/transactions.model");
 
@@ -16,7 +15,7 @@ describe("Integration Tests - Transaction routes", () => {
   before(done => {
     chai
       .request(app)
-      .post("/api/v1/auth/register")
+      .post("/api/v2/auth/register")
       .send({
         name: "Ayush Shah",
         email: "shahayush457@gmail.com",
@@ -39,20 +38,15 @@ describe("Integration Tests - Transaction routes", () => {
       });
   });
 
-  describe("GET /api/v1/transactions", () => {
+  describe("GET /api/v2/transactions", () => {
     afterEach("dropping transaction collection", async () => {
-      let updateUser = await User.findById(userId);
-      updateUser.balance = 0;
-      updateUser.pendingAmountCredit = 0;
-      updateUser.pendingAmountDebit = 0;
-      await updateUser.save();
       Transaction.collection.drop();
     });
 
     it("It should return status 200 and an empty array", async () => {
       const res = await chai
         .request(app)
-        .get("/api/v1/transactions")
+        .get("/api/v2/transactions")
         .set("authorization", "Bearer " + token);
       expect(res.status).to.equal(200);
       expect(res.body).to.be.an("array").that.is.empty;
@@ -70,7 +64,7 @@ describe("Integration Tests - Transaction routes", () => {
       });
       const res = await chai
         .request(app)
-        .get("/api/v1/transactions")
+        .get("/api/v2/transactions")
         .set("authorization", "Bearer " + token);
       expect(res.status).to.equal(200);
       expect(res.body).to.be.an("array");
@@ -79,13 +73,8 @@ describe("Integration Tests - Transaction routes", () => {
     });
   });
 
-  describe("POST /api/v1/transactions", () => {
+  describe("POST /api/v2/transactions", () => {
     afterEach("dropping transaction collection", async () => {
-      let updateUser = await User.findById(userId);
-      updateUser.balance = 0;
-      updateUser.pendingAmountCredit = 0;
-      updateUser.pendingAmountDebit = 0;
-      await updateUser.save();
       Transaction.collection.drop();
     });
 
@@ -100,14 +89,12 @@ describe("Integration Tests - Transaction routes", () => {
       };
       const res = await chai
         .request(app)
-        .post("/api/v1/transactions")
+        .post("/api/v2/transactions")
         .set("authorization", "Bearer " + token)
         .send(transaction);
-      const updatedUser = await User.findById(userId);
       expect(res.status).to.equal(201);
       expect(res.body.userId).to.be.equal(userId);
       expect(res.body.entityId).to.be.equal(entityId);
-      expect(updatedUser.balance).to.be.equal(-100);
     });
 
     it("It should successfully add a paid credit transaction to the database", async () => {
@@ -121,14 +108,12 @@ describe("Integration Tests - Transaction routes", () => {
       };
       const res = await chai
         .request(app)
-        .post("/api/v1/transactions")
+        .post("/api/v2/transactions")
         .set("authorization", "Bearer " + token)
         .send(transaction);
-      const updatedUser = await User.findById(userId);
       expect(res.status).to.equal(201);
       expect(res.body.userId).to.be.equal(userId);
       expect(res.body.entityId).to.be.equal(entityId);
-      expect(updatedUser.balance).to.be.equal(100);
     });
 
     it("It should successfully add a pending debit transaction to the database", async () => {
@@ -142,14 +127,12 @@ describe("Integration Tests - Transaction routes", () => {
       };
       const res = await chai
         .request(app)
-        .post("/api/v1/transactions")
+        .post("/api/v2/transactions")
         .set("authorization", "Bearer " + token)
         .send(transaction);
-      const updatedUser = await User.findById(userId);
       expect(res.status).to.equal(201);
       expect(res.body.userId).to.be.equal(userId);
       expect(res.body.entityId).to.be.equal(entityId);
-      expect(updatedUser.pendingAmountDebit).to.be.equal(100);
     });
 
     it("It should successfully add a pending credit transaction to the database", async () => {
@@ -163,21 +146,19 @@ describe("Integration Tests - Transaction routes", () => {
       };
       const res = await chai
         .request(app)
-        .post("/api/v1/transactions")
+        .post("/api/v2/transactions")
         .set("authorization", "Bearer " + token)
         .send(transaction);
-      const updatedUser = await User.findById(userId);
       expect(res.status).to.equal(201);
       expect(res.body.userId).to.be.equal(userId);
       expect(res.body.entityId).to.be.equal(entityId);
-      expect(updatedUser.pendingAmountCredit).to.be.equal(100);
     });
 
     it("It should return status 422 - all fields are required", async () => {
       const transaction = {};
       const res = await chai
         .request(app)
-        .post("/api/v1/transactions")
+        .post("/api/v2/transactions")
         .set("authorization", "Bearer " + token)
         .send(transaction);
       expect(res.status).to.equal(422);
@@ -193,27 +174,22 @@ describe("Integration Tests - Transaction routes", () => {
       };
       const res = await chai
         .request(app)
-        .post("/api/v1/transactions")
+        .post("/api/v2/transactions")
         .set("authorization", "Bearer " + token)
         .send(transaction);
       expect(res.status).to.equal(422);
     });
   });
 
-  describe("GET /api/v1/transactions/:id", () => {
+  describe("GET /api/v2/transactions/:id", () => {
     afterEach("dropping transaction collection", async () => {
-      let updateUser = await User.findById(userId);
-      updateUser.balance = 0;
-      updateUser.pendingAmountCredit = 0;
-      updateUser.pendingAmountDebit = 0;
-      await updateUser.save();
       Transaction.collection.drop();
     });
 
     it("It should return status 422 - Not a mongo id", async () => {
       const res = await chai
         .request(app)
-        .get("/api/v1/transactions/ddd")
+        .get("/api/v2/transactions/ddd")
         .set("authorization", "Bearer " + token);
       expect(res.status).to.equal(422);
     });
@@ -230,7 +206,7 @@ describe("Integration Tests - Transaction routes", () => {
       });
       const res = await chai
         .request(app)
-        .get("/api/v1/transactions/" + transaction.id)
+        .get("/api/v2/transactions/" + transaction.id)
         .set("authorization", "Bearer " + token);
       expect(res.status).to.equal(200);
       expect(res.body.userId).to.be.equal(userId);
@@ -242,13 +218,8 @@ describe("Integration Tests - Transaction routes", () => {
     });
   });
 
-  describe("PATCH /api/v1/transactions/:id", () => {
+  describe("PATCH /api/v2/transactions/:id", () => {
     afterEach("dropping transaction collection", async () => {
-      let updateUser = await User.findById(userId);
-      updateUser.balance = 0;
-      updateUser.pendingAmountCredit = 0;
-      updateUser.pendingAmountDebit = 0;
-      await updateUser.save();
       Transaction.collection.drop();
     });
 
@@ -259,94 +230,10 @@ describe("Integration Tests - Transaction routes", () => {
       };
       const res = await chai
         .request(app)
-        .patch("/api/v1/transactions/ddd")
+        .patch("/api/v2/transactions/ddd")
         .set("authorization", "Bearer " + token)
         .send(transaction);
       expect(res.status).to.equal(422);
-    });
-
-    it("It should successfully update the amount for a paid credit transaction", async () => {
-      const transaction = await Transaction.create({
-        userId,
-        entityId,
-        amount: 50,
-        transactionType: "credit",
-        transactionMode: "credit-card",
-        transactionStatus: "paid",
-        remark: "5 star"
-      });
-      await User.findByIdAndUpdate(userId, { balance: 50 });
-      const updateTransaction = {
-        amount: 100,
-        transactionMode: "cash"
-      };
-      const res = await chai
-        .request(app)
-        .patch("/api/v1/transactions/" + transaction.id)
-        .set("authorization", "Bearer " + token)
-        .send(updateTransaction);
-      const updatedUser = await User.findById(userId);
-      expect(res.status).to.equal(200);
-      expect(res.body.userId).to.be.equal(userId);
-      expect(res.body.entityId).to.be.equal(entityId);
-      expect(res.body.amount).to.be.equal(updateTransaction.amount);
-      expect(updatedUser.balance).to.be.equal(100);
-    });
-
-    it("It should successfully update the amount for a pending debit transaction", async () => {
-      const transaction = await Transaction.create({
-        userId,
-        entityId,
-        amount: 50,
-        transactionType: "debit",
-        transactionMode: "cash",
-        transactionStatus: "pending",
-        remark: "5 star"
-      });
-      await User.findByIdAndUpdate(userId, { pendingAmountDebit: 50 });
-      const updateTransaction = {
-        amount: 100
-      };
-      const res = await chai
-        .request(app)
-        .patch("/api/v1/transactions/" + transaction.id)
-        .set("authorization", "Bearer " + token)
-        .send(updateTransaction);
-      const updatedUser = await User.findById(userId);
-      expect(res.status).to.equal(200);
-      expect(res.body.userId).to.be.equal(userId);
-      expect(res.body.entityId).to.be.equal(entityId);
-      expect(res.body.amount).to.be.equal(updateTransaction.amount);
-      expect(updatedUser.pendingAmountDebit).to.be.equal(100);
-    });
-
-    it("It should successfully update the transaction status and amount for a pending debit transaction", async () => {
-      const transaction = await Transaction.create({
-        userId,
-        entityId,
-        amount: 50,
-        transactionType: "debit",
-        transactionMode: "cash",
-        transactionStatus: "pending",
-        remark: "5 star"
-      });
-      await User.findByIdAndUpdate(userId, { pendingAmountDebit: 50 });
-      const updateTransaction = {
-        amount: 100,
-        transactionStatus: "paid"
-      };
-      const res = await chai
-        .request(app)
-        .patch("/api/v1/transactions/" + transaction.id)
-        .set("authorization", "Bearer " + token)
-        .send(updateTransaction);
-      const updatedUser = await User.findById(userId);
-      expect(res.status).to.equal(200);
-      expect(res.body.userId).to.be.equal(userId);
-      expect(res.body.entityId).to.be.equal(entityId);
-      expect(res.body.amount).to.be.equal(updateTransaction.amount);
-      expect(updatedUser.balance).to.be.equal(-100);
-      expect(updatedUser.pendingAmountDebit).to.be.equal(0);
     });
 
     it("It should successfully update the transaction status, type and amount for a pending debit transaction", async () => {
@@ -359,7 +246,6 @@ describe("Integration Tests - Transaction routes", () => {
         transactionStatus: "pending",
         remark: "5 star"
       });
-      await User.findByIdAndUpdate(userId, { pendingAmountDebit: 50 });
       const updateTransaction = {
         amount: 100,
         transactionType: "credit",
@@ -367,17 +253,13 @@ describe("Integration Tests - Transaction routes", () => {
       };
       const res = await chai
         .request(app)
-        .patch("/api/v1/transactions/" + transaction.id)
+        .patch("/api/v2/transactions/" + transaction.id)
         .set("authorization", "Bearer " + token)
         .send(updateTransaction);
-      const updatedUser = await User.findById(userId);
       expect(res.status).to.equal(200);
       expect(res.body.userId).to.be.equal(userId);
       expect(res.body.entityId).to.be.equal(entityId);
       expect(res.body.amount).to.be.equal(updateTransaction.amount);
-      expect(updatedUser.balance).to.be.equal(100);
-      expect(updatedUser.pendingAmountDebit).to.be.equal(0);
-      expect(updatedUser.pendingAmountCredit).to.be.equal(0);
     });
 
     it("It should successfully update the transaction status, type and amount for a paid debit transaction", async () => {
@@ -390,7 +272,6 @@ describe("Integration Tests - Transaction routes", () => {
         transactionStatus: "paid",
         remark: "5 star"
       });
-      await User.findByIdAndUpdate(userId, { balance: -50 });
       const updateTransaction = {
         amount: 100,
         transactionType: "credit",
@@ -398,17 +279,13 @@ describe("Integration Tests - Transaction routes", () => {
       };
       const res = await chai
         .request(app)
-        .patch("/api/v1/transactions/" + transaction.id)
+        .patch("/api/v2/transactions/" + transaction.id)
         .set("authorization", "Bearer " + token)
         .send(updateTransaction);
-      const updatedUser = await User.findById(userId);
       expect(res.status).to.equal(200);
       expect(res.body.userId).to.be.equal(userId);
       expect(res.body.entityId).to.be.equal(entityId);
       expect(res.body.amount).to.be.equal(updateTransaction.amount);
-      expect(updatedUser.balance).to.be.equal(0);
-      expect(updatedUser.pendingAmountDebit).to.be.equal(0);
-      expect(updatedUser.pendingAmountCredit).to.be.equal(100);
     });
 
     it("It should successfully update the transaction status, type and amount for a paid credit transaction", async () => {
@@ -421,7 +298,6 @@ describe("Integration Tests - Transaction routes", () => {
         transactionStatus: "paid",
         remark: "5 star"
       });
-      await User.findByIdAndUpdate(userId, { balance: 50 });
       const updateTransaction = {
         amount: 100,
         transactionType: "debit",
@@ -429,17 +305,13 @@ describe("Integration Tests - Transaction routes", () => {
       };
       const res = await chai
         .request(app)
-        .patch("/api/v1/transactions/" + transaction.id)
+        .patch("/api/v2/transactions/" + transaction.id)
         .set("authorization", "Bearer " + token)
         .send(updateTransaction);
-      const updatedUser = await User.findById(userId);
       expect(res.status).to.equal(200);
       expect(res.body.userId).to.be.equal(userId);
       expect(res.body.entityId).to.be.equal(entityId);
       expect(res.body.amount).to.be.equal(updateTransaction.amount);
-      expect(updatedUser.balance).to.be.equal(0);
-      expect(updatedUser.pendingAmountDebit).to.be.equal(100);
-      expect(updatedUser.pendingAmountCredit).to.be.equal(0);
     });
 
     it("It should return status 405 - cannot update user id", async () => {
@@ -457,7 +329,7 @@ describe("Integration Tests - Transaction routes", () => {
       };
       const res = await chai
         .request(app)
-        .patch("/api/v1/transactions/" + transaction.id)
+        .patch("/api/v2/transactions/" + transaction.id)
         .set("authorization", "Bearer " + token)
         .send(updateTransaction);
       expect(res.status).to.equal(405);
@@ -465,7 +337,6 @@ describe("Integration Tests - Transaction routes", () => {
   });
 
   after("dropping test db", done => {
-    //User.collection.drop();
     //Entity.collection.drop();
     mongoose.connection.dropDatabase(() => {
       console.log("\n Test database dropped");

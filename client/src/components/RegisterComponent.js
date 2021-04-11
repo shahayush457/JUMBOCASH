@@ -275,11 +275,12 @@ class Register extends Component {
               <div className="row row-content ml-md-5">
                 <div className="text-center">
                   <div className="ml-md-4">
-                    <Link href="/login" variant="body2">
+                    <Link style={{ "fontSize": "18px","color":"#FFF"}}href="/login" variant="body2">
                       {"Already have an account? Sign In"}
                     </Link>
+                    
                   </div>
-                  <div className="alert alert-primary ml-md-4">
+                  <div  className="alert alert-primary ml-md-4 mt-2">
                     Or register using third-party services
                   </div>
                   <FacebookLogin

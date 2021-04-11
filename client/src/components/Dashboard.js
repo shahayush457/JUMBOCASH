@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {Link} from "react-router-dom"
-//import { read } from "../api/api-trans";
 import { find, getBalance } from "../api/api-trans";
 import auth from "../api/auth-helper";
 import i1 from "../images/header-hero.jpg";

@@ -251,11 +251,11 @@ class Login extends Component {
               <div className="row row-content ml-md-4">
                 <div className="text-center">
                   <div className="ml-md-4">
-                    <Link href="/register" variant="body2">
+                    <Link style={{ "fontSize": "18px","color":"#FFF"}} href="/register" variant="body2">
                       {"Don't have an account? Sign Up"}
                     </Link>
                   </div>
-                  <div className="alert alert-primary ml-md-4">
+                  <div className="alert alert-primary ml-md-4 mt-2">
                     Or sign in using third-party services
                   </div>
                   <FacebookLogin

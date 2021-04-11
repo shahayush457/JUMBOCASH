@@ -5,7 +5,6 @@ const expect = chai.expect;
 chai.use(chaiHttp);
 
 const mongoose = require("mongoose");
-const User = require("../../../src/models/users.model");
 const Entity = require("../../../src/models/entities.model");
 
 const app = require("../../../src/common/index");
@@ -15,7 +14,7 @@ describe("Integration Tests - Entity routes", () => {
   before(done => {
     chai
       .request(app)
-      .post("/api/v1/auth/register")
+      .post("/api/v2/auth/register")
       .send({
         name: "Ayush Shah",
         email: "shahayush457@gmail.com",
@@ -30,7 +29,7 @@ describe("Integration Tests - Entity routes", () => {
       });
   });
 
-  describe("GET /api/v1/entities", () => {
+  describe("GET /api/v2/entities", () => {
     afterEach("dropping entity collection", done => {
       Entity.collection.drop();
       done();
@@ -39,7 +38,7 @@ describe("Integration Tests - Entity routes", () => {
     it("It should return status 200 and an empty array", async () => {
       const res = await chai
         .request(app)
-        .get("/api/v1/entities")
+        .get("/api/v2/entities")
         .set("authorization", "Bearer " + token);
       expect(res.status).to.equal(200);
       expect(res.body).to.be.an("array").that.is.empty;
@@ -53,12 +52,9 @@ describe("Integration Tests - Entity routes", () => {
         contactNo: "983883832",
         entityType: "vendor"
       });
-      const user = await User.findById(userId);
-      user.entities.push(entity._id);
-      await user.save();
       const res = await chai
         .request(app)
-        .get("/api/v1/entities")
+        .get("/api/v2/entities")
         .set("authorization", "Bearer " + token);
       expect(res.status).to.equal(200);
       expect(res.body).to.be.an("array");
@@ -66,7 +62,7 @@ describe("Integration Tests - Entity routes", () => {
     });
   });
 
-  describe("POST /api/v1/entities", () => {
+  describe("POST /api/v2/entities", () => {
     afterEach("dropping entity collection", done => {
       Entity.collection.drop();
       done();
@@ -82,7 +78,7 @@ describe("Integration Tests - Entity routes", () => {
       };
       const res = await chai
         .request(app)
-        .post("/api/v1/entities")
+        .post("/api/v2/entities")
         .set("authorization", "Bearer " + token)
         .send(entity);
       expect(res.status).to.equal(201);
@@ -100,7 +96,7 @@ describe("Integration Tests - Entity routes", () => {
       };
       const res = await chai
         .request(app)
-        .post("/api/v1/entities")
+        .post("/api/v2/entities")
         .set("authorization", "Bearer " + token)
         .send(entity);
       expect(res.status).to.equal(201);
@@ -117,7 +113,7 @@ describe("Integration Tests - Entity routes", () => {
       };
       const res = await chai
         .request(app)
-        .post("/api/v1/entities")
+        .post("/api/v2/entities")
         .set("authorization", "Bearer " + token)
         .send(entity);
       expect(res.status).to.equal(422);
@@ -132,7 +128,7 @@ describe("Integration Tests - Entity routes", () => {
       };
       const res = await chai
         .request(app)
-        .post("/api/v1/entities")
+        .post("/api/v2/entities")
         .set("authorization", "Bearer " + token)
         .send(entity);
       expect(res.status).to.equal(422);
@@ -147,7 +143,7 @@ describe("Integration Tests - Entity routes", () => {
       };
       const res = await chai
         .request(app)
-        .post("/api/v1/entities")
+        .post("/api/v2/entities")
         .set("authorization", "Bearer " + token)
         .send(entity);
       expect(res.status).to.equal(422);
@@ -162,14 +158,14 @@ describe("Integration Tests - Entity routes", () => {
       };
       const res = await chai
         .request(app)
-        .post("/api/v1/entities")
+        .post("/api/v2/entities")
         .set("authorization", "Bearer " + token)
         .send(entity);
       expect(res.status).to.equal(422);
     });
   });
 
-  describe("GET /api/v1/entities/:id", () => {
+  describe("GET /api/v2/entities/:id", () => {
     afterEach("dropping entity collection", done => {
       Entity.collection.drop();
       done();
@@ -178,7 +174,7 @@ describe("Integration Tests - Entity routes", () => {
     it("It should return status 422 - Entity id not a mongo id", async () => {
       const res = await chai
         .request(app)
-        .get("/api/v1/entities/ddd")
+        .get("/api/v2/entities/ddd")
         .set("authorization", "Bearer " + token);
       expect(res.status).to.equal(422);
     });
@@ -193,7 +189,7 @@ describe("Integration Tests - Entity routes", () => {
       });
       const res = await chai
         .request(app)
-        .get("/api/v1/entities/" + entity.id)
+        .get("/api/v2/entities/" + entity.id)
         .set("authorization", "Bearer " + token);
       expect(res.status).to.equal(200);
       expect(res.body.name).to.be.equal("Ayush Shah");
@@ -201,7 +197,7 @@ describe("Integration Tests - Entity routes", () => {
     });
   });
 
-  describe("PATCH /api/v1/entities/:id", () => {
+  describe("PATCH /api/v2/entities/:id", () => {
     afterEach("dropping entity collection", done => {
       Entity.collection.drop();
       done();
@@ -216,7 +212,7 @@ describe("Integration Tests - Entity routes", () => {
       };
       const res = await chai
         .request(app)
-        .patch("/api/v1/entities/ddd")
+        .patch("/api/v2/entities/ddd")
         .set("authorization", "Bearer " + token)
         .send(entity);
       expect(res.status).to.equal(422);
@@ -235,7 +231,7 @@ describe("Integration Tests - Entity routes", () => {
       };
       const res = await chai
         .request(app)
-        .patch("/api/v1/entities/" + entity.id)
+        .patch("/api/v2/entities/" + entity.id)
         .set("authorization", "Bearer " + token)
         .send(updateEntity);
       expect(res.status).to.equal(200);
@@ -258,7 +254,7 @@ describe("Integration Tests - Entity routes", () => {
       };
       const res = await chai
         .request(app)
-        .patch("/api/v1/entities/" + entity.id)
+        .patch("/api/v2/entities/" + entity.id)
         .set("authorization", "Bearer " + token)
         .send(updateEntity);
       expect(res.status).to.equal(200);
