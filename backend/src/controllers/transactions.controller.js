@@ -1,4 +1,3 @@
-const mongoose = require("mongoose");
 const { validationResult } = require("express-validator");
 const log = require("../common/logger");
 const db = require("../database/dbQueries");
@@ -24,9 +23,6 @@ exports.getTransactionsByUser = async (req, res, next) => {
 };
 
 exports.createTransactions = async (req, res, next) => {
-  const session = await mongoose.startSession();
-  session.startTransaction();
-
   try {
     // Finds the validation errors in this request and wraps them in an object
     const errors = validationResult(req);
@@ -51,43 +47,10 @@ exports.createTransactions = async (req, res, next) => {
       return;
     }
 
-    const transactions = await db.createData(
-      "transaction",
-      {
-        userId,
-        ...req.body
-      },
-      {
-        session
-      }
-    );
-
-    const transaction = transactions[0];
-
-    let user = await db.findById("user", userId, false);
-
-    // Update user balance and pending amounts
-    if (transaction.transactionStatus === "paid") {
-      if (transaction.transactionType === "credit") {
-        // transaction (type = Credit) then add transaction amount to user balance
-        user.balance += transaction.amount;
-      } else {
-        // transaction (type = Debit) then subtract transaction amount from user balance
-        user.balance -= transaction.amount;
-      }
-    } else {
-      if (transaction.transactionType === "credit") {
-        /* transaction (type = Credit) then add transaction amount 
-          to total pending amount that the user will get*/
-        user.pendingAmountCredit += transaction.amount;
-      } else {
-        /* transaction (type = Debit) then add transaction amount 
-          to total pending amount that the user will get*/
-        user.pendingAmountDebit += transaction.amount;
-      }
-    }
-
-    await db.updateData(user, { session });
+    const transaction = await db.createData("transaction", {
+      userId,
+      ...req.body
+    });
 
     if (
       transaction.reminderDate &&
@@ -110,17 +73,12 @@ exports.createTransactions = async (req, res, next) => {
       });
     }
 
-    await session.commitTransaction();
-
     res.status(201).json(transaction);
   } catch (error) {
-    await session.abortTransaction();
     next({
       status: 400,
       message: [{ msg: error.message }]
     });
-  } finally {
-    session.endSession();
   }
 };
 
@@ -152,10 +110,87 @@ exports.getTransactionsById = async (req, res, next) => {
   }
 };
 
-exports.updateTransaction = async (req, res, next) => {
-  const session = await mongoose.startSession();
-  session.startTransaction();
+exports.getUserProfitAndPendingAmount = async (req, res, next) => {
+  try {
+    const { id: userId } = req.decoded;
 
+    let filter = { userId: db.getObjectId(userId) };
+
+    if (req.query.sDate && req.query.eDate) {
+      let startDate = req.query.sDate;
+      startDate.setHours(00, 00, 00, 000);
+      let endDate = req.query.eDate;
+      endDate.setHours(23, 59, 59, 999);
+      filter.createdAt = {
+        $gte: startDate,
+        $lte: endDate
+      };
+    } else if (req.query.sDate) {
+      let startDate = req.query.sDate;
+      startDate.setHours(00, 00, 00, 000);
+      filter.createdAt = {
+        $gte: startDate
+      };
+    } else if (req.query.eDate) {
+      let endDate = req.query.eDate;
+      endDate.setHours(23, 59, 59, 999);
+      filter.createdAt = {
+        $lte: endDate
+      };
+    }
+
+    const pipelines = [
+      // The match stage will filter transactions for current user and for given dates.
+      {
+        $match: filter
+      },
+      // The group stage will group the transactions according to type and status and will calculate
+      // the count and total amount in each group.
+      {
+        $group: {
+          _id: {
+            type: "$transactionType",
+            status: "$transactionStatus"
+          },
+          count: { $sum: 1 },
+          totalAmount: { $sum: "$amount" }
+        }
+      }
+    ];
+
+    const response = await db.aggregateData("transaction", pipelines);
+
+    let amount = {
+      balance: 0,
+      pendingAmountCredit: 0,
+      pendingAmountDebit: 0
+    };
+
+    // Add total amount to their respective fields.
+    response.forEach(curBalance => {
+      const type = curBalance._id.type,
+        status = curBalance._id.status;
+
+      if (status === "paid") {
+        if (type === "debit") amount.balance -= curBalance.totalAmount;
+        else amount.balance += curBalance.totalAmount;
+      } else {
+        if (type === "debit")
+          amount.pendingAmountDebit += curBalance.totalAmount;
+        else amount.pendingAmountCredit += curBalance.totalAmount;
+      }
+    });
+
+    res.status(200).json(amount);
+  } catch (error) {
+    next({
+      status: 400,
+      message: [{ msg: error.message }]
+    });
+  }
+};
+
+exports.updateTransaction = async (req, res, next) => {
   try {
     // Finds the validation errors in this request and wraps them in an object
     const errors = validationResult(req);
@@ -195,98 +230,21 @@ exports.updateTransaction = async (req, res, next) => {
         message: [{ msg: "Transaction not found" }]
       });
 
-    let user = await db.findById("user", transaction.userId, false);
-
-    const newStatus =
-      req.body.transactionStatus || transaction.transactionStatus;
-    const newTransactionType =
-      req.body.transactionType || transaction.transactionType;
-    const newAmount = req.body.amount;
-    const oldAmount = transaction.amount;
-
-    /* if updating status and new status is not equal to old status then 
-    update user balance and pending amounts accordingly */
-    if (newStatus !== transaction.transactionStatus) {
-      if (newStatus === "paid") {
-        if (transaction.transactionType === "credit")
-          (user.balance += oldAmount), (user.pendingAmountCredit -= oldAmount);
-        else
-          (user.balance -= oldAmount), (user.pendingAmountDebit -= oldAmount);
-      } else {
-        if (transaction.transactionType === "credit")
-          (user.balance -= oldAmount), (user.pendingAmountCredit += oldAmount);
-        else
-          (user.balance += oldAmount), (user.pendingAmountDebit += oldAmount);
-      }
-    }
-
-    // if updating transaction type then update user balance and pending amounts accordingly
-    if (
-      newStatus === "paid" &&
-      newTransactionType !== transaction.transactionType
-    ) {
-      if (newTransactionType === "credit") user.balance += 2 * oldAmount;
-      else user.balance -= 2 * oldAmount;
-    } else if (
-      newStatus === "pending" &&
-      newTransactionType !== transaction.transactionType
-    ) {
-      if (newTransactionType === "credit")
-        (user.pendingAmountDebit -= oldAmount),
-          (user.pendingAmountCredit += oldAmount);
-      else
-        (user.pendingAmountDebit += oldAmount),
-          (user.pendingAmountCredit -= oldAmount);
-    }
-
-    /* if updating transaction amount then update user balance 
-    and pending amounts accordingly */
-    if (newStatus === "paid" && newAmount) {
-      // subtract old amount and add new amount
-      if (newTransactionType === "credit") {
-        user.balance -= oldAmount;
-        user.balance += newAmount;
-      } else {
-        // add old amount and subtract new amount
-        user.balance += oldAmount;
-        user.balance -= newAmount;
-      }
-    } else if (newAmount) {
-      // subtract old amount and add new amount to pending credit amount
-      if (newTransactionType === "credit") {
-        user.pendingAmountCredit -= oldAmount;
-        user.pendingAmountCredit += newAmount;
-      } else {
-        // subtract old amount and add new amount to pending debit amount
-        user.pendingAmountDebit -= oldAmount;
-        user.pendingAmountDebit += newAmount;
-      }
-    }
-
-    // save updated user info in the database
-    await db.updateData(user, { session });
-
     // update the transaction info in the database
     const newTransaction = await db.findByIdAndUpdate(
       "transaction",
       req.params.id,
       req.body,
       true,
-      true,
-      { session }
+      true
     );
-
-    await session.commitTransaction();
 
     res.status(200).json(newTransaction);
   } catch (error) {
-    await session.abortTransaction();
     next({
       status: 400,
       message: [{ msg: error.message }]
     });
-  } finally {
-    session.endSession();
   }
 };
 
@@ -305,7 +263,6 @@ exports.getFilteredTransactions = async (req, res, next) => {
       return;
     }
 
-    log.info(req.query);
     let filter = {},
       sort = {};
 
@@ -378,6 +335,7 @@ exports.getFilteredTransactions = async (req, res, next) => {
     // Paging
     const limit = req.query.limit; // default = 10
     const skip = req.query.pageNo * limit - limit; // default pageNo = 1
+
     log.info(filter);
 
     const pipelines = [
@@ -407,6 +365,7 @@ exports.getFilteredTransactions = async (req, res, next) => {
 
     if (!transactions[0].totalCount[0])
       transactions[0].totalCount.push({ count: 0 });
+
     log.info(transactions);
 
     res.status(200).json(transactions[0]);

@@ -24,23 +24,7 @@ const user = new Schema({
   password: {
     type: String,
     description: "Password of the user for local authentication method"
-  },
-  balance: {
-    type: Number,
-    default: 0,
-    description: "Current total profit of the user"
-  },
-  pendingAmountCredit: {
-    type: Number,
-    default: 0,
-    description: "Total pending amount that the user will get"
-  },
-  pendingAmountDebit: {
-    type: Number,
-    default: 0,
-    description: "Total pending amount that the user will have to pay"
-  },
-  entities: [{ type: Schema.Types.ObjectId, ref: "Entity" }]
+  }
 });
 
 user.pre("save", async function(next) {

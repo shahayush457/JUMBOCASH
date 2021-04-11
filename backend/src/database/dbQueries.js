@@ -51,16 +51,12 @@ exports.findByIdAndUpdate = async (
   id,
   updateData,
   isNew,
-  isLean,
-  session
+  isLean
 ) => {
   const model = giveModel(modelName);
   if (isLean)
-    return model
-      .findByIdAndUpdate(id, updateData, { new: isNew, ...session })
-      .lean();
-  else
-    return model.findByIdAndUpdate(id, updateData, { new: isNew, ...session });
+    return model.findByIdAndUpdate(id, updateData, { new: isNew }).lean();
+  else return model.findByIdAndUpdate(id, updateData, { new: isNew });
 };
 
 exports.deleteAll = async (modelName, deleteQuery) => {
@@ -68,15 +64,13 @@ exports.deleteAll = async (modelName, deleteQuery) => {
   return model.deleteMany(deleteQuery);
 };
 
-exports.updateData = async (updatedDocument, session) => {
-  if (!session) return updatedDocument.save();
-  else return updatedDocument.save(session);
+exports.updateData = async updatedDocument => {
+  return updatedDocument.save();
 };
 
-exports.createData = async (modelName, data, session) => {
+exports.createData = async (modelName, data) => {
   const model = giveModel(modelName);
-  if (!session) return model.create(data);
-  else return model.create([data], session);
+  return model.create(data);
 };
 
 exports.aggregateData = async (modelName, pipelines) => {

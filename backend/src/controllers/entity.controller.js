@@ -1,20 +1,22 @@
-const mongoose = require("mongoose");
 const { validationResult } = require("express-validator");
 const log = require("../common/logger");
 const db = require("../database/dbQueries");
 
 // to get all entites added by current user
 exports.userEntities = async (req, res, next) => {
-  const { id } = req.decoded;
   try {
-    const user = await db.getPopulatedData(
-      "user",
-      id,
-      { path: "entities" },
-      true
-    );
+    const { id: userId } = req.decoded;
+    const pipelines = [
+      {
+        $match: {
+          userId: db.getObjectId(userId)
+        }
+      }
+    ];
 
-    return res.status(200).json(user.entities);
+    const entities = await db.aggregateData("entity", pipelines);
+
+    return res.status(200).json(entities);
   } catch (err) {
     return next({
       status: 400,
@@ -25,9 +27,6 @@ exports.userEntities = async (req, res, next) => {
 
 exports.createEntity = async (req, res, next) => {
   const { id: userId } = req.decoded;
-
-  const session = await mongoose.startSession();
-  session.startTransaction();
 
   try {
     // Finds the validation errors in this request and wraps them in an object
@@ -40,30 +39,17 @@ exports.createEntity = async (req, res, next) => {
       return;
     }
 
-    const user = await db.findById("user", userId, false);
-    const entity = await db.createData(
-      "entity",
-      {
-        userId,
-        ...req.body
-      },
-      { session }
-    );
+    const entity = await db.createData("entity", {
+      userId,
+      ...req.body
+    });
 
-    user.entities.push(entity[0]._id);
-    await db.updateData(user, { session });
-
-    await session.commitTransaction();
-
-    return res.status(201).json(entity[0]);
+    return res.status(201).json(entity);
   } catch (err) {
-    await session.abortTransaction();
     return next({
       status: 400,
       message: [{ msg: err.message }]
     });
-  } finally {
-    session.endSession();
   }
 };
 
@@ -125,8 +111,7 @@ exports.updateEntity = async (req, res, next) => {
       req.params.id,
       req.body,
       true,
-      true,
-      { session: null }
+      true
     );
 
     if (!updatedEntity) {
@@ -195,27 +180,10 @@ exports.getFilteredEntity = async (req, res, next) => {
     const entities = await db.aggregateData("entity", pipelines);
 
     if (!entities[0].totalCount[0]) entities[0].totalCount.push({ count: 0 });
+
     log.info(entities);
 
     res.status(200).json(entities[0]);
-
-    /*const user = await db.getPopulatedData(
-      "user",
-      userId,
-      {
-        path: "entities",
-        match: filter,
-        options: {
-          limit: limit,
-          skip: skip,
-          sort: sort
-        }
-      },
-      true
-    );
-
-    log.info(user.entities);
-    res.status(200).json(user.entities);*/
   } catch (error) {
     next({
       status: 400,

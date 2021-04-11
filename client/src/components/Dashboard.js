@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import {Link} from "react-router-dom"
-import { read } from "../api/api-user";
-import { find } from "../api/api-trans";
+//import { read } from "../api/api-trans";
+import { find, getBalance } from "../api/api-trans";
 import auth from "../api/auth-helper";
 import i1 from "../images/header-hero.jpg";
 import i2 from "../images/header.png";
@@ -278,10 +278,13 @@ export default function Dashboard() {
   const token = localStorage.getItem("jwtToken");
 
   React.useEffect(() => {
-    read(token).then(data => {
+    const urlBalance = `sDate=${startDate}&eDate=${finishDate}`;
+
+    getBalance(token, urlBalance).then(data => {
       if (data.error) {
         console.log(data.error);
       } else {
+        console.log(data);
         setBalance(data.balance);
         setPendingDebit(data.pendingAmountDebit);
         setPendingCredit(data.pendingAmountCredit);
