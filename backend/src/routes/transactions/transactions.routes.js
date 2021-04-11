@@ -5,14 +5,14 @@ const sanitiser = require("../../utils/sanitisers/sanitiseTransactions");
 const router = require("express").Router();
 
 /**
- * @route     GET /api/v1/transactions/
+ * @route     GET /api/v1/transactions
  * @desc      Get all the transactions done by the user sorted by latest
  * @access    Private
  */
 router.get("/", authenticate, transactionsController.getTransactionsByUser);
 
 /**
- * @route     POST /api/v1/transactions/
+ * @route     POST /api/v1/transactions
  * @desc      Create transaction added by the user
  * @access    Private
  */
@@ -22,6 +22,18 @@ router.post(
   validator.validate("createTransactions"),
   sanitiser.sanitiseCreate,
   transactionsController.createTransactions
+);
+
+/**
+ * @route     GET /api/v1/transactions/balance
+ * @desc      Get user total profit and pending amount to get and give between a range of date.
+ * @access    Private
+ */
+router.get(
+  "/balance",
+  authenticate,
+  sanitiser.sanitiseBalance,
+  transactionsController.getUserProfitAndPendingAmount
 );
 
 /**

@@ -19,6 +19,20 @@ exports.sanitiseUpdate = async (req, res, next) => {
   next();
 };
 
+exports.sanitiseBalance = async (req, res, next) => {
+  await query("sDate")
+    .optional()
+    .toDate()
+    .run(req);
+
+  await query("eDate")
+    .optional()
+    .toDate()
+    .run(req);
+
+  next();
+};
+
 exports.sanitiseFilter = async (req, res, next) => {
   await query("tType")
     .default(["debit", "credit"])

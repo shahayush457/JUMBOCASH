@@ -15,6 +15,23 @@ const create = async (transaction, token) => {
     console.log(err);
   }
 };
+
+const getBalance = async (token, url) => {
+  try {
+    let response = await fetch(config.server+'/transactions/balance?' + url , {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + JSON.parse(token),
+      }
+    })
+    return response.json()
+  } catch(err) {
+    console.log(err)
+  }
+}
+
 const editone = async (token, transId, transaction) => {
   //console.log(JSON.stringify(transaction));
   try {
@@ -27,7 +44,7 @@ const editone = async (token, transId, transaction) => {
       },
       body: JSON.stringify(transaction)
     });
-    return await response.json();
+    return response.json();
   } catch (err) {
     console.log(err);
   }
@@ -64,4 +81,5 @@ const find = async (url, token) => {
     console.log(err);
   }
 };
-export { create, find, editone, readone };
+
+export { create, find, getBalance, editone, readone };

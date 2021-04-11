@@ -1,15 +1,38 @@
-const log = require("../common/logger");
 const db = require("../database/dbQueries");
 
 exports.userInsights = async (req, res, next) => {
   const { id: userId } = req.decoded;
   try {
+    // Creating the filter object with required filter fields.
+    let filter = { userId: db.getObjectId(userId) };
+    
+    if (req.query.sDate && req.query.eDate) {
+      let startDate = req.query.sDate;
+      startDate.setHours(00, 00, 00, 000);
+      let endDate = req.query.eDate;
+      endDate.setHours(23, 59, 59, 999);
+      filter.createdAt = {
+        $gte: startDate,
+        $lte: endDate
+      };
+    } else if (req.query.sDate) {
+      let startDate = req.query.sDate;
+      startDate.setHours(00, 00, 00, 000);
+      filter.createdAt = {
+        $gte: startDate
+      };
+    } else if (req.query.eDate) {
+      let endDate = req.query.eDate;
+      endDate.setHours(23, 59, 59, 999);
+      filter.createdAt = {
+        $lte: endDate
+      };
+    }
+    
     const pipelinesForFavouriteEntity = [
-      // The match stage will filter the transactions of the user using its userId.
+      // The match stage will filter the transactions of the user for a specific range of dates input by the user.
       {
-        $match: {
-          userId: db.getObjectId(userId)
-        }
+        $match: filter
       },
       // The lookup stage will populate the entity using the entityId.
       {
@@ -78,11 +101,9 @@ exports.userInsights = async (req, res, next) => {
     );
 
     const pipelinesForModeFrequency = [
-      // The match stage will filter the transactions of the user using its userId.
+      // The match stage will filter the transactions of the user for a specific range of dates input by the user.
       {
-        $match: {
-          userId: db.getObjectId(userId)
-        }
+        $match: filter
       },
       // This stage will group the transactions by its mode of payment and count the
       // number of transactions performed using each mode.
@@ -99,13 +120,12 @@ exports.userInsights = async (req, res, next) => {
       pipelinesForModeFrequency
     );
 
+    filter.transactionStatus = "paid";
+
     const pipelinesForBalanceInOut = [
-      // The match stage will filter the paid transactions of the user using its userId.
+      // The match stage will filter the transactions of the user for a specific range of dates input by the user.
       {
-        $match: {
-          userId: db.getObjectId(userId),
-          transactionStatus: "paid"
-        }
+        $match: filter
       },
       // This stage will group the transactions by its transaction type (debit and credit)
       // and calculate the total amount in each group.

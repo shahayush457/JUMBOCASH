@@ -16,7 +16,7 @@ app.use(bodyParser.json());
 app.use(cors());
 
 // Root endpoint for all requests
-app.use("/api/v1", rootRouter);
+app.use("/api/v2", rootRouter);
 
 // Invalid route's error handling
 app.use((_, res, next) => {
