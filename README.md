@@ -24,6 +24,14 @@ Team ID: JUMBOCASH-T9 | Team Members: Ayush Shah &amp; Akshat Mangal
 15. Able to edit existing transactions and entities.
 16. Login/Sign Up using google and facebook OAuth.
 
+## Screenshots
+
+![Dashboard](/screenshots/1.png)
+![Dashboard](/screenshots/2.png)
+![Dashboard](/screenshots/3.png)
+![Dashboard](/screenshots/4.png)
+![Dashboard](/screenshots/5.png)
+
 ## Installation and Usage
 
 ## Local -

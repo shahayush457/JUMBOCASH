@@ -158,7 +158,7 @@ export default function EntitiesDisplay() {
       <ThemeProvider theme={darkTheme}>
         <div className={classes.root}>
           <CssBaseline />
-          <SideBar title="Entities Added" />
+          <SideBar title="Entities" />
           <main className={classes.content}>
             <div className={classes.appBarSpacer} />
             <Container maxWidth="lg" className={classes.container}>
