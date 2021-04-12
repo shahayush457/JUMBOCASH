@@ -2,14 +2,14 @@
 
 Team ID: JUMBOCASH-T9 | Team Members: Ayush Shah &amp; Akshat Mangal
 
-> Jumbotail is an online marketplace for food and grocery, targeted at kirana stores/wholesale distributors/vendors. These businesses buy from the Jumbotail marketplace for their retail sales.
+> Jumbotail is an online marketplace for food and grocery, targeted at kirana stores/wholesale distributors/vendors. These businesses buy from the Jumbotail marketplace for their retail sales. \
 > This application aims at easing their life by allowing them to track their overall cash flow in one place, along with viewing and organizing historical data to look for patterns that can help them improve their business processes. Since most of these small businesses work on micro-credit, monitoring their overall cash flow regularly in one place is a boon.
 
 ## Features
 
 1. Add entity (vendor, customer).
 2. Add individual transactions for each entity (vendor, customer).
-3. Set email reminders for pending transactions.
+3. Set payment reminders for pending transactions.
 4. View historical transactions.
 5. Export the transaction details to CSV.
 6. Filter transactions based on its type, status, mode, entity type and between two dates.
@@ -19,7 +19,7 @@ Team ID: JUMBOCASH-T9 | Team Members: Ayush Shah &amp; Akshat Mangal
 10. View list of entities added.
 11. Sort and search entities by names.
 12. Pagination on the frontend - only a fixed, limited number of transactions per page. The remaining ones go to a navigable new page.
-13. See reports of various transactional parameters for current year, current month and current week.
+13. See reports on various transactional parameters for current year, current month and current week.
 14. Provide relevant insights based on the frequency of transactional parameters - Favourite vendor and customer, the total balance in and out, etc.
 15. Able to edit existing transactions and entities.
 16. Login/Sign Up using google and facebook OAuth.
@@ -45,9 +45,10 @@ $ npm run dev
 
 ```sh
 $ cd JUMBOCASH-T9/client
-$ npm install
+# Add the google and facebook clientId in config file.
+$ yarn install
 # Start React DevServer: http://localhost:3000
-$ npm start
+$ yarn start
 ```
 
 Now you can access the site locally at http://localhost:3000
@@ -70,14 +71,15 @@ $ npm start
 
 ```sh
 $ cd JUMBOCASH-T9/client
-$ npm build
+# Add the google and facebook clientId in config file.
+$ yarn build
 ```
 
 Now you can deploy the production build created.
 
 ## Testing
 
-This will run all the tests for the backend.
+This will run all the tests for the backend. \
 **Note** - Don't use the development database for testing purposes. Instead use a test database and add its url in .env.test file.
 
 ```sh
@@ -101,5 +103,5 @@ Now you can access your application at http://localhost/
 
 ## Authors
 
-**[Ayush Shah](https://github.com/shahayush457)**
+**[Ayush Shah](https://github.com/shahayush457)** \
 **[Akshat Mangal](https://github.com/iamakshat01)**
