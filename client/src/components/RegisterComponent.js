@@ -12,6 +12,7 @@ import {
 import { create } from "../api/api-auth";
 import { oauthGoogle, oauthFacebook } from "../api/api-oauth";
 import auth from "../api/auth-helper";
+import config from "../config";
 import GoogleLogin from "react-google-login";
 import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
@@ -84,7 +85,6 @@ class Register extends Component {
     });
   };
   toggleModal() {
-    
     this.setState({
       open: !this.state.open
     });
@@ -195,9 +195,13 @@ class Register extends Component {
                 {this.state.error && (
                   <Alert color="danger">{this.state.error}</Alert>
                 )}
-                <Alert severity="success" isOpen={this.state.open} toggle={this.toggleModal}>
-                    Registered User Successfully.
-                 </Alert>
+                <Alert
+                  severity="success"
+                  isOpen={this.state.open}
+                  toggle={this.toggleModal}
+                >
+                  Registered User Successfully.
+                </Alert>
                 <Form
                   onSubmit={this.handleSubmit}
                   onChange={this.handleInputChange}
@@ -275,16 +279,19 @@ class Register extends Component {
               <div className="row row-content ml-md-5">
                 <div className="text-center">
                   <div className="ml-md-4">
-                    <Link style={{ "fontSize": "18px","color":"#FFF"}}href="/login" variant="body2">
+                    <Link
+                      style={{ fontSize: "18px", color: "#FFF" }}
+                      href="/login"
+                      variant="body2"
+                    >
                       {"Already have an account? Sign In"}
                     </Link>
-                    
                   </div>
-                  <div  className="alert alert-primary ml-md-4 mt-2">
+                  <div className="alert alert-primary ml-md-4 mt-2">
                     Or register using third-party services
                   </div>
                   <FacebookLogin
-                    appId="435566974381314"
+                    appId={config.facebook}
                     render={renderProps => (
                       <button
                         style={{ marginRight: 15 }}
@@ -300,7 +307,7 @@ class Register extends Component {
                     cssClass="btn btn-outline-primary"
                   />
                   <GoogleLogin
-                    clientId="395911397838-qevt8tlmbbrs21h7f5devar2lf2cm120.apps.googleusercontent.com"
+                    clientId={config.google}
                     render={renderProps => (
                       <button
                         className="btn btn-danger"
