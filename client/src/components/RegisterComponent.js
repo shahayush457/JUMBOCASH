@@ -185,7 +185,7 @@ class Register extends Component {
             <Typography
               component="h1"
               variant="h5"
-              style={{ paddingTop: 30 }}
+              style={{ paddingTop: 30, color: "#FFF" }}
               align="center"
             >
               Register
