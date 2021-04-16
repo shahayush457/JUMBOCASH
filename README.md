@@ -1,4 +1,4 @@
-# JUMBOCASH-T9
+# JUMBOCASH
 
 Team ID: JUMBOCASH-T9 | Team Members: Ayush Shah &amp; Akshat Mangal
 
@@ -36,7 +36,7 @@ And if you want to use a local database then install mongodb as well in your sys
 ### Backend
 
 ```sh
-$ cd JUMBOCASH-T9/backend
+$ cd JUMBOCASH/backend
 $ cp .env.template .env.development
 # Now fill all the env variables inside .env.development file.
 $ npm install
@@ -46,7 +46,7 @@ $ npm run dev
 ### Frontend
 
 ```sh
-$ cd JUMBOCASH-T9/client
+$ cd JUMBOCASH/client
 # Add the google and facebook clientId in config file.
 $ yarn install
 # Start React DevServer: http://localhost:3000
@@ -62,7 +62,7 @@ Make sure you have Nodejs installed globally in your server.
 ### Backend
 
 ```sh
-$ cd JUMBOCASH-T9/backend
+$ cd JUMBOCASH/backend
 $ cp .env.template .env.production
 # Now fill all the env variables inside .env.production file.
 $ npm install
@@ -72,7 +72,7 @@ $ npm start
 ### Frontend
 
 ```sh
-$ cd JUMBOCASH-T9/client
+$ cd JUMBOCASH/client
 # Add the google, facebook clientId and server url in config file.
 $ yarn build
 ```
@@ -85,7 +85,7 @@ This will run all the tests for the backend. \
 **Note** - Don't use the development database for testing purposes. Instead use a test database and add its url in .env.test file.
 
 ```sh
-$ cd JUMBOCASH-T9/backend
+$ cd JUMBOCASH/backend
 $ cp .env.template .env.test
 # Now fill all the env variables inside .env.test file.
 $ npm test
@@ -96,12 +96,12 @@ $ npm test
 **Note** - You need [Docker](https://docs.docker.com/engine/install/) and [Docker Compose](https://docs.docker.com/compose/install/) installed on your system.
 
 ```sh
-$ cd JUMBOCASH-T9/backend
+$ cd JUMBOCASH/backend
 $ cp .env.template .env.production
 # Now fill all the env variables inside .env.production file.
-$ cd JUMBOCASH-T9/client/src
+$ cd JUMBOCASH/client/src
 # Add the google and facebook client id in config file.
-$ cd JUMBOCASH-T9
+$ cd JUMBOCASH
 $ docker-compose up --build
 ```
 
