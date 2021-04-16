@@ -4,6 +4,8 @@ Team ID: JUMBOCASH-T9 | Team Members: Ayush Shah &amp; Akshat Mangal
 
 > Jumbotail is an online marketplace for food and grocery, targeted at kirana stores/wholesale distributors/vendors. These businesses buy from the Jumbotail marketplace for their retail sales. \
 > This application aims at easing their life by allowing them to track their overall cash flow in one place, along with viewing and organizing historical data to look for patterns that can help them improve their business processes. Since most of these small businesses work on micro-credit, monitoring their overall cash flow regularly in one place is a boon.
+ 
+## [Demo](https://youtu.be/XOuo065e4FY)
 
 ## Features
 
@@ -23,14 +25,6 @@ Team ID: JUMBOCASH-T9 | Team Members: Ayush Shah &amp; Akshat Mangal
 14. Provide relevant insights based on the frequency of transactional parameters - Favourite vendor and customer, the total balance in and out, etc.
 15. Able to edit existing transactions and entities.
 16. Login/Sign Up using google and facebook OAuth.
-
-## Screenshots
-
-![Dashboard](/screenshots/1.png)
-![Dashboard](/screenshots/2.png)
-![Dashboard](/screenshots/3.png)
-![Dashboard](/screenshots/4.png)
-![Dashboard](/screenshots/5.png)
 
 ## Installation and Usage
 
@@ -79,7 +73,7 @@ $ npm start
 
 ```sh
 $ cd JUMBOCASH-T9/client
-# Add the google and facebook clientId in config file.
+# Add the google, facebook clientId and server url in config file.
 $ yarn build
 ```
 
@@ -102,6 +96,11 @@ $ npm test
 **Note** - You need [Docker](https://docs.docker.com/engine/install/) and [Docker Compose](https://docs.docker.com/compose/install/) installed on your system.
 
 ```sh
+$ cd JUMBOCASH-T9/backend
+$ cp .env.template .env.production
+# Now fill all the env variables inside .env.production file.
+$ cd JUMBOCASH-T9/client/src
+# Add the google and facebook client id in config file.
 $ cd JUMBOCASH-T9
 $ docker-compose up --build
 ```
@@ -109,7 +108,15 @@ $ docker-compose up --build
 This will build the images and start the docker containers for the backend, frontend and the mongodb database.
 Now you can access your application at http://localhost/
 
-## Authors
+## Screenshots
+
+![Dashboard](/screenshots/1.png)
+![Dashboard](/screenshots/2.png)
+![Dashboard](/screenshots/3.png)
+![Dashboard](/screenshots/4.png)
+![Dashboard](/screenshots/5.png)
+
+## Developers
 
 **[Ayush Shah](https://github.com/shahayush457)** \
 **[Akshat Mangal](https://github.com/iamakshat01)**
